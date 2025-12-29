@@ -9,12 +9,13 @@ return new class extends Migration
     /**
      * Run the migrations.
      */
-    public function up():void
+    public function up(): void
     {
-        Schema::create('session_equipment', function (Blueprint $table) {
+        Schema::create('images', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('session_id')->constrained()->onDelete('cascade');
-            $table->foreignId('equipment_id')->constrained()->onDelete('cascade');
+            $table->morphs('imageable');  
+            $table->string('path');       // مسار الصورة  
+            $table->string('filename');   // اسم الصورة
             $table->timestamps();
         });
     }
@@ -24,6 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('session_equipment');
+        Schema::dropIfExists('images');
     }
 };
