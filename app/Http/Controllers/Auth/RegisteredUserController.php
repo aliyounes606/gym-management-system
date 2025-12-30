@@ -44,6 +44,7 @@ class RegisteredUserController extends Controller
             'age' => $request->age,
             'weight' => $request->weight,
         ]);
+        $user->assignRole('member');
 
         event(new Registered($user));
 
