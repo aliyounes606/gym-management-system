@@ -30,5 +30,10 @@ class DatabaseSeeder extends Seeder
         if (!$admin->hasRole('admin')) {
             $admin->assignRole($adminRole);
         }
+        // جلب كل المستخدمين الذين ليس لديهم أي دور وإعطاؤهم دور member
+        $usersWithoutRoles = User::doesntHave('roles')->get();
+        foreach ($usersWithoutRoles as $user) {
+            $user->assignRole('member');
+        }
     }
 }

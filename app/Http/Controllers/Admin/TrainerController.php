@@ -18,7 +18,7 @@ class TrainerController extends Controller
     {
         $trainers = TrainerProfile::with('user')->get();
         // جلب المستخدمين العاديين لتحوليهم الى مدربين 
-        $availableUsers = User::doesntHave('trainerProfile')->doesntHave('roles')->get();
+        $availableUsers = User::role('member')->get(); // جلب الأعضاء فقط للترقية
         return view('admin.trainers.index', compact('trainers', 'availableUsers'));
     }
 
