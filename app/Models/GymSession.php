@@ -2,13 +2,36 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
-
+use Illuminate\Database\Eloquent\Model; 
+use App\Models\User; 
+Use  App\Models\Course;
+use App\Models\Equipment;
 class GymSession extends Model
-{
-    public function equipment()
+//تحديد الجدول
+{    protected $table = "gym_sessions";
+   //استقبال المتغيرات
+    protected $fillable = [
+        "title",
+        "trainer_id",
+        "course_id",
+        "single_price",
+        "max_capacity",
+        "start_time",
+        "end_time",
+    ];
+//علاقة الكورس مع الجلسات 
+public function Course(){
+    return $this->belongsTo(Course::class,'course_id');
+}
+//علاقة المعدات k
+ public function equipment()
     {
         return 
           $this->belongsToMany(Equipment::class, 'session_equipment');
     }
+    //علاقة المدرب مع الجلسات 
+public function trainer(){
+  return $this->belongsTo(user::class,'trainer_id');   
+}
+
 }
