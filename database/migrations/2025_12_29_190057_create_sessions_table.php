@@ -11,7 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('sessions', function (Blueprint $table) {
+        Schema::create('gym_sessions', function (Blueprint $table) {
             $table->id();
             $table->string('name');
             $table->dateTime('session_time');
