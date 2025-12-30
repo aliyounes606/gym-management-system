@@ -12,7 +12,7 @@ return new class extends Migration {
     {
         Schema::create('session_equipment', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('session_id')->constrained('gym_sessions')->onDelete('cascade');
+            $table->foreignId('session_id')->constrained('gymsessions')->onDelete('cascade');
             $table->foreignId('equipment_id')->constrained('equipment')->onDelete('cascade');
             $table->timestamps();
         });
