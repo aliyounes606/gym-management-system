@@ -11,23 +11,34 @@ class DatabaseSeeder extends Seeder
 {
     public function run(): void
     {
-        // 1. إنشاء الرتبة والصلاحية (Spatie)
-        $adminRole = Role::firstOrCreate(['name' => 'admin']);
-        $managePermission = Permission::firstOrCreate(['name' => 'manage meal plans']);
-        
-        // ربط الصلاحية بالرتبة
-        $adminRole->givePermissionTo($managePermission);
 
-        // 2. إنشاء حساب المدير الرسمي
-        $adminUser = User::updateOrCreate(
-            ['email' => 'admin@gym.com'], // الإيميل الرسمي
-            [
-                'name' => 'Admin Manager',
-                'password' => bcrypt('12345678'), // كلمة السر الرسمية
-            ]
-        );
+       // 1. إنشاء كل الرتب (من كود الـ Main)
+$adminRole = Role::firstOrCreate(['name' => 'admin']);
+Role::firstOrCreate(['name' => 'trainer']);
+Role::firstOrCreate(['name' => 'member']);
 
-        // 3. تعيين رتبة أدمن لهذا المستخدم
-        $adminUser->assignRole($adminRole);
+// 2. إضافة صلاحية محمود (من كود محمود)
+$managePermission = Permission::firstOrCreate(['name' => 'manage meal plans']);
+$adminRole->givePermissionTo($managePermission);
+
+// 3. إنشاء الأدمن (استخدم كود الـ Main لأنه أنظف)
+$admin = User::firstOrCreate(
+    ['email' => 'admin@gym.com'],
+    [
+        'name' => 'Admin Manager', // اختر الاسم اللي بدك اياه
+        'password' => bcrypt('12345678'),
+    ]
+);
+
+// تعيين الرتبة إذا لم تكن موجودة
+if (!$admin->hasRole('admin')) {
+    $admin->assignRole($adminRole);
+}
+
+// 4. إعطاء رتبة member لمن ليس له رتبة (كود الـ Main ممتاز هنا)
+$usersWithoutRoles = User::doesntHave('roles')->get();
+foreach ($usersWithoutRoles as $user) {
+    $user->assignRole('member');
+}
     }
 }

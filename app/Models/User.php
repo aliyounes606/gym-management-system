@@ -6,12 +6,12 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
-use Spatie\Permission\Traits\HasRoles; 
+use Spatie\Permission\Traits\HasRoles;
 
 class User extends Authenticatable
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
-    use HasFactory, Notifiable, HasRoles; 
+    use HasFactory, Notifiable, HasRoles;
 
     /**
      * The attributes that are mass assignable.
@@ -51,5 +51,10 @@ class User extends Authenticatable
 
     public function mealPlans() {
         return $this->belongsToMany(MealPlan::class, 'meal_recommendations');
+    }
+}
+    public function trainerProfile()
+    {
+        return $this->hasOne(TrainerProfile::class);
     }
 }
