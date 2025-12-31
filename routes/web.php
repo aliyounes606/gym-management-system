@@ -6,6 +6,8 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\MealPlanController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\TrainerController;
+use App\Http\Controllers\Admin\RoleController;
+use App\Http\Controllers\Admin\PermissionController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -23,6 +25,8 @@ Route::middleware('auth')->group(function () {
 });
 Route::middleware(['auth', 'role:admin'])->group(function () {
     Route::resource('admin/trainers', TrainerController::class)->names('admin.trainers');
+    Route::resource('roles', RoleController::class);
+    Route::resource('permissions', PermissionController::class);
 });
 
 // Route::middleware(['auth'])->group(function () {
