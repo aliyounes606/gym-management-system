@@ -20,9 +20,15 @@
                 {{ __('إدارة المدربين') }}
             </x-dropdown-link>
 
-            {{-- <x-dropdown-link :href="route('admin.users.index')">
-                {{ __('إدارة الأعضاء') }}
-            </x-dropdown-link> --}}
+            <hr class="border-gray-100">
+
+            <x-dropdown-link :href="route('roles.index')" :active="request()->routeIs('roles.*')">
+                {{ __('إدارة الأدوار') }}
+            </x-dropdown-link>
+
+            <x-dropdown-link :href="route('permissions.index')" :active="request()->routeIs('permissions.*')">
+                {{ __('إدارة الصلاحيات') }}
+            </x-dropdown-link>
         </x-slot>
     </x-dropdown>
 </div>
