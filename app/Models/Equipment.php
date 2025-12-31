@@ -12,6 +12,16 @@ class Equipment extends Model
     }
 
     protected $fillable = ['name','status','quantity'];
+
+    public function images()
+    {
+        return $this->morphMany(Image::class,'imageable');
+
+    }
+
     
    
 }
+
+
+
