@@ -57,6 +57,11 @@ class User extends Authenticatable
     {
         return $this->hasOne(TrainerProfile::class);
     }
+    //علاقة المستخدم بالحجوزات
+    public function bookings()
+    {
+        return $this->belongsToMany(Booking::class,'booking_users');
+    }
 }
 
 
