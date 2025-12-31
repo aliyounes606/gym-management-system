@@ -34,4 +34,9 @@ public function trainer(){
   return $this->belongsTo(user::class,'trainer_id');   
 }
 
+public function bookings()
+    {
+        return $this->belongsToMany(Booking::class, 'bookings_gymsessions');
+    }
+    
 }
