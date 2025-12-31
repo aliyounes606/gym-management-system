@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\EquipmentController;
+use App\Http\Controllers\CourseController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\TrainerController;
@@ -21,7 +22,10 @@ Route::middleware('auth')->group(function () {
 Route::middleware(['auth', 'role:admin'])->group(function () {
     Route::resource('admin/trainers', TrainerController::class)->names('admin.trainers');
 });
-
+//course routes for admin only
+Route::middleware(['auth', 'role:admin'])->group(function () {
+    Route::resource('admin/course', CourseController::class)->names('admin.course');
+});
 require __DIR__ . '/auth.php';
 
 Route::resource('equipment', EquipmentController::class);
