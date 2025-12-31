@@ -13,11 +13,27 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // User::factory(10)->create();
+        $adminRole = \Spatie\Permission\Models\Role::firstOrCreate(['name' => 'admin']);
+        \Spatie\Permission\Models\Role::firstOrCreate(['name' => 'trainer']);
+        \Spatie\Permission\Models\Role::firstOrCreate(['name' => 'member']);
 
-        User::factory()->create([
-            'name' => 'Test User',
-            'email' => 'test@example.com',
-        ]);
+        // التأكد من إنشاء حساب الآدمن أو تحديثه إذا كان موجوداً
+        $admin = User::firstOrCreate(
+            ['email' => 'admin@gym.com'], // يبحث بالإيميل
+            [
+                'name' => 'Ali Admin',
+                'password' => bcrypt('12345678'),
+            ]
+        );
+
+        // إعطاؤه الرتبة فقط إذا لم يكن يملكها
+        if (!$admin->hasRole('admin')) {
+            $admin->assignRole($adminRole);
+        }
+        // جلب كل المستخدمين الذين ليس لديهم أي دور وإعطاؤهم دور member
+        $usersWithoutRoles = User::doesntHave('roles')->get();
+        foreach ($usersWithoutRoles as $user) {
+            $user->assignRole('member');
+        }
     }
 }
