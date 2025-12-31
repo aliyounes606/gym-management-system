@@ -2,22 +2,32 @@
 
 namespace Database\Seeders;
 
-use App\Models\User;
-// use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
+use App\Models\User;
+use Spatie\Permission\Models\Role;
+use Spatie\Permission\Models\Permission;
 
 class DatabaseSeeder extends Seeder
 {
-    /**
-     * Seed the application's database.
-     */
     public function run(): void
     {
-        // User::factory(10)->create();
+        // 1. إنشاء الرتبة والصلاحية (Spatie)
+        $adminRole = Role::firstOrCreate(['name' => 'admin']);
+        $managePermission = Permission::firstOrCreate(['name' => 'manage meal plans']);
+        
+        // ربط الصلاحية بالرتبة
+        $adminRole->givePermissionTo($managePermission);
 
-        User::factory()->create([
-            'name' => 'Test User',
-            'email' => 'test@example.com',
-        ]);
+        // 2. إنشاء حساب المدير الرسمي
+        $adminUser = User::updateOrCreate(
+            ['email' => 'admin@gym.com'], // الإيميل الرسمي
+            [
+                'name' => 'Admin Manager',
+                'password' => bcrypt('12345678'), // كلمة السر الرسمية
+            ]
+        );
+
+        // 3. تعيين رتبة أدمن لهذا المستخدم
+        $adminUser->assignRole($adminRole);
     }
 }
