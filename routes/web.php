@@ -22,8 +22,25 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
     Route::resource('admin/trainers', TrainerController::class)->names('admin.trainers');
 });
 
+/*Route::middleware(['auth'])->group(function () {
+    // عرض المعدات في الداشبورد للمستخدمين العاديين
+    Route::get('/dashboard', [EquipmentController::class, 'dashboard'])->name('dashboard');
+
+    // عرض المعدات في الداشبورد للمسؤولين فقط (مديرين)
+    Route::middleware(['role:admin'])->get('/admin/equipment', [EquipmentController::class, 'dashboard'])->name('admin.equipment.dashboard');
+});*/
+
+
+/*Route::middleware(['auth', 'role:admin'])->group(function (){
+    Route::get('/admin/equipment',[EquipmentController::class,'dashboard'])->name('admin.equipment.dashboard');
+    
+});*/
+
+
+Route::middleware(['auth', 'role:admin'])->get('/admin/equipment', [EquipmentController::class, 'dashboard'])->name('admin.equipment.dashboard');
+
 require __DIR__ . '/auth.php';
 
 Route::resource('equipment', EquipmentController::class);
 
-Route::get('/dashboard',[EquipmentController::class,'dashboard'])->name('dashboard');
+//Route::get('/dashboard',[EquipmentController::class,'dashboard'])->name('dashboard');
