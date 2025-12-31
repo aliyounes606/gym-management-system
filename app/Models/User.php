@@ -48,6 +48,11 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
+
+    public function mealPlans() {
+        return $this->belongsToMany(MealPlan::class, 'meal_recommendations');
+    }
+}
     public function trainerProfile()
     {
         return $this->hasOne(TrainerProfile::class);

@@ -2,38 +2,43 @@
 
 namespace Database\Seeders;
 
-use App\Models\User;
-// use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
+use App\Models\User;
+use Spatie\Permission\Models\Role;
+use Spatie\Permission\Models\Permission;
 
 class DatabaseSeeder extends Seeder
 {
-    /**
-     * Seed the application's database.
-     */
     public function run(): void
     {
-        $adminRole = \Spatie\Permission\Models\Role::firstOrCreate(['name' => 'admin']);
-        \Spatie\Permission\Models\Role::firstOrCreate(['name' => 'trainer']);
-        \Spatie\Permission\Models\Role::firstOrCreate(['name' => 'member']);
 
-        // التأكد من إنشاء حساب الآدمن أو تحديثه إذا كان موجوداً
-        $admin = User::firstOrCreate(
-            ['email' => 'admin@gym.com'], // يبحث بالإيميل
-            [
-                'name' => 'Ali Admin',
-                'password' => bcrypt('12345678'),
-            ]
-        );
+       // 1. إنشاء كل الرتب (من كود الـ Main)
+$adminRole = Role::firstOrCreate(['name' => 'admin']);
+Role::firstOrCreate(['name' => 'trainer']);
+Role::firstOrCreate(['name' => 'member']);
 
-        // إعطاؤه الرتبة فقط إذا لم يكن يملكها
-        if (!$admin->hasRole('admin')) {
-            $admin->assignRole($adminRole);
-        }
-        // جلب كل المستخدمين الذين ليس لديهم أي دور وإعطاؤهم دور member
-        $usersWithoutRoles = User::doesntHave('roles')->get();
-        foreach ($usersWithoutRoles as $user) {
-            $user->assignRole('member');
-        }
+// 2. إضافة صلاحية محمود (من كود محمود)
+$managePermission = Permission::firstOrCreate(['name' => 'manage meal plans']);
+$adminRole->givePermissionTo($managePermission);
+
+// 3. إنشاء الأدمن (استخدم كود الـ Main لأنه أنظف)
+$admin = User::firstOrCreate(
+    ['email' => 'admin@gym.com'],
+    [
+        'name' => 'Admin Manager', // اختر الاسم اللي بدك اياه
+        'password' => bcrypt('12345678'),
+    ]
+);
+
+// تعيين الرتبة إذا لم تكن موجودة
+if (!$admin->hasRole('admin')) {
+    $admin->assignRole($adminRole);
+}
+
+// 4. إعطاء رتبة member لمن ليس له رتبة (كود الـ Main ممتاز هنا)
+$usersWithoutRoles = User::doesntHave('roles')->get();
+foreach ($usersWithoutRoles as $user) {
+    $user->assignRole('member');
+}
     }
 }
