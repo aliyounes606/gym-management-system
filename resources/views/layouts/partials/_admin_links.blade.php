@@ -19,6 +19,9 @@
             <x-dropdown-link :href="route('admin.trainers.index')" :active="request()->routeIs('admin.trainers.*')">
                 {{ __('إدارة المدربين') }}
             </x-dropdown-link>
+            <x-dropdown-link :href="route('meal-plans.index')" :active="request()->routeIs('meal-plans.*')">
+    {{ __('إدارة الوجبات') }}
+</x-dropdown-link>
 
             {{-- <x-dropdown-link :href="route('admin.users.index')">
                 {{ __('إدارة الأعضاء') }}
