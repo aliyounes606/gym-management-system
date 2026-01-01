@@ -20,8 +20,8 @@
                 {{ __('إدارة المدربين') }}
             </x-dropdown-link>
             <x-dropdown-link :href="route('meal-plans.index')" :active="request()->routeIs('meal-plans.*')">
-    {{ __('إدارة الوجبات') }}
-</x-dropdown-link>
+                {{ __('إدارة الوجبات') }}
+            </x-dropdown-link>
 
             <hr class="border-gray-100">
 
