@@ -4,6 +4,7 @@ use App\Http\Controllers\EquipmentController;
 use App\Http\Controllers\CourseController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\MealPlanController;
+use App\Http\Controllers\BookingsController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\TrainerController;
 
@@ -66,5 +67,5 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
 require __DIR__ . '/auth.php';
 
 Route::resource('equipment', EquipmentController::class);
-
 //Route::get('/dashboard',[EquipmentController::class,'dashboard'])->name('dashboard');
+Route::resource('bookings', BookingsController::class);
