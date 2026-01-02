@@ -16,9 +16,10 @@ class Equipment extends Model
     ];
     
  
-/*public function equipment()
+public function categories()
 {
-    return $this->hasMany(GymSession::class, 'equipment_id');
-}*/
+    return $this->belongsToManyMany(Category::class, 'category_equipment','equipment_id','category_id');
+}
 
 }
+

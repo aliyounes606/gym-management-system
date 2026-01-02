@@ -21,10 +21,20 @@
                 </div>
 
                  <div class="mb-4">
-                    <label class="block text-gray-700">quantity</label>
+                    <label class="block text-gray-700">الكمية</label>
                     <textarea name="quantity" class="w-full border-gray-300 rounded">{{ old('quantity') }}</textarea>
                 </div>
 
+                <div class="mb-4">
+                    <label class="block text-gray-700">التصنيفات</label>
+                    <select name="categories[]" multiple class="w-full border-gray-300 rounded">
+                         @foreach($categories as $category)
+                            <option value="{{ $category->id }}">
+                                {{ $category->name }}
+                            </option>
+                        @endforeach
+                    </select>
+                </div>
                 <button type="submit" class="bg-green-600 text-white px-6 py-2 rounded hover:bg-green-700">
                     حفظ
                 </button>

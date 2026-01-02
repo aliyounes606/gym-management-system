@@ -15,7 +15,6 @@
                     <label class="block text-gray-700">اسم المعدة</label>
                     <input type="text" name="name" class="w-full border-gray-300 rounded" value="{{ $equipment->name }}" required>
                 </div>
-
                 
                 <div class="mb-4">
                     <label class="block text-gray-700"> الحالة</label>
@@ -25,6 +24,17 @@
                 <div class="mb-4">
                     <label class="block text-gray-700"> الكمية</label>
                     <input type="number" name="quantity" class="w-full border-gray-300 rounded" value="{{ $equipment->quantity }}" required>
+                </div>
+
+                <div class="mb-4">
+                    <label class="block text-gray-700">التصنيفات</label>
+                    <select name="categories[]" multiple class="w-full border-gray-300 rounded">
+                        @foreach($categories as $category)
+                            <option value="{{ $category->id }}"
+                                {{ $equipment->categories->contains($category->id) ? 'selected' : '' }}> {{ $category->name }}
+                            </option>
+                        @endforeach
+                    </select>
                 </div>
 
                 <button type="submit" class="bg-green-600 text-white px-6 py-2 rounded hover:bg-green-700">
