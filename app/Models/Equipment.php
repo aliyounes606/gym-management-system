@@ -6,22 +6,19 @@ use Illuminate\Database\Eloquent\Model;
 
 class Equipment extends Model
 {
-    public function gymSessions()
-    {
-        return $this->belongsToMany(GymSession::class,'session_equipment');
-    }
 
-    protected $fillable = ['name','status','quantity'];
 
-    public function images()
-    {
-        return $this->morphMany(Image::class,'imageable');
-
-    }
-
+  protected $table = "equipment"; 
+    protected $fillable =[
+        "name",
+        "status",
+       "quantity"
+    ];
     
-   
+ 
+/*public function equipment()
+{
+    return $this->hasMany(GymSession::class, 'equipment_id');
+}*/
+
 }
-
-
-

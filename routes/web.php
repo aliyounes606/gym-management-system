@@ -65,7 +65,7 @@ Route::middleware(['auth'])->group(function () {
 });
 
 
-Route::middleware(['auth', 'role:admin'])->get('/admin/equipment', [EquipmentController::class, 'dashboard'])->name('admin.equipment.dashboard');
+
 
 //course routes for admin only
 Route::middleware(['auth', 'role:admin'])->group(function () {
@@ -78,5 +78,15 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
 require __DIR__ . '/auth.php';
 
 Route::resource('equipment', EquipmentController::class);
-//Route::get('/dashboard',[EquipmentController::class,'dashboard'])->name('dashboard');
+
 Route::resource('bookings', BookingsController::class);
+
+
+//equipment routes for admin only
+Route::middleware(['auth', 'role:admin'])->group(function () {
+    Route::resource('equipment', EquipmentController::class);
+});
+//equipment routes for admin only
+Route::middleware(['auth', 'role:admin'])->group(function () {
+    Route::resource('gymsessions', GymSessionController::class);
+});

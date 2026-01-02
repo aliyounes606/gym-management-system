@@ -1,18 +1,34 @@
-// عرض تفاصيل المعدة
+<x-app-layout>
+    <x-slot name="header">
+        <h2 class="font-semibold text-xl text-gray-800 leading-tight text-right">
+            تفاصيل المعدة
+        </h2>
+    </x-slot>
 
-@extends('layouts.app')
+    <div class="py-12">
+        <div class="max-w-md mx-auto sm:px-6 lg:px-8 bg-white p-6 rounded shadow">
+            <h3 class="text-lg font-bold mb-4">{{ $equipment->name }}</h3>
 
-@section('content')
-    <div class="container">
-        <h1> Equipment Details </h1>
+            <div class="mb-4">
+                <strong>الحالة:</strong>
+                <p class="text-gray-700">{{ $equipment->status }}</p>
+            </div>
 
-        <div class="card">
-            <div class="card-body">
-                <h5 class="card-title">{{ $equipment->name }}</h5>
-                <p class="card-text"><strong>Status:</strong> {{ $equipment->status }}</p>
-                <p class="card-text"><strong>Quantity:</strong> {{ $equipment->quantity }}</p>
-                <a href="{{ route('equipment.index') }}" class="btn btn-secondary"> Back to List </a>
+            <div class="flex gap-4 mt-6">
+                <a href="{{ route('equipment.edit', $quipmente->id) }}"
+                   class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">
+                    تعديل
+                </a>
+
+                <form action="{{ route('equipment.destroy', $equipment->id) }}" method="POST"
+                      onsubmit="return confirm('هل أنت متأكد من الحذف؟');">
+                    @csrf
+                    @method('DELETE')
+                    <button type="submit" class="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700">
+                        حذف
+                    </button>
+                </form>
             </div>
         </div>
     </div>
-@endsection
+</x-app-layout>
