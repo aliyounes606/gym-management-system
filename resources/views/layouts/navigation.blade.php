@@ -127,3 +127,4 @@
         </div>
     </div>
 </nav>
+<button><a href="{{ route('bookings.index') }}">الجوزات</a></button>
