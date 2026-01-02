@@ -39,7 +39,7 @@
                         @foreach($sessions as $session)
                             <tr>
                                 <td class="px-6 py-4">{{ $session->title }}</td>
-                                <td class="px-6 py-4">{{ $session->trainer->name ?? '---' }}</td>
+                                <td class="px-6 py-4">{{ $session->trainer->user->name ?? '---' }}</td>
                                 <td class="px-6 py-4">{{ $session->course->name ?? '---' }}</td>
                                 <td class="px-6 py-4">{{ $session->single_price }}</td>
                                 <td class="px-6 py-4">{{ $session->max_capacity }}</td>
