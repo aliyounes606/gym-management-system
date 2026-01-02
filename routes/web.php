@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\EquipmentController;
 use App\Http\Controllers\CourseController;
 use App\Http\Controllers\GymSessionController;
@@ -29,6 +30,7 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
     Route::resource('admin/trainers', TrainerController::class)->names('admin.trainers');
     Route::resource('roles', RoleController::class);
     Route::resource('permissions', PermissionController::class);
+    Route::resource('admin/categories', CategoryController::class)->middleware(['auth', 'role:admin']);
 });
 
 // Route::middleware(['auth'])->group(function () {
