@@ -24,7 +24,7 @@ class StoreCourseRequest extends FormRequest
         return [
              'name'        => 'required|string|max:255',
             'description' => 'nullable|string',
-            'trainer_profile_id' => 'nullable|exists:trainers,id',
+            'trainer_profile_id' => 'nullable|exists:trainer_profiles,id',
             'total_price' => 'required|numeric|min:0',
         ];
     }

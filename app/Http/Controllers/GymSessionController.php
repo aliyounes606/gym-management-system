@@ -15,7 +15,7 @@ class GymSessionController extends Controller
     // عرض كل الجلسات
     public function index()
     {
-        $sessions = GymSession::with(['course','trainer'])->get();
+        $sessions = GymSession::with(['course','trainer.user'])->get();
         return view('sessions.index', compact('sessions'));
     }
 
@@ -36,18 +36,25 @@ class GymSessionController extends Controller
     // عرض جلسة واحدة
     public function show($id)
     {
-        $session = GymSession::with(['course','trainer'])->findOrFail($id);
+        $session = GymSession::with(['course','trainer.user'])->findOrFail($id);
         return view('sessions.show', compact('session'));
     }
 
     // صفحة تعديل جلسة
-    public function edit($id)
-    {
-        $session  = GymSession::findOrFail($id);
-        $trainers = User::all();
-        $courses  = Course::all();
-        return view('sessions.edit', compact('session','trainers','courses'));
-    }
+    // public function edit($id)
+    // {
+    //     $session  = GymSession::findOrFail($id);
+    //     $trainers = User::all();
+    //     $courses  = Course::all();
+    //     return view('sessions.edit', compact('session','trainers','courses'));
+    // }
+public function edit($id)
+{
+    $session  = GymSession::findOrFail($id);
+    $trainers = TrainerProfile::with('user')->get();
+    $courses  = Course::all();
+    return view('sessions.edit', compact('session','trainers','courses'));
+}
 
     // تحديث جلسة
     public function update(UpdateSessionRequest $request, $id)
