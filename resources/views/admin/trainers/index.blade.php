@@ -37,6 +37,7 @@
 
         <div class="bg-white rounded shadow p-4">
             <h3 class="text-lg mb-4">قائمة المدربين</h3>
+
             <table class="w-full text-center border">
                 <thead>
                     <tr class="bg-gray-200">

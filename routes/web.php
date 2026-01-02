@@ -53,7 +53,7 @@ Route::middleware(['auth'])->group(function () {
 
     // 2. عمليات الإدارة (فقط للمدير)
     // استخدمنا ميزة الصلاحيات can لضمان الأمان
-    Route::middleware(['can:manage meal plans'])->group(function () {
+  Route::middleware(['role:trainer|admin'])->group(function () {
         Route::post('/meal-plans', [MealPlanController::class, 'store'])->name('meal-plans.store');
         Route::get('/meal-plans/{mealPlan}/edit', [MealPlanController::class, 'edit'])->name('meal-plans.edit');
         Route::put('/meal-plans/{mealPlan}', [MealPlanController::class, 'update'])->name('meal-plans.update');
