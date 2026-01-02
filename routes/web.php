@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\EquipmentController;
 use App\Http\Controllers\CourseController;
 use App\Http\Controllers\GymSessionController;
@@ -29,6 +30,7 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
     Route::resource('admin/trainers', TrainerController::class)->names('admin.trainers');
     Route::resource('roles', RoleController::class);
     Route::resource('permissions', PermissionController::class);
+    Route::resource('admin/categories', CategoryController::class)->middleware(['auth', 'role:admin']);
 });
 
 // Route::middleware(['auth'])->group(function () {
@@ -63,7 +65,7 @@ Route::middleware(['auth'])->group(function () {
 });
 
 
-Route::middleware(['auth', 'role:admin'])->get('/admin/equipment', [EquipmentController::class, 'dashboard'])->name('admin.equipment.dashboard');
+
 
 //course routes for admin only
 Route::middleware(['auth', 'role:admin'])->group(function () {
@@ -80,3 +82,15 @@ Route::resource('equipment', EquipmentController::class);
 Route::resource('bookings', BookingsController::class)->middleware('auth');
 Route::post('/bookings/bookCorse', [BookingsController::class, 'bookCorse'])->name('bookings.bookCorse');
 Route::post('/bookings/bookSession', [BookingsController::class, 'bookSession'])->name('bookings.bookSession')->middleware('auth');
+
+Route::resource('bookings', BookingsController::class);
+
+
+//equipment routes for admin only
+Route::middleware(['auth', 'role:admin'])->group(function () {
+    Route::resource('equipment', EquipmentController::class);
+});
+//equipment routes for admin only
+Route::middleware(['auth', 'role:admin'])->group(function () {
+    Route::resource('gymsessions', GymSessionController::class);
+});

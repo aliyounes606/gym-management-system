@@ -19,9 +19,7 @@
             <x-dropdown-link :href="route('admin.trainers.index')" :active="request()->routeIs('admin.trainers.*')">
                 {{ __('إدارة المدربين') }}
             </x-dropdown-link>
-            <x-dropdown-link :href="route('meal-plans.index')" :active="request()->routeIs('meal-plans.*')">
-                {{ __('إدارة الوجبات') }}
-            </x-dropdown-link>
+
 
             <hr class="border-gray-100">
 
@@ -40,6 +38,12 @@
             </x-dropdown-link>
             <x-dropdown-link :href="route('bookings.index')" :active="request()->routeIs('sessions.*')">
                 {{ __('إدارة الحجوزات ') }}
+
+            <x-dropdown-link :href="route('equipment.index')" :active="request()->routeIs('equipment.*')">
+                {{ __('إدارة المعدات') }}
+            </x-dropdown-link>
+            <x-dropdown-link :href="route('categories.index')">
+                {{ __('أقسام التدريبات') }}
             </x-dropdown-link>
         </x-slot>
     </x-dropdown>
