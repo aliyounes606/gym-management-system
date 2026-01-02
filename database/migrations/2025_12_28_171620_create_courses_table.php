@@ -11,20 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-    //    Schema::create('courses', function (Blueprint $table) {
-    //         $table->id();
-    //         $table->string("name");//اسم الكورس
-    //         $table->text("description");// وصفه
-    //         //for trainer_id  
-    //         $table->foreignId("trainer_id")->constrained("users")->onDelete("restrict");//المدرب المسؤول
-    //         $table->decimal("total_price",8,2);//السعر النهائي
-    //         $table->timestamps();
-    //     });
-    Schema::create('courses', function (Blueprint $table) {
+        Schema::create('courses', function (Blueprint $table) {
     $table->id();
     $table->string("name"); // اسم الكورس
     $table->text("description"); // وصفه
-    $table->foreignId("trainer_id")->constrained("users")->onDelete("restrict"); // المدرب المسؤول
+    $table->foreignId("trainer_profile_id")->nullable()->constrained("trainer_profiles")->onDelete("restrict"); // المدرب المسؤول
     $table->decimal("total_price", 8, 2); // السعر النهائي
     $table->timestamps();
 });

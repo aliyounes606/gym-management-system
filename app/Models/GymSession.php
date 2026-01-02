@@ -3,16 +3,16 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model; 
-use App\Models\User; 
+use App\Models\TrainerProfile ; 
 Use  App\Models\Course;
 use App\Models\Equipment;
 class GymSession extends Model
 //تحديد الجدول
-{    protected $table = "gym_sessions";
+{    protected $table = "gymsessions";
    //استقبال المتغيرات
     protected $fillable = [
         "title",
-        "trainer_id",
+        "trainer_profile_id",
         "course_id",
         "single_price",
         "max_capacity",
@@ -20,7 +20,7 @@ class GymSession extends Model
         "end_time",
     ];
 //علاقة الكورس مع الجلسات 
-public function Course(){
+public function course(){
     return $this->belongsTo(Course::class,'course_id');
 }
 //علاقة المعدات k
@@ -31,7 +31,7 @@ public function Course(){
     }
     //علاقة المدرب مع الجلسات 
 public function trainer(){
-  return $this->belongsTo(user::class,'trainer_id');   
+  return $this->belongsTo(TrainerProfile ::class,'trainer_profile_id');   
 }
 
 public function bookings()

@@ -27,6 +27,15 @@
                     {{-- link for member --}}
                     @include('layouts.partials._member_links')
 
+                    {{-- link for courses --}}
+                    @include('layouts.partials._course_links')
+
+                    {{-- link for session --}}
+                    @include('layouts.partials._session_links')
+
+                    
+                    
+                    
                 </div>
             </div>
 
