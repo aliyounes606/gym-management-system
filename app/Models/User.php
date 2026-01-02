@@ -58,10 +58,17 @@ class User extends Authenticatable
         return $this->hasOne(TrainerProfile::class);
     }
     //علاقة المستخدم بالحجوزات
-    public function bookings()
-    {
-        return $this->belongsToMany(Booking::class,'booking_users');
-    }
+    public function gymSessions()
+{
+    return $this->belongsToMany(
+        GymSession::class,
+        'bookings',
+        'user_id',
+        'gym_session_id'
+    )->withPivot('booking_type')
+     ->withTimestamps();
+}
+
 }
 
 
