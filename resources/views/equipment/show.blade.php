@@ -15,7 +15,7 @@
             </div>
 
             <div class="flex gap-4 mt-6">
-                <a href="{{ route('equipment.edit', $quipmente->id) }}"
+                <a href="{{ route('equipment.edit', $equipment->id) }}"
                    class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">
                     تعديل
                 </a>

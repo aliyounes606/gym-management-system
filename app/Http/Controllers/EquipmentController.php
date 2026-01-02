@@ -57,7 +57,7 @@ class EquipmentController extends Controller
         $equipment = Equipment::findOrFail($id);
         $equipment->update($validated);
 
-        return redirect()->route('Equipment.index')
+        return redirect()->route('equipment.index')
                          ->with('success','تم تحديث المعدة بنجاح');
     }
 
@@ -65,7 +65,7 @@ class EquipmentController extends Controller
     public function destroy($id)
     {
         Equipment::destroy($id);
-        return redirect()->route('Equipment.index')
+        return redirect()->route('equipment.index')
                          ->with('success','تم حذف المعدة');
     }
 }
