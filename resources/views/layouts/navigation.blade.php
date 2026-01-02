@@ -32,14 +32,14 @@
                     @include('layouts.partials._course_links')
 
                     {{-- link for session --}}
-                    @include('layouts.partials.session_links')
-                   
-                     {{-- link for equipment --}}
+                    @include('layouts.partials._session_links')
+
+                    {{-- link for equipment --}}
                     @include('layouts.partials._equipment_links')
 
-                    
-                    
-                    
+
+
+
                 </div>
             </div>
 
