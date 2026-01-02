@@ -2,14 +2,15 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model; 
-use App\Models\User; 
-Use  App\Models\Course;
+use Illuminate\Database\Eloquent\Model;
+use App\Models\User;
+use App\Models\Course;
 use App\Models\Equipment;
 class GymSession extends Model
-//تحديد الجدول
-{    protected $table = "gym_sessions";
-   //استقبال المتغيرات
+    //تحديد الجدول
+{
+    protected $table = "gym_sessions";
+    //استقبال المتغيرات
     protected $fillable = [
         "title",
         "trainer_id",
@@ -19,19 +20,21 @@ class GymSession extends Model
         "start_time",
         "end_time",
     ];
-//علاقة الكورس مع الجلسات 
-public function Course(){
-    return $this->belongsTo(Course::class,'course_id');
-}
-//علاقة المعدات k
- public function equipment()
+    //علاقة الكورس مع الجلسات 
+    public function Course()
     {
-        return 
-          $this->belongsToMany(Equipment::class, 'session_equipment');
+        return $this->belongsTo(Course::class, 'course_id');
+    }
+    //علاقة المعدات k
+    public function equipment()
+    {
+        return
+            $this->belongsToMany(Equipment::class, 'session_equipment');
     }
     //علاقة المدرب مع الجلسات 
-public function trainer(){
-  return $this->belongsTo(user::class,'trainer_id');   
-}
+    public function trainer()
+    {
+        return $this->belongsTo(user::class, 'trainer_id');
+    }
 
 }
