@@ -14,8 +14,8 @@ return new class extends Migration
         Schema::create('gymsessions', function (Blueprint $table) {
     $table->id();
     $table->string("title");
-    $table->foreignId("trainer_id")->constrained("users")->onDelete("restrict");
-    $table->foreignId("course_id")->constrained("courses")->onDelete("restrict");
+    $table->foreignId("trainer_profile_id")->nullable()->constrained("trainer_profiles")->onDelete("restrict");
+    $table->foreignId("course_id")->nullable()->constrained("courses")->onDelete("restrict");
     $table->decimal("single_price", 8, 2);
     $table->integer("max_capacity");
     $table->dateTime("start_time");

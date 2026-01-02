@@ -11,7 +11,7 @@ class Course extends Model
     protected $fillable =[
         "name",
         "description",
-        "trainer_id",
+        "trainer_profile_id",
         "total_price"
     ];
     
@@ -20,8 +20,8 @@ public function sessions()
 {
     return $this->hasMany(GymSession::class, 'course_id');
 }
-public function trainerSessions()
+public function trainerProfile()
 {
-    return $this->hasMany(GymSession::class, 'trainer_id');
+    return $this->belongsTo(TrainerProfile::class, 'trainer_profile_id');
 }
 }

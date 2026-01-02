@@ -15,14 +15,16 @@ class CourseController extends Controller
     public function index()
     {
         $courses = Course::all();
-        return view('admin.course.index', compact('courses'));
+        return view('courses.index', compact('courses'));
     }
 
     // عرض فورم إنشاء كورس جديد
     public function create()
-    {
-        return view('admin.course.create');
-    }
+{//للتجريب تضمين اسم المدرب
+    $trainerProfiles = \App\Models\TrainerProfile::with('user')->get();
+    return view('courses.create', compact('trainerProfiles'));
+}
+
 
     // حفظ الكورس الجديد
     public function store(StoreCourseRequest $request)
@@ -30,7 +32,7 @@ class CourseController extends Controller
         $validated = $request->validated();
         $course = Course::create($validated);
 
-        return redirect()->route('admin.course.show', $course->id)
+        return redirect()->route('courses.show', $course->id)
                          ->with('success','تم إنشاء الكورس بنجاح');
     }
 
@@ -38,14 +40,14 @@ class CourseController extends Controller
     public function show($id)
     {
         $course = Course::findOrFail($id);
-        return view('admin.course.show', compact('course'));
+        return view('courses.show', compact('course'));
     }
 
     // عرض فورم تعديل كورس
     public function edit($id)
     {
         $course = Course::findOrFail($id);
-        return view('admin.course.edit', compact('course'));
+        return view('courses.edit', compact('course'));
     }
 
     // تحديث الكورس
@@ -56,7 +58,7 @@ class CourseController extends Controller
         $course = Course::findOrFail($id);
         $course->update($validated);
 
-        return redirect()->route('admin.course.index')
+        return redirect()->route('courses.index')
                          ->with('success','تم تحديث الكورس بنجاح');
     }
 
@@ -64,7 +66,7 @@ class CourseController extends Controller
     public function destroy($id)
     {
         Course::destroy($id);
-        return redirect()->route('admin.course.index')
+        return redirect()->route('courses.index')
                          ->with('success','تم حذف الكورس');
     }
 }

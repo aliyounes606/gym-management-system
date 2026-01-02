@@ -32,6 +32,12 @@
             <x-dropdown-link :href="route('permissions.index')" :active="request()->routeIs('permissions.*')">
                 {{ __('إدارة الصلاحيات') }}
             </x-dropdown-link>
+            <x-dropdown-link :href="route('courses.index')" :active="request()->routeIs('courses.*')">
+                {{ __('إدارة الكورسات') }}
+            </x-dropdown-link>
+            <x-dropdown-link :href="route('gymsessions.index')" :active="request()->routeIs('sessions.*')">
+                {{ __('إدارة الجلسات') }}
+            </x-dropdown-link>
         </x-slot>
     </x-dropdown>
 </div>

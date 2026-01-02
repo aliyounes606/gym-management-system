@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\EquipmentController;
 use App\Http\Controllers\CourseController;
+use App\Http\Controllers\GymSessionController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\MealPlanController;
 use App\Http\Controllers\BookingsController;
@@ -66,7 +67,11 @@ Route::middleware(['auth', 'role:admin'])->get('/admin/equipment', [EquipmentCon
 
 //course routes for admin only
 Route::middleware(['auth', 'role:admin'])->group(function () {
-    Route::resource('admin/course', CourseController::class)->names('admin.course');
+    Route::resource('courses', CourseController::class);
+});
+//course routes for admin only
+Route::middleware(['auth', 'role:admin'])->group(function () {
+    Route::resource('gymsessions', GymSessionController::class);
 });
 require __DIR__ . '/auth.php';
 
