@@ -20,6 +20,7 @@
                     @include('layouts.partials._admin_links')
 
 
+
                     {{-- link for trainer --}}
                     @include('layouts.partials._trainer_links')
 
