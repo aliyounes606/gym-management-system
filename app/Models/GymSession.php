@@ -8,7 +8,8 @@ Use  App\Models\Course;
 use App\Models\Equipment;
 class GymSession extends Model
 //تحديد الجدول
-{    protected $table = "gym_sessions";
+{   
+     protected $table = "gymsessions";
    //استقبال المتغيرات
     protected $fillable = [
         "title",
@@ -32,6 +33,17 @@ public function Course(){
     //علاقة المدرب مع الجلسات 
 public function trainer(){
   return $this->belongsTo(user::class,'trainer_id');   
+}
+
+public function users()
+{
+    return $this->belongsToMany(
+        User::class,
+        'bookings',
+        'gym_session_id',
+        'user_id'
+    )->withPivot('booking_type')
+     ->withTimestamps();
 }
 
 }

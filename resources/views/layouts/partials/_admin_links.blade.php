@@ -38,6 +38,9 @@
             <x-dropdown-link :href="route('gymsessions.index')" :active="request()->routeIs('sessions.*')">
                 {{ __('إدارة الجلسات') }}
             </x-dropdown-link>
+            <x-dropdown-link :href="route('bookings.index')" :active="request()->routeIs('sessions.*')">
+                {{ __('إدارة الحجوزات ') }}
+            </x-dropdown-link>
         </x-slot>
     </x-dropdown>
 </div>

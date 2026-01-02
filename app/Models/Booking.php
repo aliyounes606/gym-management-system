@@ -18,6 +18,6 @@ class Booking extends Model
     }
     public function gymSessions()
     {
-        return $this->belongsToMany(GymSession::class, 'bookings_gymsessions');
+        return $this->belongsTo(GymSession::class, 'bookings_gymsessions');
     }
 }

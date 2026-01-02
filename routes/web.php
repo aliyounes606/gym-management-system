@@ -77,4 +77,6 @@ require __DIR__ . '/auth.php';
 
 Route::resource('equipment', EquipmentController::class);
 //Route::get('/dashboard',[EquipmentController::class,'dashboard'])->name('dashboard');
-Route::resource('bookings', BookingsController::class);
+Route::resource('bookings', BookingsController::class)->middleware('auth');
+Route::post('/bookings/bookCorse', [BookingsController::class, 'bookCorse'])->name('bookings.bookCorse');
+Route::post('/bookings/bookSession', [BookingsController::class, 'bookSession'])->name('bookings.bookSession')->middleware('auth');
