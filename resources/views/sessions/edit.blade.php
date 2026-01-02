@@ -21,7 +21,7 @@
                     <select name="trainer_id" class="w-full border-gray-300 rounded" required>
                         @foreach($trainers as $trainer)
                             <option value="{{ $trainer->id }}" {{ $session->trainer_id == $trainer->id ? 'selected' : '' }}>
-                                {{ $trainer->name }}
+                                {{ $trainer->user->name  }}
                             </option>
                         @endforeach
                     </select>
