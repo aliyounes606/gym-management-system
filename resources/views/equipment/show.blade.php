@@ -14,6 +14,19 @@
                 <p class="text-gray-700">{{ $equipment->status }}</p>
             </div>
 
+               <div class="mb-4">
+                <strong>التصنيفات:</strong>
+                <div class="mt-1">
+                    @forelse($equipment->categories as $category)
+                        <span class="inline-block bg-gray-200 px-2 py-1 rounded text-sm">
+                            {{ $category->name }}
+                        </span>
+                    @empty
+                        <span class="text-gray-500">لا يوجد تصنيفات</span>
+                    @endforelse
+                </div>
+            </div>
+
             <div class="flex gap-4 mt-6">
                 <a href="{{ route('equipment.edit', $equipment->id) }}"
                    class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">

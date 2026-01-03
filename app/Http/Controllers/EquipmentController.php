@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Equipment;
+use App\Models\Category;
 //use App\Http\Requests\Admin\StoreCourseRequest;
 use App\Http\Requests\StoreEquipmentRequest;
 use App\Http\Requests\UpdateEquipmentRequest;
@@ -20,8 +21,9 @@ class EquipmentController extends Controller
 
     // عرض فورم إنشاء معدة جديدة
     public function create()
-{
-    return view('equipment.create');
+{    
+    $categories=Category::all();
+    return view('equipment.create',compact('categories'));
 }
 
 
@@ -30,6 +32,8 @@ class EquipmentController extends Controller
     {
         $validated = $request->validated();
         $equipment = Equipment::create($validated);
+
+        $equipment->categories()->attach($request->categories);
 
         return redirect()->route('equipment.show', $equipment->id)
                          ->with('success','تم حفظ المعدة بنجاح');
@@ -46,7 +50,9 @@ class EquipmentController extends Controller
     public function edit($id)
     {
         $equipment = Equipment::findOrFail($id);
-        return view('equipment.edit', compact('equipment'));
+
+        $categories=Category::all();
+        return view('equipment.edit', compact('equipment','categories'));
     }
 
     // تحديث المعدة
@@ -56,6 +62,8 @@ class EquipmentController extends Controller
 
         $equipment = Equipment::findOrFail($id);
         $equipment->update($validated);
+
+        $equipment->categories()->sync($request->categories);
 
         return redirect()->route('equipment.index')
                          ->with('success','تم تحديث المعدة بنجاح');
