@@ -8,33 +8,51 @@ use Illuminate\Http\Request;
 class CategoryController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * Summary of index
+     * @return \Illuminate\Contracts\View\View
      */
     public function index()
     {
         $categories = Category::all();
         return view('admin.categories.index', compact('categories'));
     }
-
+    /**
+     * Summary of store
+     * @param \Illuminate\Http\Request $request
+     * @return \Illuminate\Http\RedirectResponse
+     */
     public function store(Request $request)
     {
         $request->validate(['name' => 'required|unique:categories|max:255']);
         Category::create($request->all());
         return back()->with('success', 'تم إضافة القسم بنجاح');
     }
-
+    /**
+     * Summary of edit
+     * @param \App\Models\Category $category
+     * @return \Illuminate\Contracts\View\View
+     */
     public function edit(Category $category)
     {
         return view('admin.categories.edit', compact('category'));
     }
-
+    /**
+     * Summary of update
+     * @param \Illuminate\Http\Request $request
+     * @param \App\Models\Category $category
+     * @return \Illuminate\Http\RedirectResponse
+     */
     public function update(Request $request, Category $category)
     {
         $request->validate(['name' => 'required|unique:categories,name,' . $category->id]);
         $category->update($request->all());
         return redirect()->route('categories.index')->with('success', 'تم التحديث بنجاح');
     }
-
+    /**
+     * Summary of destroy
+     * @param \App\Models\Category $category
+     * @return \Illuminate\Http\RedirectResponse
+     */
     public function destroy(Category $category)
     {
         $category->delete();
