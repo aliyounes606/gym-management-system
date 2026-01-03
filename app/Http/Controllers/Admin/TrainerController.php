@@ -21,7 +21,11 @@ class TrainerController extends Controller
         $availableUsers = User::role('member')->get(); // جلب الأعضاء فقط للترقية
         return view('admin.trainers.index', compact('trainers', 'availableUsers'));
     }
-
+    /**
+     * Summary of store
+     * @param \App\Http\Requests\Admin\StoreTrainerRequest $request
+     * @return \Illuminate\Http\RedirectResponse
+     */
     public function store(StoreTrainerRequest $request)
     {
         $validated = $request->validated();
@@ -34,13 +38,22 @@ class TrainerController extends Controller
 
         return redirect()->route('admin.trainers.index')->with('success', 'تمت إضافة المدرب بنجاح');
     }
-
+    /**
+     * Summary of edit
+     * @param mixed $id
+     * @return \Illuminate\Contracts\View\View
+     */
     public function edit($id)
     {
         $trainer = TrainerProfile::findOrFail($id);
         return view('admin.trainers.edit', compact('trainer'));
     }
-
+    /**
+     * Summary of update
+     * @param \App\Http\Requests\Admin\UpdateTrainerRequest $request
+     * @param mixed $id
+     * @return \Illuminate\Http\RedirectResponse
+     */
     public function update(UpdateTrainerRequest $request, $id)
     {
         $trainer = TrainerProfile::findOrFail($id);
@@ -49,8 +62,11 @@ class TrainerController extends Controller
 
         return redirect()->route('admin.trainers.index')->with('success', 'تم تحديث بيانات المدرب');
     }
-
-    // حذف المدرب (إعادته ليوزر عادي)
+    /**
+     * Summary of destroy
+     * @param mixed $id
+     * @return \Illuminate\Http\RedirectResponse
+     */
     public function destroy($id)
     {
         $trainer = TrainerProfile::findOrFail($id);

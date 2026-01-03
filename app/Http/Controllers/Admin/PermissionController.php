@@ -8,13 +8,22 @@ use Spatie\Permission\Models\Permission;
 
 class PermissionController extends Controller
 {
+    /**
+     * Summary of index
+     * @return \Illuminate\Contracts\View\View
+     */
     public function index()
     {
         $permissions = Permission::all();
         return view('admin.permissions.index', compact('permissions'));
     }
 
-    // تخزين صلاحية جديدة
+
+    /**
+     * Summary of store
+     * @param \Illuminate\Http\Request $request
+     * @return \Illuminate\Http\RedirectResponse
+     */
     public function store(Request $request)
     {
         $request->validate([
@@ -26,13 +35,21 @@ class PermissionController extends Controller
         return redirect()->route('permissions.index')->with('success', 'تم إضافة الصلاحية بنجاح');
     }
 
-    // واجهة التعديل
+    /**
+     * Summary of edit
+     * @param \Spatie\Permission\Models\Permission $permission
+     * @return \Illuminate\Contracts\View\View
+     */
     public function edit(Permission $permission)
     {
         return view('admin.permissions.edit', compact('permission'));
     }
-
-    // تحديث الصلاحية
+    /**
+     * Summary of update
+     * @param \Illuminate\Http\Request $request
+     * @param \Spatie\Permission\Models\Permission $permission
+     * @return \Illuminate\Http\RedirectResponse
+     */
     public function update(Request $request, Permission $permission)
     {
         $request->validate([
@@ -43,8 +60,11 @@ class PermissionController extends Controller
 
         return redirect()->route('permissions.index')->with('success', 'تم تحديث الصلاحية بنجاح');
     }
-
-    // حذف الصلاحية
+    /**
+     * Summary of destroy
+     * @param \Spatie\Permission\Models\Permission $permission
+     * @return \Illuminate\Http\RedirectResponse
+     */
     public function destroy(Permission $permission)
     {
         $permission->delete();

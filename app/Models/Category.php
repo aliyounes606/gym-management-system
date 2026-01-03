@@ -3,14 +3,17 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Category extends Model
 {
     protected $fillable = ['name'];
-    
-    
-      /**
-     * علاقة القسم مع الجلسات التدريبية
+
+
+    /**
+     * Summary of sessions
+     * @return HasMany<GymSession, Category>
      */
     public function sessions(): HasMany
     {
@@ -18,14 +21,15 @@ class Category extends Model
     }
 
     /**
-     * علاقة القسم مع المعدات
+     * Summary of equipment
+     * @return BelongsToMany<Equipment, Category, \Illuminate\Database\Eloquent\Relations\Pivot>
      */
     public function equipment(): BelongsToMany
     {
         return $this->belongsToMany(
-            Equipment::class, 
-            'category_equipment', 
-            'category_id', 
+            Equipment::class,
+            'category_equipment',
+            'category_id',
             'equipment_id'
         );
     }
