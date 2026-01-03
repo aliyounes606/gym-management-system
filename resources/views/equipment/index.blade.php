@@ -36,6 +36,7 @@
                                 <td class="px-6 py-4">{{ $loop->iteration }}</td>
                                 <td class="px-6 py-4">{{ $equipment->name }}</td>
                                 <td class="px-6 py-4">{{ $equipment->status }}</td>
+                                <td class="px-6 py-4">{{ $equipment->quantity }}</td>
                                <td class="px-6 py-4">
                                 <td class="px-6 py-4 flex gap-2 justify-end">
                                     <a href="{{ route('equipment.edit', $equipment->id) }}"

@@ -18,7 +18,7 @@ class Equipment extends Model
  
 public function categories()
 {
-    return $this->belongsToManyMany(Category::class, 'category_equipment','equipment_id','category_id');
+    return $this->belongsToMany(Category::class, 'category_equipment','equipment_id','category_id');
 }
 
 }
