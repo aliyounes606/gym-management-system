@@ -25,6 +25,20 @@
                     <label class="block text-gray-700">العنوان</label>
                     <input type="text" name="title" class="w-full border-gray-300 rounded" value="{{ old('title') }}" required>
                 </div>
+        <div class="mb-4">
+    <label for="category_id">اختر الفئة</label>
+    <select name="category_id" id="category_id" class="w-full border-gray-300 rounded">
+        <option value="">اختر الفئة</option>
+        @foreach($categories as $category)
+            <option value="{{ $category->id }}" {{ old('category_id') == $category->id ? 'selected' : '' }}>
+                {{ $category->name }}
+            </option>
+        @endforeach
+    </select>
+</div>
+
+   
+
 
                 <div class="mb-4">
                     <label class="block text-gray-700">اختر الكورس</label>

@@ -30,6 +30,7 @@ class UpdateSessionRequest extends FormRequest
             'max_capacity' => 'sometimes|integer',
             'start_time' => 'sometimes|date',
             'end_time' => 'sometimes|date|after:start_time',
+            'category_id' => 'nullable|exists:categories,id'
         ];
     }
 }
