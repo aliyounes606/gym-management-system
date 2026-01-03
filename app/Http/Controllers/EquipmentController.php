@@ -35,7 +35,7 @@ class EquipmentController extends Controller
 
         $equipment->categories()->attach($request->categories);
 
-        return redirect()->route('equipment.show', $equipment->id)
+        return redirect()->route('equipment.index', $equipment->id)
                          ->with('success','تم حفظ المعدة بنجاح');
     }
 
