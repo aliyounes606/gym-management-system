@@ -29,6 +29,7 @@ class StoreSessionRequest extends FormRequest
             'max_capacity' => 'required|integer',
             'start_time' => 'required|date',
             'end_time' => 'required|date|after:start_time',
+            'category_id' => 'nullable|exists:categories,id'
         ];
     }
 }
