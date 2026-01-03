@@ -20,6 +20,7 @@
                     @include('layouts.partials._admin_links')
 
 
+
                     {{-- link for trainer --}}
                     @include('layouts.partials._trainer_links')
 
@@ -33,9 +34,12 @@
                     {{-- link for session --}}
                     @include('layouts.partials._session_links')
 
-                    
-                    
-                    
+                    {{-- link for equipment --}}
+                    @include('layouts.partials._equipment_links')
+
+
+
+
                 </div>
             </div>
 
@@ -127,4 +131,3 @@
         </div>
     </div>
 </nav>
-<button><a href="{{ route('bookings.index') }}">الجوزات</a></button>

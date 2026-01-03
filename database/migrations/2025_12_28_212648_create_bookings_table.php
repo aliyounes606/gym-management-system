@@ -13,8 +13,8 @@ return new class extends Migration
     {
         Schema::create('bookings', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')->constrained('users')->onDelete('cascade')->nullable();
-            $table->foreignId('session_id')->constrained('gymsessions')->onDelete('cascade')->nullable();
+            // $table->foreignId('user_id')->constrained('users')->onDelete('cascade')->defulte(1);
+            // $table->foreignId('session_id')->constrained('gymsessions')->onDelete('cascade')->nullable();
             $table->enum('booking_type', ['single', 'group']);
             $table->enum('payment_status', ['paid', 'unpaid'])->default('unpaid')->nullable();
             $table->decimal('amount_paid');

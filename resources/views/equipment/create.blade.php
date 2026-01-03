@@ -1,26 +1,44 @@
-// إضافة معدة جديدة
+<x-app-layout>
+    <x-slot name="header">
+        <h2 class="font-semibold text-xl text-gray-800 leading-tight text-right">
+            إضافة معدة جديدة
+        </h2>
+    </x-slot>
 
-@extends('layouts.app')
+    <div class="py-12">
+        <div class="max-w-md mx-auto sm:px-6 lg:px-8 bg-white p-6 rounded shadow">
+            <form action="{{ route('equipment.store') }}" method="POST">
+                @csrf
 
-@section('content')
-    <div class="container">
-        <h1> Add New Equipment </h1>
+                <div class="mb-4">
+                    <label class="block text-gray-700">اسم المعدة</label>
+                    <input type="text" name="name" class="w-full border-gray-300 rounded" value="{{ old('name') }}" required>
+                </div>
 
-        <form action="{{ route('equipment.store') }}" method="POST">
-            @csrf
-            <div class="form-group">
-                <label for="name"> Name </label>
-                <input type="text" name="name" id="name" class="form-control" required>
-            </div>
-            <div class="form-group">
-                <label for="status"> Status </label>
-                <input type="text" name="status" id="status" class="form-control" required>
-            </div>
-            <div class="form-group">
-                <label for="quantity"> Quantity </label>
-                <input type="number" name="quantity" id="quantity" class="form-control" required>
-            </div>
-            <button type="submit" class="btn btn-success mt-3"> Save </button>
-        </form>
+                <div class="mb-4">
+                    <label class="block text-gray-700">الحالة</label>
+                    <textarea name="status" class="w-full border-gray-300 rounded">{{ old('status') }}</textarea>
+                </div>
+
+                 <div class="mb-4">
+                    <label class="block text-gray-700">الكمية</label>
+                    <textarea name="quantity" class="w-full border-gray-300 rounded">{{ old('quantity') }}</textarea>
+                </div>
+
+                <div class="mb-4">
+                    <label class="block text-gray-700">التصنيفات</label>
+                    <select name="categories[]" multiple class="w-full border-gray-300 rounded">
+                         @foreach($categories as $category)
+                            <option value="{{ $category->id }}">
+                                {{ $category->name }}
+                            </option>
+                        @endforeach
+                    </select>
+                </div>
+                <button type="submit" class="bg-green-600 text-white px-6 py-2 rounded hover:bg-green-700">
+                    حفظ
+                </button>
+            </form>
+        </div>
     </div>
-@endsection
+</x-app-layout>

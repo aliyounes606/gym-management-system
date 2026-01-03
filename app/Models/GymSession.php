@@ -2,13 +2,14 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model; 
+use Illuminate\Database\Eloquent\Model;
+use App\Models\User;
 use App\Models\TrainerProfile ; 
-Use  App\Models\Course;
+use App\Models\Course;
 use App\Models\Equipment;
 class GymSession extends Model
-//تحديد الجدول
-{    protected $table = "gymsessions";
+{   
+     protected $table = "gymsessions";
    //استقبال المتغيرات
     protected $fillable = [
         "title",
@@ -27,13 +28,23 @@ public function course(){
 //علاقة المعدات k
  public function equipment()
     {
-        return 
-          $this->belongsToMany(Equipment::class, 'session_equipment');
+        return
+            $this->belongsToMany(Equipment::class, 'session_equipment');
     }
     //علاقة المدرب مع الجلسات 
 public function trainer(){
-  return $this->belongsTo(TrainerProfile ::class,'trainer_profile_id');   
+  return $this->belongsTo(TrainerProfile::class,'trainer_profile_id');   
 }
+  public function users()
+{
+    return $this->belongsToMany(
+        User::class,
+        'bookings',
+        'gym_session_id',
+        'user_id'
+    )->withPivot('booking_type')
+     ->withTimestamps();
+  }
 
 public function bookings()
     {
