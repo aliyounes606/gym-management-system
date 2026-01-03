@@ -28,6 +28,7 @@
                             <th class="px-6 py-3 text-xs font-medium text-gray-500 uppercase">العنوان</th>
                             <th class="px-6 py-3 text-xs font-medium text-gray-500 uppercase">المدرب</th>
                             <th class="px-6 py-3 text-xs font-medium text-gray-500 uppercase">الكورس</th>
+                            <th class="px-6 py-3 text-xs font-medium text-gray-500 uppercase">الفئة</th>
                             <th class="px-6 py-3 text-xs font-medium text-gray-500 uppercase">السعر</th>
                             <th class="px-6 py-3 text-xs font-medium text-gray-500 uppercase">السعة</th>
                             <th class="px-6 py-3 text-xs font-medium text-gray-500 uppercase">من</th>
@@ -39,8 +40,10 @@
                         @foreach($sessions as $session)
                             <tr>
                                 <td class="px-6 py-4">{{ $session->title }}</td>
-                                <td class="px-6 py-4">{{ $session->trainer->user->name ?? '---' }}</td>
-                                <td class="px-6 py-4">{{ $session->course->name ?? '---' }}</td>
+                               <td class="px-6 py-4">{{ $session->trainer?->user?->name ?? '---' }}</td>
+                               <td class="px-6 py-4">{{ $session->course?->name ?? '---' }}</td>
+                               <td class="px-6 py-4">{{ $session->category?->name ?? '---' }}</td>
+
                                 <td class="px-6 py-4">{{ $session->single_price }}</td>
                                 <td class="px-6 py-4">{{ $session->max_capacity }}</td>
                                 <td class="px-6 py-4">{{ $session->start_time }}</td>

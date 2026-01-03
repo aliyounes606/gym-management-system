@@ -10,14 +10,19 @@
             <h3 class="text-lg font-bold mb-4">{{ $session->title }}</h3>
 
             <div class="mb-4">
-                <strong>المدرب:</strong>
-                <p class="text-gray-700">{{ $session->trainer->name ?? '---' }}</p>
-            </div>
+    <strong>المدرب:</strong>
+    <p class="text-gray-700">{{ $session->trainer?->user?->name ?? '---' }}</p>
+</div>
 
-            <div class="mb-4">
-                <strong>الكورس:</strong>
-                <p class="text-gray-700">{{ $session->course->name ?? '---' }}</p>
-            </div>
+<div class="mb-4">
+    <strong>الكورس:</strong>
+    <p class="text-gray-700">{{ $session->course?->name ?? '---' }}</p>
+</div>
+
+<div class="mb-4">
+    <strong>الفئة :</strong>
+    <p class="text-gray-700">{{ $session->category?->name ?? '---' }}</p>
+</div>
 
             <div class="mb-4">
                 <strong>السعر:</strong>

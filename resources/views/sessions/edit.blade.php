@@ -18,7 +18,7 @@
 
                 <div class="mb-4">
                     <label class="block text-gray-700">المدرب</label>
-                    <select name="trainer_id" class="w-full border-gray-300 rounded" required>
+                    <select name="trainer_id" class="w-full border-gray-300 rounded" >
                         @foreach($trainers as $trainer)
                             <option value="{{ $trainer->id }}" {{ $session->trainer_id == $trainer->id ? 'selected' : '' }}>
                                 {{ $trainer->user->name  }}
@@ -27,6 +27,15 @@
                     </select>
                 </div>
 
+                <div class="mb-4">
+                <label for="category_id">اختر الفئة</label>
+    <select name="category_id" id="category_id" class="w-full border-gray-300 rounded">
+        <option value=""> اختر الفئة </option>
+        @foreach($categories as $category)
+            <option value="{{ $category->id }}">{{ $category->name }}</option>
+        @endforeach
+    </select>
+     </div>
                 <div class="mb-4">
                     <label class="block text-gray-700">الكورس</label>
                     <select name="course_id" class="w-full border-gray-300 rounded" >
