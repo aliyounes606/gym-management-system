@@ -1,3 +1,15 @@
+@if(session('success'))
+    <div style="
+        background: #d4edda;
+        color: #155724;
+        padding: 10px;
+        margin-bottom: 15px;
+        border-radius: 5px;
+    ">
+        {{ session('success') }}
+    </div>
+@endif
+
 <x-app-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 leading-tight text-right">
@@ -46,6 +58,8 @@
                                 <!-- زر تأكيد الحجز -->
                               <form action="{{ route('bookings.bookSession', $session->id) }}" method="POST">
                                     @csrf
+                                    <input type="hidden" name="session_id" value="{{ $session->id }}">
+                                    <input type="hidden" name="single_price" value="{{ $session->single_price }}">
                                     <button
                                         type="submit"
                                         class="bg-green-600 text-white px-3 py-1 rounded hover:bg-green-700"
