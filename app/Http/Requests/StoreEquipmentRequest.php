@@ -25,6 +25,14 @@ class StoreEquipmentRequest extends FormRequest
              'name'  => 'required|string|max:255',
             'status' => 'nullable|string',
             'quantity'=>'nullable|integer',
+            'image'=>'nullable|image|mimes:jpg,jpeg,png,gif',
         ];
+    }
+         public function storeImage($equipment)
+    {
+        if ($this->hasFile('image')){
+            $path=$this->file('image')->store('public/equipment_images');
+            $equipment->image()->create(['path'=>$path,]);
+        }
     }
 }
