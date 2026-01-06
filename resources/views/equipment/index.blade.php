@@ -28,6 +28,7 @@
                             <th class="px-6 py-3 text-xs font-medium text-gray-500 uppercase">اسم المعدة</th>
                             <th class="px-6 py-3 text-xs font-medium text-gray-500 uppercase">الحالة</th>
                             <th class="px-6 py-3 text-xs font-medium text-gray-500 uppercase">الكمية</th>
+                            <th class="px-6 py-3 text-xs font-medium text-gray-500 uppercase">الصورة</th>
                         </tr>
                     </thead>
                     <tbody class="bg-white divide-y divide-gray-200">
@@ -38,6 +39,14 @@
                                 <td class="px-6 py-4">{{ $equipment->status }}</td>
                                 <td class="px-6 py-4">{{ $equipment->quantity }}</td>
                                <td class="px-6 py-4">
+
+                                 <!--  عرض صورة المعدة إذا كانت موجودة -->
+                                 @if($equipment->image)
+                                  <img src="{{ Storage::url($equipment->image->path) }}" alt="صورة المعدة " style="width:150px; height:auto;">
+                                 @else 
+                                  <p> لا توجد صورة </p>
+                                 @endif  
+
                                 <td class="px-6 py-4 flex gap-2 justify-end">
                                     <a href="{{ route('equipment.edit', $equipment->id) }}"
                                        class="text-indigo-600 hover:text-indigo-900">تعديل</a>

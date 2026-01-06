@@ -30,8 +30,11 @@ class EquipmentController extends Controller
     // حفظ المعدة الجديدة
     public function store(StoreEquipmentRequest $request)
     {
-        $validated = $request->validated();
-        $equipment = Equipment::create($validated);
+        //$validated = $request->validated();
+        $equipment = Equipment::create($request->validated());
+        if($request->hasFile('image')){
+            $imagePath=$request->file('image')->store('public/equipment_images');
+        $equipment->image()->create(['path'=>'equipment_images/' . basename($imagePath),'filename'=>basename($imagePath),]);}
 
         $equipment->categories()->attach($request->categories);
 
@@ -58,10 +61,15 @@ class EquipmentController extends Controller
     // تحديث المعدة
     public function update(UpdateEquipmentRequest $request, $id)
     {
-        $validated = $request->validated();
+        //$validated = $request->validated();
 
         $equipment = Equipment::findOrFail($id);
-        $equipment->update($validated);
+        $equipment->update($request->validated());
+        //في حال تم إرسال صورة جديدة نقوم بنعديل الصورة
+         if ($request->hasFile('image')){
+            $equipment->image()->delete();        //حذف الصورة القديمة
+            $request->storeImage($equipment);     //تخزين الصورة ال
+        }
 
         $equipment->categories()->sync($request->categories);
 

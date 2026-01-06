@@ -21,5 +21,11 @@ class Equipment extends Model
     return $this->belongsToMany(Category::class, 'category_equipment', 'equipment_id', 'category_id');
   }
 
+  public function image()
+  {
+    return $this->morphOne(Image::class, 'imageable');
+  }
+
+
 }
 

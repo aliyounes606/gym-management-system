@@ -36,6 +36,14 @@
                         @endforeach
                     </select>
                 </div>
+            <!-- عرض الصورة الحالية -->
+                 @if($equipment->image)
+                 <div class="mb-4">
+                   <img src="{{ Storage::url($equipment->image->path) }}" alt="صورة المعدة " style="width:150px; height:auto;">
+                         @else 
+                            <p> لا توجد صورة </p>
+                @endif
+                 </div>
 
                 <button type="submit" class="bg-green-600 text-white px-6 py-2 rounded hover:bg-green-700">
                     تحديث
