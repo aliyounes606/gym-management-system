@@ -61,6 +61,9 @@ Route::middleware(['auth'])->group(function () {
         Route::put('/meal-plans/{mealPlan}', [MealPlanController::class, 'update'])->name('meal-plans.update');
         Route::delete('/meal-plans/{mealPlan}', [MealPlanController::class, 'destroy'])->name('meal-plans.destroy');
         Route::get('/meal-plans/create', [MealPlanController::class, 'create'])->name('meal-plans.create');
+        Route::resource('bookings', BookingsController::class)->middleware('auth');
+        Route::post('/bookings/bookCorse', [BookingsController::class, 'bookCorse'])->name('bookings.bookCorse');
+        Route::post('/bookings/bookSession', [BookingsController::class, 'bookSession'])->name('bookings.bookSession')->middleware('auth');
     });
 });
 
@@ -79,9 +82,6 @@ require __DIR__ . '/auth.php';
 
 Route::resource('equipment', EquipmentController::class);
 //Route::get('/dashboard',[EquipmentController::class,'dashboard'])->name('dashboard');
-Route::resource('bookings', BookingsController::class)->middleware('auth');
-Route::post('/bookings/bookCorse', [BookingsController::class, 'bookCorse'])->name('bookings.bookCorse');
-Route::post('/bookings/bookSession', [BookingsController::class, 'bookSession'])->name('bookings.bookSession')->middleware('auth');
 
 // Route::resource('bookings', BookingsController::class);
 
