@@ -4,11 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\Equipment;
 use App\Models\Category;
-//use App\Http\Requests\Admin\StoreCourseRequest;
 use App\Http\Requests\StoreEquipmentRequest;
 use App\Http\Requests\UpdateEquipmentRequest;
-
-//use App\Http\Requests\Admin\UpdateEquipmentRequest;
 
 class EquipmentController extends Controller
 {
@@ -21,22 +18,33 @@ class EquipmentController extends Controller
 
     // عرض فورم إنشاء معدة جديدة
     public function create()
-{    
-    $categories=Category::all();
-    return view('equipment.create',compact('categories'));
-}
+    {    
+        $categories = Category::all();
+        return view('equipment.create', compact('categories'));
+    }
 
-
-    // حفظ المعدة الجديدة
+    // حفظ معدة جديدة
     public function store(StoreEquipmentRequest $request)
     {
-        $validated = $request->validated();
-        $equipment = Equipment::create($validated);
+        // حفظ بيانات المعدة
+        $equipment = Equipment::create($request->validated());
 
-        $equipment->categories()->attach($request->categories);
+        // حفظ الصورة إذا موجودة
+        if ($request->hasFile('image')) {
+            $imagePath = $request->file('image')->store('equipment_images', 'public');
+            $equipment->image()->create([
+                'path' => $imagePath,
+                'filename' => basename($imagePath),
+            ]);
+        }
+
+        // ربط التصنيفات
+        if ($request->categories) {
+            $equipment->categories()->attach($request->categories);
+        }
 
         return redirect()->route('equipment.index', $equipment->id)
-                         ->with('success','تم حفظ المعدة بنجاح');
+                         ->with('success', 'تم حفظ المعدة بنجاح');
     }
 
     // عرض معدة محددة
@@ -50,30 +58,50 @@ class EquipmentController extends Controller
     public function edit($id)
     {
         $equipment = Equipment::findOrFail($id);
-
-        $categories=Category::all();
-        return view('equipment.edit', compact('equipment','categories'));
+        $categories = Category::all();
+        return view('equipment.edit', compact('equipment', 'categories'));
     }
 
     // تحديث المعدة
     public function update(UpdateEquipmentRequest $request, $id)
     {
-        $validated = $request->validated();
-
         $equipment = Equipment::findOrFail($id);
-        $equipment->update($validated);
+        $equipment->update($request->validated());
 
-        $equipment->categories()->sync($request->categories);
+        // تعديل الصورة إذا تم رفع صورة جديدة
+        if ($request->hasFile('image')) {
+            if ($equipment->image) {
+                $equipment->image()->delete(); // حذف الصورة القديمة
+            }
+            $imagePath = $request->file('image')->store('equipment_images', 'public');
+            $equipment->image()->create([
+                'path' => $imagePath,
+                'filename' => basename($imagePath),
+            ]);
+        }
+
+        // تحديث التصنيفات
+        if ($request->categories) {
+            $equipment->categories()->sync($request->categories);
+        }
 
         return redirect()->route('equipment.index')
-                         ->with('success','تم تحديث المعدة بنجاح');
+                         ->with('success', 'تم تحديث المعدة بنجاح');
     }
 
     // حذف المعدة
     public function destroy($id)
     {
-        Equipment::destroy($id);
+        $equipment = Equipment::findOrFail($id);
+
+        // حذف الصورة المرتبطة إذا موجودة
+        if ($equipment->image) {
+            $equipment->image()->delete();
+        }
+
+        $equipment->delete();
+
         return redirect()->route('equipment.index')
-                         ->with('success','تم حذف المعدة');
+                         ->with('success', 'تم حذف المعدة');
     }
 }

@@ -26,7 +26,11 @@
                     @endforelse
                 </div>
             </div>
-
+       @if ($equipment->image)
+             <img src="{{ Storage::url($equipment->image->path) }}" alt="صورة المعدة" style="max-width: 100%; hieght:auto;">
+           @else
+           <p> لا توجد صورة للمعدة </p>
+          @endif
             <div class="flex gap-4 mt-6">
                 <a href="{{ route('equipment.edit', $equipment->id) }}"
                    class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">
