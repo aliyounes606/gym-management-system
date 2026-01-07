@@ -11,7 +11,9 @@ class DatabaseSeeder extends Seeder
 {
     public function run(): void
     {
-
+        $this->call([
+            MealPlanSeeder::class,
+        ]);
         $adminRole = Role::firstOrCreate(['name' => 'admin']);
         Role::firstOrCreate(['name' => 'trainer']);
         Role::firstOrCreate(['name' => 'member']);
