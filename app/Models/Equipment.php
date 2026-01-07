@@ -16,15 +16,16 @@ class Equipment extends Model
   ];
 
 
- public function image()
+  public function image()
   {
     return $this->morphOne(Image::class, 'imageable');
   }
 
   public function categories()
   {
-    return $this->morphOne(Image::class, 'imageable');
+    return $this->belongsToMany(Category::class);
   }
 
-} 
+
+}
 
