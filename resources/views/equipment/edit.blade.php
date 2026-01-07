@@ -14,43 +14,41 @@
 
                 <div class="mb-4">
                     <label class="block text-gray-700">اسم المعدة</label>
-                    <input type="text" name="name" class="w-full border-gray-300 rounded" value="{{ $equipment->name }}" required>
+                    <input type="text" name="name" class="w-full border-gray-300 rounded"
+                        value="{{ $equipment->name }}" required>
                 </div>
-                
+
                 <div class="mb-4">
                     <label class="block text-gray-700">الحالة</label>
-                    <input type="text" name="status" class="w-full border-gray-300 rounded" value="{{ $equipment->status }}" required>
+                    <input type="text" name="status" class="w-full border-gray-300 rounded"
+                        value="{{ $equipment->status }}" required>
                 </div>
 
                 <div class="mb-4">
                     <label class="block text-gray-700">الكمية</label>
-                    <input type="number" name="quantity" class="w-full border-gray-300 rounded" value="{{ $equipment->quantity }}" required>
+                    <input type="number" name="quantity" class="w-full border-gray-300 rounded"
+                        value="{{ $equipment->quantity }}" required>
                 </div>
 
                 <div class="mb-4">
                     <label class="block text-gray-700">التصنيفات</label>
                     <select name="categories[]" multiple class="w-full border-gray-300 rounded">
-                        @foreach($categories as $category)
+                        @foreach ($categories as $category)
                             <option value="{{ $category->id }}"
-                                {{ $equipment->categories->contains($category->id) ? 'selected' : '' }}> {{ $category->name }}
+                                {{ $equipment->categories->contains($category->id) ? 'selected' : '' }}>
+                                {{ $category->name }}
                             </option>
                         @endforeach
                     </select>
                 </div>
-            <!-- عرض الصورة الحالية -->
-                 @if($equipment->image)
-                 <div class="mb-4">
-                   <img src="{{ Storage::url($equipment->image->path) }}" alt="صورة المعدة " style="width:150px; height:auto;">
-                         @else 
-                            <p> لا توجد صورة </p>
-                @endif
-                 </div>
+
 
                 <!-- عرض الصورة الحالية -->
                 <div class="mb-4">
-                    @if($equipment->image)
-                        <img src="{{ Storage::url($equipment->image->path) }}" alt="صورة المعدة" style="width:150px; height:auto;">
-                    @else 
+                    @if ($equipment->image)
+                        <img src="{{ Storage::url($equipment->image->path) }}" alt="صورة المعدة"
+                            style="width:150px; height:auto;">
+                    @else
                         <p>لا توجد صورة</p>
                     @endif
                 </div>
