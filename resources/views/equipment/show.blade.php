@@ -29,7 +29,7 @@
 
           <!--  عرض صورة المعدة إذا كانت موجودة -->
           @if ($equipment->image)
-             <img src="{{ Storage::url($equipment->image->path) }}" alt="صورة المعدة" style="max-width: 100%; hieght:auto;">
+             <img src="{{ Storage::url($equipment->image->path) }}" style="max-width: 100%; hieght:auto;">
            @else
            <p> لا توجد صورة للمعدة </p>
           @endif

@@ -25,7 +25,7 @@ class StoreEquipmentRequest extends FormRequest
              'name'  => 'required|string|max:255',
             'status' => 'nullable|string',
             'quantity'=>'nullable|integer',
-            'image'=>'nullable|image|mimes:jpg,jpeg,png,gif|max:2048',
+            'image'=>'nullable|image|mimes:jpg,jpeg,png,gif',
         ];
     }
 
