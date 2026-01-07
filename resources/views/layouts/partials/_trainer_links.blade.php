@@ -17,7 +17,12 @@
                 {{ __('إدارة خطط الوجبات') }}
             </x-dropdown-link>
             
-            
+    {{-- لاظهار جدول مخصص لكل مدرب يحتوي على جلساته الخاصة مع امكانية تعديله عليها او حذفها --}}
+        @if(auth()->user()->trainerProfile)
+    <x-dropdown-link :href="route('sessions.schedule', auth()->user()->trainerProfile->id)">
+        {{ __('الجدول الزمني') }}
+    </x-dropdown-link>
+    @endif
         </x-slot>
     </x-dropdown>
 </div>

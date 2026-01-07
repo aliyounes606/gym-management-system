@@ -1,3 +1,15 @@
+@if(session('success'))
+    <div style="
+        background: #d4edda;
+        color: #155724;
+        padding: 10px;
+        margin-bottom: 15px;
+        border-radius: 5px;
+    ">
+        {{ session('success') }}
+    </div>
+@endif
+
 <x-app-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 leading-tight text-right">
@@ -41,6 +53,8 @@
                                 <!-- زر تأكيد الحجز -->
                               <form action="{{ route('bookings.bookCorse') }}" method="POST">
                                     @csrf
+                                    <input type="hidden" name="course_id" value="{{ $course->id }}">
+                                    <input type="hidden" name="total_price" value="{{ $course->total_price }}">
                                     <button
                                         type="submit"
                                         class="bg-green-600 text-white px-3 py-1 rounded hover:bg-green-700"

@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->morphs('imageable');  
             $table->string('path');       // مسار الصورة  
-            $table->string('filename');   // اسم الصورة
+            //$table->string('filename');   // اسم الصورة
             $table->timestamps();
         });
     }

@@ -7,7 +7,8 @@
 
     <div class="py-12">
         <div class="max-w-md mx-auto sm:px-6 lg:px-8 bg-white p-6 rounded shadow">
-            <form action="{{ route('equipment.update', $equipment->id) }}" method="POST">
+            <!-- لاحظ إضافة enctype -->
+            <form action="{{ route('equipment.update', $equipment->id) }}" method="POST" enctype="multipart/form-data">
                 @csrf
                 @method('PUT')
 
@@ -17,12 +18,12 @@
                 </div>
                 
                 <div class="mb-4">
-                    <label class="block text-gray-700"> الحالة</label>
+                    <label class="block text-gray-700">الحالة</label>
                     <input type="text" name="status" class="w-full border-gray-300 rounded" value="{{ $equipment->status }}" required>
                 </div>
 
                 <div class="mb-4">
-                    <label class="block text-gray-700"> الكمية</label>
+                    <label class="block text-gray-700">الكمية</label>
                     <input type="number" name="quantity" class="w-full border-gray-300 rounded" value="{{ $equipment->quantity }}" required>
                 </div>
 
@@ -35,6 +36,29 @@
                             </option>
                         @endforeach
                     </select>
+                </div>
+            <!-- عرض الصورة الحالية -->
+                 @if($equipment->image)
+                 <div class="mb-4">
+                   <img src="{{ Storage::url($equipment->image->path) }}" alt="صورة المعدة " style="width:150px; height:auto;">
+                         @else 
+                            <p> لا توجد صورة </p>
+                @endif
+                 </div>
+
+                <!-- عرض الصورة الحالية -->
+                <div class="mb-4">
+                    @if($equipment->image)
+                        <img src="{{ Storage::url($equipment->image->path) }}" alt="صورة المعدة" style="width:150px; height:auto;">
+                    @else 
+                        <p>لا توجد صورة</p>
+                    @endif
+                </div>
+
+                <!-- إضافة مكان لتعديل الصورة -->
+                <div class="mb-4">
+                    <label class="block text-gray-700">تعديل الصورة</label>
+                    <input type="file" name="image" accept="image/*" class="w-full border-gray-300 rounded">
                 </div>
 
                 <button type="submit" class="bg-green-600 text-white px-6 py-2 rounded hover:bg-green-700">

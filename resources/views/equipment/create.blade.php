@@ -7,7 +7,7 @@
 
     <div class="py-12">
         <div class="max-w-md mx-auto sm:px-6 lg:px-8 bg-white p-6 rounded shadow">
-            <form action="{{ route('equipment.store') }}" method="POST">
+            <form action="{{ route('equipment.store') }}" method="POST" enctype="multipart/form-data">
                 @csrf
 
                 <div class="mb-4">
@@ -35,6 +35,12 @@
                         @endforeach
                     </select>
                 </div>
+                   
+                <div class="mb-4">
+                 <label for="image"> الصورة </label>
+                 <input type="file" name="image" id="image" accept="image/*">
+                 </div>
+
                 <button type="submit" class="bg-green-600 text-white px-6 py-2 rounded hover:bg-green-700">
                     حفظ
                 </button>

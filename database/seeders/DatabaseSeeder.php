@@ -6,6 +6,7 @@ use Illuminate\Database\Seeder;
 use App\Models\User;
 use Spatie\Permission\Models\Role;
 use Spatie\Permission\Models\Permission;
+use Database\Seeders\EquipmentSeeder;
 
 class DatabaseSeeder extends Seeder
 {
@@ -38,5 +39,11 @@ class DatabaseSeeder extends Seeder
         foreach ($usersWithoutRoles as $user) {
             $user->assignRole('member');
         }
+
+          $this->call([
+        EquipmentSeeder::class,
+    ]);
+
+
     }
 }

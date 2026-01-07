@@ -70,9 +70,9 @@
                                 <td>{{ $booking->user->name ?? '---' }}</td>
 
                                 <td>
-                                    {{ $booking->booking_type === 'single'
+                                    {{ $booking->booking_type === 'session'
                                         ? 'جلسة مفردة'
-                                        : 'جماعي' }}
+                                        : 'كورس' }}
                                 </td>
 
                                 <td>
