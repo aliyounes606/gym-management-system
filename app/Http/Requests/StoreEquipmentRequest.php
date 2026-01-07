@@ -28,7 +28,8 @@ class StoreEquipmentRequest extends FormRequest
             'image'=>'nullable|image|mimes:jpg,jpeg,png,gif',
         ];
     }
-         public function storeImage($equipment)
+
+     public function storeImage($equipment)
     {
         if ($this->hasFile('image')){
             $path=$this->file('image')->store('public/equipment_images');

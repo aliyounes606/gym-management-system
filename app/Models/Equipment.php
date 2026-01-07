@@ -8,23 +8,23 @@ class Equipment extends Model
 {
 
 
-  protected $table = "equipment"; 
-    protected $fillable =[
-        "name",
-        "status",
-       "quantity"
-    ];
-    
- 
-  public function image()
+  protected $table = "equipment";
+  protected $fillable = [
+    "name",
+    "status",
+    "quantity"
+  ];
+
+
+ public function image()
   {
     return $this->morphOne(Image::class, 'imageable');
   }
 
-public function categories()
-{
-    return $this->belongsToMany(Category::class, 'category_equipment','equipment_id','category_id');
-}
+  public function categories()
+  {
+    return $this->morphOne(Image::class, 'imageable');
+  }
 
-}
+} 
 

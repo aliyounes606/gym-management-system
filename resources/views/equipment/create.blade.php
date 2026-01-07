@@ -35,11 +35,12 @@
                         @endforeach
                     </select>
                 </div>
-                
+                   
                 <div class="mb-4">
                  <label for="image"> الصورة </label>
                  <input type="file" name="image" id="image" accept="image/*">
                  </div>
+
                 <button type="submit" class="bg-green-600 text-white px-6 py-2 rounded hover:bg-green-700">
                     حفظ
                 </button>
