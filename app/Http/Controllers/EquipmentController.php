@@ -4,11 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\Equipment;
 use App\Models\Category;
-//use App\Http\Requests\Admin\StoreCourseRequest;
 use App\Http\Requests\StoreEquipmentRequest;
 use App\Http\Requests\UpdateEquipmentRequest;
-
-//use App\Http\Requests\Admin\UpdateEquipmentRequest;
 
 class EquipmentController extends Controller
 {
@@ -16,18 +13,17 @@ class EquipmentController extends Controller
     public function index()
     {
         $equipment = Equipment::all();
-        return view('Equipment.index', compact('equipment'));
+        return view('equipment.index', compact('equipment'));
     }
 
     // عرض فورم إنشاء معدة جديدة
     public function create()
-{    
-    $categories=Category::all();
-    return view('equipment.create',compact('categories'));
-}
+    {    
+        $categories = Category::all();
+        return view('equipment.create', compact('categories'));
+    }
 
-
-    // حفظ المعدة الجديدة
+    // حفظ معدة جديدة
     public function store(StoreEquipmentRequest $request)
     { 
         $equipment = Equipment::create($request->validated());
@@ -40,7 +36,7 @@ class EquipmentController extends Controller
         $equipment->categories()->attach($request->categories);}
 
         return redirect()->route('equipment.index', $equipment->id)
-                         ->with('success','تم حفظ المعدة بنجاح');
+                         ->with('success', 'تم حفظ المعدة بنجاح');
     }
 
     // عرض معدة محددة
@@ -54,9 +50,8 @@ class EquipmentController extends Controller
     public function edit($id)
     {
         $equipment = Equipment::findOrFail($id);
-
-        $categories=Category::all();
-        return view('equipment.edit', compact('equipment','categories'));
+        $categories = Category::all();
+        return view('equipment.edit', compact('equipment', 'categories'));
     }
 
     // تحديث المعدة
@@ -75,7 +70,7 @@ class EquipmentController extends Controller
             $equipment->categories()->sync($request->categories);}
 
         return redirect()->route('equipment.index')
-                         ->with('success','تم تحديث المعدة بنجاح');
+                         ->with('success', 'تم تحديث المعدة بنجاح');
     }
 
     // حذف المعدة
@@ -88,6 +83,6 @@ class EquipmentController extends Controller
         }
         $equipment->delete();
         return redirect()->route('equipment.index')
-                         ->with('success','تم حذف المعدة');
+                         ->with('success', 'تم حذف المعدة');
     }
 }

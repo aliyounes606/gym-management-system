@@ -3,7 +3,7 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
-
+use  App\Models\GymSession;
 class StoreSessionRequest extends FormRequest
 {
     /**
@@ -32,4 +32,21 @@ class StoreSessionRequest extends FormRequest
             'category_id' => 'nullable|exists:categories,id'
         ];
     }
+// add more validation for session time 
+    public function withValidator($validator)
+{
+    $validator->after(function ($validator) {
+        if ($this->trainer_profile_id) {
+            $conflict = GymSession::where('trainer_profile_id', $this->trainer_profile_id)
+                ->where(function($q) {
+                    $q->whereBetween('start_time', [$this->start_time, $this->end_time])
+                      ->orWhereBetween('end_time', [$this->start_time, $this->end_time]);
+                })
+                ->exists();
+
+            if ($conflict) {
+                $validator->errors()->add('start_time', 'المدرب لديه جلسة بنفس الوقت.');
+            }
+        }
+    });}
 }

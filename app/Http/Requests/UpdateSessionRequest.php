@@ -23,13 +23,13 @@ class UpdateSessionRequest extends FormRequest
     {
         return [
             //
-               'title' => 'sometimes|string|max:255',
-            'trainer_id' => 'sometimes|exists:users,id',
-            'course_id' => 'sometimes|exists:courses,id',
-            'single_price' => 'sometimes|numeric',
-            'max_capacity' => 'sometimes|integer',
-            'start_time' => 'sometimes|date',
-            'end_time' => 'sometimes|date|after:start_time',
+               'title' => 'string|max:255',
+            'trainer_id' => 'nullable|exists:users,id',
+            'course_id' => 'nullable|exists:courses,id',
+            'single_price' => 'numeric',
+            'max_capacity' => 'integer',
+            'start_time' => 'date',
+            'end_time' => 'date|after:start_time',
             'category_id' => 'nullable|exists:categories,id'
         ];
     }

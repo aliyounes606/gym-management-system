@@ -23,7 +23,7 @@ class Equipment extends Model
 
   public function categories()
   {
-    return $this->belongsToMany(Category::class, 'category_equipment', 'equipment_id', 'category_id');
+    return $this->morphOne(Image::class, 'imageable');
   }
 
 } 

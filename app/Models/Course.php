@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Http\Controllers\BookingsController;
 use Illuminate\Database\Eloquent\Model;
 class Course extends Model
 {
@@ -23,5 +24,9 @@ public function sessions()
 public function trainerProfile()
 {
     return $this->belongsTo(TrainerProfile::class, 'trainer_profile_id');
+}
+public function booking()
+{
+    return $this->belongsTo(BookingsController::class, 'booking_course');
 }
 }

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Booking;
 use App\Http\Controllers\GymSessionController;
+use App\Http\Requests\StoreBookingRequest;
 use App\Models\GymSession;
 use App\Models\Course;
 use Illuminate\Foundation\Auth\User;
@@ -39,20 +40,36 @@ class BookingsController extends Controller
     }
 
 
-    public function bookCorse()
+    public function bookCorse(Request $request)
+    {
+    $request->validate([
+    'course_id'  => 'required|nullable|exists:courses,id',
+    ]);
+    
+       Booking::create([
+           'user_id'=>Auth::user()->id,
+           'session_id'=>$request->session_id,
+           'course_id'=>$request->course_id,
+           'booking_type'=>'course',
+           'payment_status'=>'unpaid',
+           'amount_paid'=> $request->total_price,
+           'attendance_status'=> 1,
+        ]);
+        return redirect()->back()->with('success', 'تم حجز الجلسة بنجاح!');
+    }
+
+    
+    public function bookSession(request $request)
     {
        Booking::create([
-            'booking_type'=>'group',
-            'amount_paid'=> 10,
-            'attendance_status'=> 1,
+           'user_id'=>Auth::user()->id,
+           'session_id'=>$request->session_id,
+           'course_id'=>null,
+           'booking_type'=>'session',
+           'payment_status'=>'unpaid',
+           'amount_paid'=> $request->single_price,
+           'attendance_status'=> 1,
         ]);
-    }
-    public function bookSession(GymSession $request)
-    {
-            $booking = Booking::create([
-            'booking_type'=>'single',
-            'amount_paid'=> 3,
-            'attendance_status'=> 1,
-        ]);
+        return redirect()->back()->with('success', 'تم حجز الجلسة بنجاح!');
     }
 }

@@ -65,7 +65,9 @@ public function edit($id)
   );
 
         $session->update($validated);
+//         dump($session->getAttributes());
 
+// dd($session);
         return redirect()->route('gymsessions.index')
                          ->with('success','تم تعديل الجلسة بنجاح');
     }
@@ -79,4 +81,16 @@ public function edit($id)
         return redirect()->route('gymsessions.index')
                          ->with('success','تم حذف الجلسة بنجاح');
     }
+    public function schedule($id)
+    //find if trainner id exist 
+     { $trainer = TrainerProfile::with('user')
+        ->findOrFail($id); 
+        //get sessions that assigned to the trainer
+        $sessions = GymSession::where('trainer_profile_id', $id) 
+        ->with(['course','category'])
+        //sort the session asc
+        ->orderBy('start_time','asc') ->get();
+        //return it to the page blade 
+          return view('sessions.schedule', compact('trainer','sessions'));
+         }
 }
