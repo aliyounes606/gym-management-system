@@ -7,6 +7,10 @@ use Illuminate\Database\Eloquent\Model;
 class Course extends Model
 {
     //
+     /**
+     * Summary of fillable
+     * @var array
+     */
 
   protected $table = "courses"; 
     protected $fillable =[
@@ -16,11 +20,18 @@ class Course extends Model
         "total_price"
     ];
     
- 
+/**
+ * Summary of sessions
+ * @return \Illuminate\Database\Eloquent\Relations\HasMany<GymSession, Course>
+ */
 public function sessions()
 {
     return $this->hasMany(GymSession::class, 'course_id');
 }
+/**
+ * Summary of trainerProfile
+ * @return \Illuminate\Database\Eloquent\Relations\BelongsTo<TrainerProfile, Course>
+ */
 public function trainerProfile()
 {
     return $this->belongsTo(TrainerProfile::class, 'trainer_profile_id');

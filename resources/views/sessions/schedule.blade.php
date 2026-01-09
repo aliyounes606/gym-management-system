@@ -20,12 +20,13 @@
                         <tr>
                             <th class="px-6 py-3 text-xs font-medium text-gray-500 uppercase">العنوان</th>
                             <th class="px-6 py-3 text-xs font-medium text-gray-500 uppercase">الكورس</th>
-                            <th class="px-6 py-3 text-xs font-medium text-gray-500 uppercase">الفئة</th>
-                            <th class="px-6 py-3 text-xs font-medium text-gray-500 uppercase">السعر</th>
+                            {{-- <th class="px-6 py-3 text-xs font-medium text-gray-500 uppercase">الفئة</th> --}}
+                            {{-- <th class="px-6 py-3 text-xs font-medium text-gray-500 uppercase">السعر</th> --}}
                             <th class="px-6 py-3 text-xs font-medium text-gray-500 uppercase">السعة</th>
                             <th class="px-6 py-3 text-xs font-medium text-gray-500 uppercase">من</th>
                             <th class="px-6 py-3 text-xs font-medium text-gray-500 uppercase">إلى</th>
                             <th class="px-6 py-3 text-xs font-medium text-gray-500 uppercase">عدد الأعضاء</th>
+                            <th class="px-6 py-3 text-xs font-medium text-gray-500 uppercase">الحالة</th>
                             <th class="px-6 py-3 text-xs font-medium text-gray-500 uppercase">الإجراءات</th>
                         </tr>
                     </thead>
@@ -34,12 +35,34 @@
                             <tr>
                                 <td class="px-6 py-4">{{ $session->title }}</td>
                                 <td class="px-6 py-4">{{ $session->course?->name ?? '---' }}</td>
-                                <td class="px-6 py-4">{{ $session->category?->name ?? '---' }}</td>
-                                <td class="px-6 py-4">{{ $session->single_price }}</td>
+                                {{-- <td class="px-6 py-4">{{ $session->category?->name ?? '---' }}</td> --}}
+                                {{-- <td class="px-6 py-4">{{ $session->single_price }}</td> --}}
                                 <td class="px-6 py-4">{{ $session->max_capacity }}</td>
                                 <td class="px-6 py-4">{{ $session->start_time }}</td>
                                 <td class="px-6 py-4">{{ $session->end_time }}</td>
                                 <td class="px-6 py-4">{{ $session->members_count ?? 0 }}</td>
+
+                                <!-- الحالة -->
+                               <td class="px-6 py-4">
+    <form action="{{ route('gymsessions.updateStatus', $session->id) }}" method="POST" class="flex items-center gap-2">
+        @csrf
+        @method('PATCH')
+        <select name="status"
+                class="block w-32 px-2 py-1 text-sm border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
+            <option value="pending"   {{ $session->status == 'pending' ? 'selected' : '' }}>قيد الانتظار</option>
+            <option value="started"   {{ $session->status == 'started' ? 'selected' : '' }}>بدأت</option>
+            <option value="ended"     {{ $session->status == 'ended' ? 'selected' : '' }}>انتهت</option>
+            <option value="cancelled" {{ $session->status == 'cancelled' ? 'selected' : '' }}>ملغاة</option>
+        </select>
+        <button type="submit"
+                class="px-3 py-1 bg-indigo-600 text-white text-sm rounded hover:bg-indigo-700">
+            تحديث
+        </button>
+    </form>
+</td>
+
+
+                                <!-- الإجراءات -->
                                 <td class="px-6 py-4 flex gap-2 justify-end">
                                     <a href="{{ route('gymsessions.show', $session->id) }}"
                                        class="text-indigo-600 hover:text-indigo-900">عرض</a>
