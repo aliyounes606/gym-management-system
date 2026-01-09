@@ -4,7 +4,7 @@ namespace App\Models;
 
 use App\Http\Controllers\BookingsController;
 use Illuminate\Database\Eloquent\Model;
-use app\Models\GymSession;
+use App\Models\GymSession;
 
 class Booking extends Model
 {
@@ -19,7 +19,7 @@ class Booking extends Model
     ];
     public function users()
     {
-        return $this->belongsToMany(User::class);
+        return $this->belongsTo(User::class, 'user_id');
     }
     public function gymsessions()
     {
