@@ -18,6 +18,8 @@ return new class extends Migration
         $table->text('description'); // الوصف
         $table->integer('calories'); // السعرات الحرارية 
         $table->decimal('price', 8, 2); // السعر
+        $table->foreignId('user_id')->constrained('users')->onDelete('cascade'); // المتدرب المستلم
+        $table->foreignId('trainer_id')->constrained('users')->onDelete('cascade'); // المدرب المرسل
         $table->timestamps();
     });
 
@@ -35,6 +37,7 @@ return new class extends Migration
      */
     public function down(): void
     {
+        Schema::dropIfExists('meal_recommendations');
         Schema::dropIfExists('meals_tables');
     }
 };
