@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\PaymentController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\EquipmentController;
 use App\Http\Controllers\CourseController;
@@ -31,6 +32,10 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
     Route::resource('roles', RoleController::class);
     Route::resource('permissions', PermissionController::class);
     Route::resource('admin/categories', CategoryController::class)->middleware(['auth', 'role:admin']);
+    //routes of payments
+    Route::get('/admin/payments', [PaymentController::class, 'index'])->name('admin.payments.index');
+    Route::post('/admin/payments/{batch_id}/confirm', [PaymentController::class, 'confirm'])->name('admin.payments.confirm');
+    Route::delete('/admin/payments/{batch_id}', [PaymentController::class, 'destroy'])->name('admin.payments.destroy');
 });
 
 // Route::middleware(['auth'])->group(function () {
@@ -92,9 +97,9 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
 });
 
 
-    Route::resource('gymsessions', GymSessionController::class);
+Route::resource('gymsessions', GymSessionController::class);
 
 //route for schedule 
-Route::get('/sessions/schedule/{id}', [GymSessionController::class, 'schedule']) ->name('sessions.schedule');
+Route::get('/sessions/schedule/{id}', [GymSessionController::class, 'schedule'])->name('sessions.schedule');
 Route::patch('/gymsessions/{id}/status', [GymSessionController::class, 'updateStatus'])
-     ->name('gymsessions.updateStatus');
+    ->name('gymsessions.updateStatus');
