@@ -90,12 +90,11 @@ Route::resource('equipment', EquipmentController::class);
 Route::middleware(['auth', 'role:admin'])->group(function () {
     Route::resource('equipment', EquipmentController::class);
 });
-//sessions routes for admin only
-// Route::middleware(['auth', 'role:admin'])->group(function () {
-//     Route::resource('gymsessions', GymSessionController::class);
-// });
-//sessions routes for trainer only
+
+
     Route::resource('gymsessions', GymSessionController::class);
 
 //route for schedule 
 Route::get('/sessions/schedule/{id}', [GymSessionController::class, 'schedule']) ->name('sessions.schedule');
+Route::patch('/gymsessions/{id}/status', [GymSessionController::class, 'updateStatus'])
+     ->name('gymsessions.updateStatus');
