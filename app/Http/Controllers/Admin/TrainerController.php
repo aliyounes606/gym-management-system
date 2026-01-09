@@ -12,14 +12,27 @@ use Illuminate\Http\Request;
 class TrainerController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * Summary of index
+     * @return \Illuminate\Contracts\View\View
      */
     public function index()
     {
         $trainers = TrainerProfile::with('user')->get();
-        // جلب المستخدمين العاديين لتحوليهم الى مدربين 
-        $availableUsers = User::role('member')->get(); // جلب الأعضاء فقط للترقية
-        return view('admin.trainers.index', compact('trainers', 'availableUsers'));
+        return view('admin.trainers.index', compact('trainers'));
+    }
+    /**
+     * Summary of create
+     * @return \Illuminate\Contracts\View\View
+     */
+    public function create()
+    {
+
+        $availableUsers = User::role('member')
+            ->whereDoesntHave('trainerProfile')
+            ->get();
+
+        return view('admin.trainers.create', compact('availableUsers'));
+
     }
     /**
      * Summary of store
@@ -72,8 +85,8 @@ class TrainerController extends Controller
         $trainer = TrainerProfile::findOrFail($id);
         $user = User::find($trainer->user_id);
 
-        $user->removeRole('trainer'); // سحب الرتبة منه
-        $trainer->delete(); // حذف البروفايل
+        $user->removeRole('trainer'); // سحب الرتبة 
+        $trainer->delete();
 
         return back()->with('success', 'تم إزالة المدرب وإعادته لمستخدم عادي');
     }
