@@ -2,8 +2,8 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Seeder; 
-use App\Models\MealPlan;       
+use Illuminate\Database\Seeder;
+use App\Models\MealPlan;
 
 class MealPlanSeeder extends Seeder
 {
@@ -12,14 +12,14 @@ class MealPlanSeeder extends Seeder
      */
     public function run(): void
     {
-        MealPlan::create([
+        MealPlan::firstOrCreate([
             'name' => 'سلطة السيزر الصحية',
             'description' => 'صدر دجاج مشوي مع خس طازج وصلصة قليلة الدسم',
             'calories' => 350,
             'price' => 15.00
         ]);
 
-        MealPlan::create([
+        MealPlan::firstOrCreate([
             'name' => 'سمك السلمون المشوي',
             'description' => 'قطعة سلمون غنية بالأوميغا 3 مع خضار سوتيه',
             'calories' => 500,

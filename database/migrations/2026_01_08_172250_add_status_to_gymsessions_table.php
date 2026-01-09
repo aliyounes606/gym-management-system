@@ -11,12 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('images', function (Blueprint $table) {
-            $table->id();
-            $table->morphs('imageable');  
-            $table->string('path');       // مسار الصورة  
-            //$table->string('filename');   // اسم الصورة
-            $table->timestamps();
+        Schema::table('gymsessions', function (Blueprint $table) {
+            $table->enum('status', ['pending', 'started', 'ended', 'cancelled'])
+                  ->default('pending')
+                  ->after('end_time');
         });
     }
 
@@ -25,6 +23,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('images');
+        Schema::table('gymsessions', function (Blueprint $table) {
+            $table->dropColumn('status');
+        });
     }
 };

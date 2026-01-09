@@ -4,76 +4,130 @@ namespace App\Http\Controllers;
 
 use App\Models\Equipment;
 use App\Models\Category;
-//use App\Http\Requests\Admin\StoreCourseRequest;
 use App\Http\Requests\StoreEquipmentRequest;
 use App\Http\Requests\UpdateEquipmentRequest;
-
-//use App\Http\Requests\Admin\UpdateEquipmentRequest;
+use Illuminate\Support\Facades\Storage;
 
 class EquipmentController extends Controller
 {
-    // عرض كل المعدات
+    /**
+     * Summary of index
+     * @return \Illuminate\Contracts\View\View
+     */
     public function index()
     {
-        $equipment = Equipment::all();
-        return view('Equipment.index', compact('equipment'));
+        $equipment = Equipment::with('image')->get();
+        return view('equipment.index', compact('equipment'));
     }
-
-    // عرض فورم إنشاء معدة جديدة
+    /**
+     * Summary of create
+     * @return \Illuminate\Contracts\View\View
+     */
     public function create()
-{    
-    $categories=Category::all();
-    return view('equipment.create',compact('categories'));
-}
-
-
-    // حفظ المعدة الجديدة
+    {
+        $categories = Category::all();
+        return view('equipment.create', compact('categories'));
+    }
+    /**
+     * Summary of store
+     * @param \App\Http\Requests\StoreEquipmentRequest $request
+     * @return \Illuminate\Http\RedirectResponse
+     */
     public function store(StoreEquipmentRequest $request)
     {
-        $validated = $request->validated();
-        $equipment = Equipment::create($validated);
+        $equipment = Equipment::create($request->validated());
 
-        $equipment->categories()->attach($request->categories);
+        // حفظ الصورة
+        if ($request->hasFile('image')) {
+            $imagePath = $request->file('image')->store('equipment_images', 'public');
 
-        return redirect()->route('equipment.index', $equipment->id)
-                         ->with('success','تم حفظ المعدة بنجاح');
+            $equipment->image()->create([
+                'path' => $imagePath
+            ]);
+        }
+
+        if ($request->categories) {
+            $equipment->categories()->attach($request->categories);
+        }
+
+        return redirect()->route('equipment.index')
+            ->with('success', 'تم حفظ المعدة بنجاح');
     }
 
-    // عرض معدة محددة
+    /**
+     * Summary of show
+     * @param mixed $id
+     * @return \Illuminate\Contracts\View\View
+     */
     public function show($id)
     {
-        $equipment = Equipment::findOrFail($id);
+        $equipment = Equipment::with('image')->findOrFail($id);
         return view('equipment.show', compact('equipment'));
     }
 
-    // عرض فورم تعديل معدة
+    /**
+     * Summary of edit
+     * @param mixed $id
+     * @return \Illuminate\Contracts\View\View
+     */
     public function edit($id)
     {
-        $equipment = Equipment::findOrFail($id);
-
-        $categories=Category::all();
-        return view('equipment.edit', compact('equipment','categories'));
+        $equipment = Equipment::with('image')->findOrFail($id);
+        $categories = Category::all();
+        return view('equipment.edit', compact('equipment', 'categories'));
     }
 
-    // تحديث المعدة
+    /**
+     * Summary of update
+     * @param \App\Http\Requests\UpdateEquipmentRequest $request
+     * @param mixed $id
+     * @return \Illuminate\Http\RedirectResponse
+     */
     public function update(UpdateEquipmentRequest $request, $id)
     {
-        $validated = $request->validated();
-
         $equipment = Equipment::findOrFail($id);
-        $equipment->update($validated);
+        $equipment->update($request->validated());
 
-        $equipment->categories()->sync($request->categories);
+        // تحديث الصورة
+        if ($request->hasFile('image')) {
+            // حذف الصورة القديمة
+            if ($equipment->image) {
+                Storage::disk('public')->delete($equipment->image->path);
+                $equipment->image()->delete();
+            }
+
+            // رفع الصورة الجديدة
+            $imagePath = $request->file('image')->store('equipment_images', 'public');
+
+            $equipment->image()->create([
+                'path' => $imagePath
+            ]);
+        }
+
+        if ($request->categories) {
+            $equipment->categories()->sync($request->categories);
+        }
 
         return redirect()->route('equipment.index')
-                         ->with('success','تم تحديث المعدة بنجاح');
+            ->with('success', 'تم تحديث المعدة بنجاح');
     }
 
-    // حذف المعدة
+    /**
+     * Summary of destroy
+     * @param mixed $id
+     * @return \Illuminate\Http\RedirectResponse
+     */
     public function destroy($id)
     {
-        Equipment::destroy($id);
+        $equipment = Equipment::findOrFail($id);
+
+        if ($equipment->image) {
+            Storage::disk('public')->delete($equipment->image->path);
+            $equipment->image()->delete();
+        }
+
+        $equipment->delete();
         return redirect()->route('equipment.index')
-                         ->with('success','تم حذف المعدة');
+            ->with('success', 'تم حذف المعدة');
     }
 }
