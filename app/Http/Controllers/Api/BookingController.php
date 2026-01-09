@@ -1,0 +1,113 @@
+<?php
+
+namespace App\Http\Controllers\Api;
+
+use App\Http\Controllers\Controller;
+use App\Models\Booking;
+use App\Models\Course;
+use App\Models\GymSession;
+use App\Http\Requests\Api\StoreSingleBookingRequest;
+use App\Http\Requests\Api\StoreCourseBookingRequest;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
+
+class BookingController extends Controller
+{
+    /**
+     * Summary of storeSingleSession
+     * @param \App\Http\Requests\Api\StoreSingleBookingRequest $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function storeSingleSession(StoreSingleBookingRequest $request)
+    {
+
+        $user = auth()->user();
+
+        $session = GymSession::findOrFail($request->session_id);
+
+        $currentBookings = Booking::where('session_id', $session->id)
+            ->whereIn('status', ['confirmed', 'pending'])
+            ->count();
+
+        if ($currentBookings >= $session->max_capacity) {
+            return response()->json(['message' => 'عذراً، الجلسة ممتلئة تماماً.'], 400);
+        }
+
+        $existingBooking = Booking::where('user_id', $user->id)
+            ->where('session_id', $session->id)
+            ->whereIn('status', ['confirmed', 'pending'])
+            ->exists();
+
+        if ($existingBooking) {
+            return response()->json(['message' => 'أنت قمت بحجز هذه الجلسة مسبقاً.'], 400);
+        }
+
+        $booking = Booking::create([
+            'user_id' => $user->id,
+            'session_id' => $session->id,
+            'batch_id' => Str::uuid(),
+            'price' => $session->single_price,
+            'payment_status' => 'unpaid',
+            'status' => 'pending',
+        ]);
+
+        return response()->json([
+            'message' => 'تم استلام طلب الحجز. يرجى التوجه للاستقبال للدفع لتفعيل الحجز.',
+            'booking_reference' => $booking->batch_id,
+            'data' => $booking
+        ], 201);
+    }
+
+    /**
+     * Summary of storeCourse
+     * @param \App\Http\Requests\Api\StoreCourseBookingRequest $request
+     */
+    public function storeCourse(StoreCourseBookingRequest $request)
+    {
+
+        $user = auth()->user();
+        $course = Course::with('gymsessions')->findOrFail($request->course_id);
+
+        if ($course->gymsessions->isEmpty()) {
+            return response()->json(['message' => 'هذا الكورس لا يحتوي على جلسات حالياً.'], 400);
+        }
+        return DB::transaction(function () use ($user, $course) {
+
+            $batchId = Str::uuid();
+            $createdBookings = [];
+            $totalPriceToPay = 0;
+
+            foreach ($course->gymsessions as $session) {
+
+                $exists = Booking::where('user_id', $user->id)
+                    ->where('session_id', $session->id)
+                    ->exists();
+
+                if (!$exists) {
+                    $booking = Booking::create([
+                        'user_id' => $user->id,
+                        'session_id' => $session->id,
+                        'batch_id' => $batchId,
+                        'price' => $session->single_price,
+                        'payment_status' => 'unpaid',
+                        'status' => 'pending',
+                    ]);
+
+                    $createdBookings[] = $booking;
+                    $totalPriceToPay += $session->single_price;
+                }
+            }
+
+            if (empty($createdBookings)) {
+                return response()->json(['message' => 'يبدو أنك مسجل بالفعل في جميع جلسات هذا الكورس.'], 400);
+            }
+
+            return response()->json([
+                'message' => 'تم حجز الكورس مبدئياً. يرجى دفع المبلغ الإجمالي في الاستقبال.',
+                'booking_reference' => $batchId,
+                'sessions_booked_count' => count($createdBookings),
+                'total_price' => $totalPriceToPay
+            ], 201);
+        });
+    }
+}

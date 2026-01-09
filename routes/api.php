@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Api\AuthController;
+use App\Http\Controllers\Api\BookingController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -15,4 +16,11 @@ Route::post('/login', [AuthController::class, 'login']);
 // Protected Routes (Require Token)
 Route::middleware('auth:sanctum')->group(function () {
     Route::post('/logout', [AuthController::class, 'logout']);
+});
+Route::middleware('auth:sanctum')->group(function () {
+
+    Route::post('/bookings/single', [BookingController::class, 'storeSingleSession']);
+
+    Route::post('/bookings/course', [BookingController::class, 'storeCourse']);
+
 });
