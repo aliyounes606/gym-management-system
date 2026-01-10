@@ -4,65 +4,81 @@ namespace App\Http\Controllers;
 
 use App\Models\MealPlan;
 use App\Models\User;
-use App\Models\Image;
+use App\Models\MealRecommendation;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use App\Http\Requests\StoreMealPlanRequest;
 
 class MealPlanController extends Controller
 {
-    // 1. عرض جدول الوجبات (الأدمن يرى الكل، والمتدرب يرى وجباته فقط)
+    // 1. عرض جدول الوجبات (مكتبة الوجبات العامة)
     public function index() {
-        if (auth()->user()->hasRole('admin')) {
-            // إذا كان أدمن يجلب كل الوجبات
-            $plans = MealPlan::with(['image', 'trainee'])->latest()->get();
-        } else {
-            // إذا كان متدرب يجلب وجباته هو فقط بناءً على id الخاص به
-            $plans = MealPlan::where('user_id', auth()->id())
-                             ->with(['image', 'trainee'])
-                             ->latest()
-                             ->get();
-        }
+        // هنا نعرض كل الوجبات المضافة للمكتبة مع صورها
+        $plans = MealPlan::with(['image'])->latest()->get();
         
-        return view('meal_plans.index', compact('plans'));
+        // جلب المستخدمين الذين يحملون رتبة متدرب فقط
+        $trainees = User::role('member')->get();
+
+        return view('meal_plans.index', compact('plans', 'trainees'));
     }
 
     // 2. عرض صفحة "إضافة وجبة"
     public function create() {
-        $trainees = User::role('member')->get();
-        return view('meal_plans.create', compact('trainees'));
+        return view('meal_plans.create');
     }
 
-    // 3. حفظ الوجبة الجديدة
-    public function store(Request $request) {
-        $request->validate([
-            'name'        => 'required|string|max:255',
-            'description' => 'required',
-            'user_id'     => 'required|exists:users,id',
-            'image'       => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048'
-        ]);
-
+    // 3. حفظ الوجبة في المكتبة
+    public function store(StoreMealPlanRequest $request) 
+    {
+        // إنشاء الوجبة كبيانات عامة في المكتبة
         $mealPlan = MealPlan::create([
             'name'        => $request->name,
             'description' => $request->description,
             'calories'    => $request->calories ?? 0,
             'price'       => $request->price ?? 0,
-            'user_id'     => $request->user_id,
             'trainer_id'  => auth()->id(),
         ]);
 
+        // معالجة رفع الصورة إن وجدت
         if ($request->hasFile('image')) {
             $path = $request->file('image')->store('meals', 'public');
             
             $mealPlan->image()->create([
-                'path'     => $path, // التوافق مع جدول رفاقك
+                'path'     => $path,
                 'filename' => $request->file('image')->getClientOriginalName(),
             ]);
         }
 
-        return redirect()->route('meal-plans.index')->with('success', 'تم إرسال التوصية للمتدرب بنجاح');
+        return redirect()->route('meal-plans.index')->with('success', 'تمت إضافة الوجبة للمكتبة بنجاح');
     }
 
-    // 4. حذف الوجبة
+    // التعديل الجديد: إرسال الوجبة لعدة متدربين في وقت واحد
+    public function recommend(Request $request)
+    {
+        // التحقق من صحة البيانات (نتوقع مصفوفة من الـ user_ids)
+        $request->validate([
+            'user_ids'     => 'required|array',
+            'user_ids.*'   => 'exists:users,id',
+            'meal_plan_id' => 'required|exists:meal_plans,id',
+        ]);
+
+        $mealPlanId = $request->meal_plan_id;
+        $trainerId = auth()->id();
+
+        // عمل دوران على كل المتدربين المختارين
+        foreach ($request->user_ids as $userId) {
+            // استخدام firstOrCreate لمنع تكرار نفس الوجبة لنفس المتدرب
+            MealRecommendation::firstOrCreate([
+                'user_id'      => $userId,
+                'meal_plan_id' => $mealPlanId,
+                'trainer_id'   => $trainerId,
+            ]);
+        }
+
+        return back()->with('success', 'تم إرسال التوصية لجميع المتدربين المختارين بنجاح');
+    }
+
+    // 4. حذف وجبة من المكتبة
     public function destroy(MealPlan $mealPlan) {
         if ($mealPlan->image) {
             Storage::disk('public')->delete($mealPlan->image->path);
@@ -70,33 +86,30 @@ class MealPlanController extends Controller
         }
         
         $mealPlan->delete();
-        return back()->with('success', 'تم حذف التوصية بنجاح');
+        return back()->with('success', 'تم حذف الوجبة من المكتبة بنجاح');
     }
 
-    // 5. تعديل الوجبة
+    // 5. تعديل بيانات وجبة
     public function edit(MealPlan $mealPlan) {
-        $trainees = User::role('member')->get();
-        return view('meal_plans.edit', compact('mealPlan', 'trainees'));
+        return view('meal_plans.edit', compact('mealPlan'));
     }
 
-    // 6. تحديث الوجبة (تم تعديل url إلى path و filename)
     public function update(Request $request, MealPlan $mealPlan) {
         $request->validate([
-            'name'    => 'required',
-            'user_id' => 'required|exists:users,id',
-            'image'   => 'nullable|image|max:2048'
+            'name'  => 'required',
+            'image' => 'nullable|image|max:2048'
         ]);
 
-        $mealPlan->update($request->only(['name', 'description', 'calories', 'price', 'user_id']));
+        // تحديث البيانات الأساسية
+        $mealPlan->update($request->only(['name', 'description', 'calories', 'price']));
 
+        // تحديث الصورة إذا تم رفع صورة جديدة
         if ($request->hasFile('image')) {
-            // حذف الصورة القديمة من السيرفر ومن قاعدة البيانات
             if ($mealPlan->image) {
                 Storage::disk('public')->delete($mealPlan->image->path);
                 $mealPlan->image()->delete();
             }
 
-            // تخزين الصورة الجديدة باستخدام الأسماء الصحيحة
             $file = $request->file('image');
             $path = $file->store('meals', 'public');
             
@@ -106,6 +119,6 @@ class MealPlanController extends Controller
             ]);
         }
 
-        return redirect()->route('meal-plans.index')->with('success', 'تم تحديث التوصية بنجاح');
+        return redirect()->route('meal-plans.index')->with('success', 'تم تحديث بيانات الوجبة بنجاح');
     }
 }

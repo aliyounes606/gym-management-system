@@ -53,19 +53,24 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
 });
 
 // مسارات إدارة الوجبات
+
 Route::middleware(['auth'])->group(function () {
 
-    // 1. عرض الوجبات (متاح للكل ليشوفوا المنيو)
+    // 1. عرض الوجبات (المكتبة العامة) - متاح للجميع
     Route::get('/meal-plans', [MealPlanController::class, 'index'])->name('meal-plans.index');
 
-    // 2. عمليات الإدارة (فقط للمدير)
-    // استخدمنا ميزة الصلاحيات can لضمان الأمان
-    Route::middleware(['can:manage meal plans'])->group(function () {
+    // 2. عمليات الإدارة (فقط للأدمن)
+    Route::middleware(['role:admin'])->group(function () {
+       
+        Route::get('/meal-plans/create', [MealPlanController::class, 'create'])->name('meal-plans.create');
         Route::post('/meal-plans', [MealPlanController::class, 'store'])->name('meal-plans.store');
+        
+
         Route::get('/meal-plans/{mealPlan}/edit', [MealPlanController::class, 'edit'])->name('meal-plans.edit');
         Route::put('/meal-plans/{mealPlan}', [MealPlanController::class, 'update'])->name('meal-plans.update');
         Route::delete('/meal-plans/{mealPlan}', [MealPlanController::class, 'destroy'])->name('meal-plans.destroy');
-        Route::get('/meal-plans/create', [MealPlanController::class, 'create'])->name('meal-plans.create');
+        Route::post('/meal-plans/recommend', [MealPlanController::class, 'recommend'])->name('meal-plans.recommend');
+
         Route::resource('bookings', BookingsController::class)->middleware('auth');
         Route::post('/bookings/bookCorse', [BookingsController::class, 'bookCorse'])->name('bookings.bookCorse');
         Route::post('/bookings/bookSession', [BookingsController::class, 'bookSession'])->name('bookings.bookSession')->middleware('auth');
