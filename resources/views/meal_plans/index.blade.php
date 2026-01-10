@@ -2,7 +2,7 @@
     <x-slot name="header">
         <div class="flex justify-between items-center">
             <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-                {{ __('نظام إدارة وتوصية الوجبات') }}
+                {{ __('مكتبة الوجبات ونظام التوصيات') }}
             </h2>
           
             @role('admin')
@@ -11,7 +11,7 @@
                     <svg class="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
                     </svg>
-                    إضافة توصية جديدة
+                 إضافة وجبة جديدة
                 </a>
             </div>
             @endrole
@@ -27,35 +27,19 @@
                 </div>
             @endif
 
-            @role('member')
-                @if($plans->count() > 0)
-                    <div class="mb-6 p-4 bg-indigo-50 border-r-4 border-indigo-500 rounded-lg shadow-sm flex items-center">
-                        <div class="flex-shrink-0 bg-indigo-100 p-2 rounded-full">
-                            <svg class="h-6 w-6 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"></path>
-                            </svg>
-                        </div>
-                        <div class="mr-4">
-                            <h4 class="text-sm font-bold text-indigo-900">لديك توصيات غذائية جديدة!</h4>
-                            <p class="text-xs text-indigo-700">قام مدربك بإضافة {{ $plans->count() }} توصيات مخصصة لك اليوم.</p>
-                        </div>
-                    </div>
-                @endif
-            @endrole
-
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6 bg-white border-b border-gray-200">
-                    <h3 class="text-lg font-bold mb-4 text-gray-700 border-r-4 border-indigo-500 pr-3">قائمة توصيات الوجبات</h3>
+                    <h3 class="text-lg font-bold mb-4 text-gray-700 border-r-4 border-indigo-500 pr-3">مكتبة الوجبات العامة</h3>
                     <div class="overflow-x-auto">
                         <table class="min-w-full divide-y divide-gray-200 text-right" dir="rtl">
                             <thead class="bg-gray-50">
                                 <tr>
                                     <th class="px-6 py-3 text-xs font-medium text-gray-500 uppercase">الصورة</th>
                                     <th class="px-6 py-3 text-xs font-medium text-gray-500 uppercase">الوجبة</th>
-                                    <th class="px-6 py-3 text-xs font-medium text-gray-500 uppercase">المتدرب</th>
                                     <th class="px-6 py-3 text-xs font-medium text-gray-500 uppercase">السعرات</th>
                                     <th class="px-6 py-3 text-xs font-medium text-gray-500 uppercase">السعر</th>
                                     @role('admin')
+                                    <th class="px-6 py-3 text-xs font-medium text-gray-500 uppercase">المتدربين </th>
                                     <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase">العمليات</th>
                                     @endrole
                                 </tr>
@@ -76,20 +60,30 @@
                                             <div class="text-xs text-gray-500">{{ Str::limit($plan->description, 30) }}</div>
                                         </td>
 
-                                        <td class="px-6 py-4 whitespace-nowrap">
-                                            <span class="px-2 py-1 bg-blue-50 text-blue-700 rounded-md text-xs font-semibold">
-                                                {{ $plan->trainee->name ?? 'غير محدد' }}
-                                            </span>
-                                        </td>
-
                                         <td class="px-6 py-4 whitespace-nowrap text-sm text-orange-600 font-semibold">{{ $plan->calories }} سعرة</td>
                                         <td class="px-6 py-4 whitespace-nowrap text-sm text-indigo-600 font-bold">{{ $plan->price }} $</td>
                                         
                                         @role('admin')
+                                        <td class="px-6 py-4 whitespace-nowrap">
+                                            <form action="{{ route('meal-plans.recommend') }}" method="POST" class="flex flex-col space-y-2">
+                                                @csrf
+                                                <input type="hidden" name="meal_plan_id" value="{{ $plan->id }}">
+                                                <select name="user_ids[]" required multiple class="text-xs border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500 min-h-[80px]">
+                                                    @foreach($trainees as $trainee)
+                                                        <option value="{{ $trainee->id }}">{{ $trainee->name }}</option>
+                                                    @endforeach
+                                                </select>
+                                                <button type="submit" class="bg-green-500 hover:bg-green-600 text-white px-2 py-1 rounded text-xs transition font-bold">
+                                                    إرسال للمختارين
+                                                </button>
+                                                <span class="text-[9px] text-gray-400">علق على Ctrl للاختيار المتعدد</span>
+                                            </form>
+                                        </td>
+
                                         <td class="px-6 py-4 whitespace-nowrap text-center text-sm font-medium">
                                             <div class="flex items-center justify-center space-x-2 space-x-reverse">
                                                 <a href="{{ route('meal-plans.edit', $plan->id) }}" class="text-indigo-600 hover:text-indigo-900 bg-indigo-50 px-3 py-1 rounded-full text-xs transition">تعديل</a>
-                                                <form action="{{ route('meal-plans.destroy', $plan->id) }}" method="POST" onsubmit="return confirm('هل أنت متأكد من حذف هذه التوصية؟')">
+                                                <form action="{{ route('meal-plans.destroy', $plan->id) }}" method="POST" onsubmit="return confirm('هل أنت متأكد من حذف هذه الوجبة؟')">
                                                     @csrf @method('DELETE')
                                                     <button type="submit" class="text-red-600 hover:text-red-900 bg-red-50 px-3 py-1 rounded-full text-xs transition">حذف</button>
                                                 </form>
@@ -99,7 +93,7 @@
                                     </tr>
                                 @empty
                                     <tr>
-                                        <td colspan="6" class="px-6 py-10 text-center text-gray-400 italic">لا توجد توصيات وجبات حالياً.</td>
+                                        <td colspan="6" class="px-6 py-10 text-center text-gray-400 italic">لا توجد وجبات في المكتبة حالياً.</td>
                                     </tr>
                                 @endforelse
                             </tbody>

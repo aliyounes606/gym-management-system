@@ -21,15 +21,6 @@
                     <form action="{{ route('meal-plans.store') }}" method="POST" enctype="multipart/form-data" class="grid grid-cols-1 md:grid-cols-3 gap-6">
                         @csrf
                         
-                        <div class="md:col-span-3">
-                            <label class="block text-sm font-medium text-gray-700">اختر المتدرب المستهدف</label>
-                            <select name="user_id" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500" required>
-                                <option value="">-- اختر المتدرب من القائمة --</option>
-                                @foreach($trainees as $trainee)
-                                    <option value="{{ $trainee->id }}">{{ $trainee->name }} ({{ $trainee->email }})</option>
-                                @endforeach
-                            </select>
-                        </div>
 
                         <div>
                             <label class="block text-sm font-medium text-gray-700">اسم الوجبة</label>
@@ -54,13 +45,13 @@
                         <div class="md:col-span-3">
                             <label class="block text-sm font-medium text-gray-700">صورة الوجبة</label>
                             <input type="file" name="image" accept="image/*" class="mt-1 block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100">
-                            <p class="mt-1 text-xs text-gray-500">سيتم تخزين الصورة باستخدام نظام Polymorphic Relations.</p>
+                            <p class="mt-1 text-xs text-gray-500"></p>
                         </div>
 
                         <div class="md:col-span-3 flex justify-between items-center pt-4 border-t">
                             <a href="{{ route('meal-plans.index') }}" class="text-gray-600 hover:underline text-sm">إلغاء والعودة</a>
                             <button type="submit" class="inline-flex items-center px-8 py-3 bg-indigo-600 text-white rounded-md font-bold shadow-sm hover:bg-indigo-700 focus:outline-none transition duration-150">
-                                إرسال التوصية للمتدرب
+                               حفظ
                             </button>
                         </div>
                     </form>

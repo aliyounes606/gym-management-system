@@ -11,7 +11,7 @@ class StoreMealPlanRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -21,8 +21,13 @@ class StoreMealPlanRequest extends FormRequest
      */
     public function rules(): array
     {
-        return [
-            //
+     return [
+            'user_id' => 'nullable',
+            'name'        => 'required|string|max:255',
+            'description' => 'required|string',
+            'calories'    => 'nullable|integer',
+            'price'       => 'nullable|decimal:0,2',
+            'image'       => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
         ];
     }
 }

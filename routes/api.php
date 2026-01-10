@@ -3,6 +3,8 @@
 use App\Http\Controllers\Api\AuthController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Api\MealPlanController;
+
 
 Route::get('/user', function (Request $request) {
     return $request->user();
@@ -15,4 +17,15 @@ Route::post('/login', [AuthController::class, 'login']);
 // Protected Routes (Require Token)
 Route::middleware('auth:sanctum')->group(function () {
     Route::post('/logout', [AuthController::class, 'logout']);
+});
+
+Route::middleware('auth:sanctum')->group(function () {
+    
+    // رابط جلب كل الوجبات
+    Route::get('/meals', [MealPlanController::class, 'index']);
+    
+    // رابط جلب الوجبات الخاصة بي فقط
+    Route::get('/meals/my-plans', [MealPlanController::class, 'myPlans']);
+    Route::post('/meals/recommend', [MealPlanController::class, 'recommend']);
+    
 });
