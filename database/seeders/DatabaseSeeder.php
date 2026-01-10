@@ -38,10 +38,10 @@ class DatabaseSeeder extends Seeder
             $user->assignRole('member');
         }
 
-          $this->call([
+        $this->call([
             MealPlanSeeder::class,
-        EquipmentSeeder::class,
-    ]);
+            EquipmentSeeder::class,
+        ]);
 
 
     }
