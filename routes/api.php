@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Api\AuthController;
+use App\Http\Controllers\Api\BookingController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\MealPlanController;
@@ -28,4 +29,10 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/meals/my-plans', [MealPlanController::class, 'myPlans']);
     Route::post('/meals/recommend', [MealPlanController::class, 'recommend']);
     
+Route::middleware('auth:sanctum')->group(function () {
+
+    Route::post('/bookings/single', [BookingController::class, 'storeSingleSession']);
+
+    Route::post('/bookings/course', [BookingController::class, 'storeCourse']);
+
 });

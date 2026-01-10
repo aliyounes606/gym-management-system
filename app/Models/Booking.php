@@ -4,25 +4,26 @@ namespace App\Models;
 
 use App\Http\Controllers\BookingsController;
 use Illuminate\Database\Eloquent\Model;
-use app\Models\GymSession;
+use App\Models\GymSession;
 
 class Booking extends Model
 {
     protected $fillable = [
         'user_id',
         'session_id',
-        'course_id',
-        'booking_type',
+        'batch_id',
         'payment_status',
-        'amount_paid',
+        'status',
+        'price',
+        'attended_at',
     ];
     public function users()
     {
-        return $this->belongsToMany(User::class,'bookings_users');
+        return $this->belongsTo(User::class, 'user_id');
     }
-    public function gymSessions()
+    public function gymsessions()
     {
-        return $this->belongsTo(GymSession::class, 'bookings_gymsessions');
+        return $this->belongsTo(GymSession::class, 'session_id');
     }
     public function courses()
     {

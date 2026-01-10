@@ -24,6 +24,10 @@
                         class="text-gray-300 hover:text-white transition-colors duration-200">
                         {{ __('Dashboard') }}
                     </x-nav-link>
+                    <x-nav-link :href="route('admin.payments.index')" :active="request()->routeIs('admin.payments.*')"
+                        class="text-gray-300 hover:text-white transition-colors duration-200">
+                        {{ __('طلبات الدفع') }}
+                    </x-nav-link>
 
                     {{-- link for admin --}}
                     <div class="flex space-x-8">
@@ -54,96 +58,103 @@
                     <div class="flex space-x-8">
                         @include('layouts.partials._equipment_links')
                     </div>
+
+                </div>
+
+                <div class="hidden sm:flex sm:items-center sm:ms-6">
+                    <x-dropdown align="right" width="48">
+                        <x-slot name="trigger">
+                            <button
+                                class="inline-flex items-center px-4 py-2 border border-gray-700 text-sm leading-4 font-bold rounded-xl text-gray-300 bg-gray-900 hover:text-white hover:bg-gray-800 hover:border-indigo-500/50 focus:outline-none transition ease-in-out duration-150 shadow-sm">
+                                <div>{{ Auth::user()->name }}</div>
+
+                                <div class="ms-1">
+                                    <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg"
+                                        viewBox="0 0 20 20">
+                                        <path fill-rule="evenodd"
+                                            d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+                                            clip-rule="evenodd" />
+                                    </svg>
+                                </div>
+                            </button>
+                        </x-slot>
+
+                        <x-slot name="content">
+                            <x-dropdown-link :href="route('profile.edit')">
+                                {{ __('Profile') }}
+                            </x-dropdown-link>
+
+                            <form method="POST" action="{{ route('logout') }}">
+                                @csrf
+
+                                <x-dropdown-link :href="route('logout')"
+                                    onclick="event.preventDefault();
+                                                this.closest('form').submit();">
+                                    {{ __('Log Out') }}
+                                </x-dropdown-link>
+                            </form>
+                        </x-slot>
+                    </x-dropdown>
+                </div>
+
+                <div class="-me-2 flex items-center sm:hidden">
+                    <button @click="open = ! open"
+                        class="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-white hover:bg-gray-800 focus:outline-none focus:bg-gray-800 focus:text-white transition duration-150 ease-in-out">
+                        <svg class="h-6 w-6" stroke="currentColor" fill="none" viewBox="0 0 24 24">
+                            <path :class="{ 'hidden': open, 'inline-flex': !open }" class="inline-flex"
+                                stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M4 6h16M4 12h16M4 18h16" />
+                            <path :class="{ 'hidden': !open, 'inline-flex': open }" class="hidden"
+                                stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M6 18L18 6M6 6l12 12" />
+                        </svg>
+                    </button>
                 </div>
             </div>
-
-            <div class="hidden sm:flex sm:items-center sm:ms-6">
-                <x-dropdown align="right" width="48">
-                    <x-slot name="trigger">
-                        <button
-                            class="inline-flex items-center px-4 py-2 border border-gray-700 text-sm leading-4 font-bold rounded-xl text-gray-300 bg-gray-900 hover:text-white hover:bg-gray-800 hover:border-indigo-500/50 focus:outline-none transition ease-in-out duration-150 shadow-sm">
-                            <div>{{ Auth::user()->name }}</div>
-
-                            <div class="ms-1">
-                                <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg"
-                                    viewBox="0 0 20 20">
-                                    <path fill-rule="evenodd"
-                                        d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
-                                        clip-rule="evenodd" />
-                                </svg>
-                            </div>
-                        </button>
-                    </x-slot>
-
-                    <x-slot name="content">
-                        <x-dropdown-link :href="route('profile.edit')">
-                            {{ __('Profile') }}
-                        </x-dropdown-link>
-
-                        <form method="POST" action="{{ route('logout') }}">
-                            @csrf
-
-                            <x-dropdown-link :href="route('logout')"
-                                onclick="event.preventDefault();
-                                                this.closest('form').submit();">
-                                {{ __('Log Out') }}
-                            </x-dropdown-link>
-                        </form>
-                    </x-slot>
-                </x-dropdown>
-            </div>
-
-            <div class="-me-2 flex items-center sm:hidden">
-                <button @click="open = ! open"
-                    class="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-white hover:bg-gray-800 focus:outline-none focus:bg-gray-800 focus:text-white transition duration-150 ease-in-out">
-                    <svg class="h-6 w-6" stroke="currentColor" fill="none" viewBox="0 0 24 24">
-                        <path :class="{ 'hidden': open, 'inline-flex': !open }" class="inline-flex"
-                            stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M4 6h16M4 12h16M4 18h16" />
-                        <path :class="{ 'hidden': !open, 'inline-flex': open }" class="hidden" stroke-linecap="round"
-                            stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-                    </svg>
-                </button>
-            </div>
-        </div>
-    </div>
-
-    <div :class="{ 'block': open, 'hidden': !open }" class="hidden sm:hidden bg-gray-900 border-t border-gray-800">
-        <div class="pt-2 pb-3 space-y-1">
-            <x-responsive-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')"
-                class="text-gray-300 hover:text-indigo-400 hover:bg-gray-800 border-indigo-500">
-                {{ __('Dashboard') }}
-            </x-responsive-nav-link>
-
-            @include('layouts.partials._admin_links')
-            @include('layouts.partials._trainer_links')
-            @include('layouts.partials._member_links')
-            @include('layouts.partials._course_links')
-            @include('layouts.partials._session_links')
-            @include('layouts.partials._equipment_links')
         </div>
 
-        <div class="pt-4 pb-1 border-t border-gray-800 bg-gray-950">
-            <div class="px-4">
-                <div class="font-medium text-base text-white">{{ Auth::user()->name }}</div>
-                <div class="font-medium text-sm text-gray-400">{{ Auth::user()->email }}</div>
-            </div>
-
-            <div class="mt-3 space-y-1">
-                <x-responsive-nav-link :href="route('profile.edit')" class="text-gray-300 hover:text-indigo-400 hover:bg-gray-800">
-                    {{ __('Profile') }}
+        <div :class="{ 'block': open, 'hidden': !open }" class="hidden sm:hidden bg-gray-900 border-t border-gray-800">
+            <div class="pt-2 pb-3 space-y-1">
+                <x-responsive-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')"
+                    class="text-gray-300 hover:text-indigo-400 hover:bg-gray-800 border-indigo-500">
+                    {{ __('Dashboard') }}
+                </x-responsive-nav-link>
+                <x-responsive-nav-link :href="route('admin.payments.index')" :active="request()->routeIs('admin.payments.*')">
+                    {{ __('طلبات الدفع') }}
                 </x-responsive-nav-link>
 
-                <form method="POST" action="{{ route('logout') }}">
-                    @csrf
+                @include('layouts.partials._admin_links')
+                @include('layouts.partials._trainer_links')
+                @include('layouts.partials._payments_links')
+                @include('layouts.partials._member_links')
+                @include('layouts.partials._course_links')
+                @include('layouts.partials._session_links')
+                @include('layouts.partials._equipment_links')
+            </div>
 
-                    <x-responsive-nav-link :href="route('logout')" class="text-gray-300 hover:text-red-400 hover:bg-gray-800"
-                        onclick="event.preventDefault();
-                                        this.closest('form').submit();">
-                        {{ __('Log Out') }}
+            <div class="pt-4 pb-1 border-t border-gray-800 bg-gray-950">
+                <div class="px-4">
+                    <div class="font-medium text-base text-white">{{ Auth::user()->name }}</div>
+                    <div class="font-medium text-sm text-gray-400">{{ Auth::user()->email }}</div>
+                </div>
+
+                <div class="mt-3 space-y-1">
+                    <x-responsive-nav-link :href="route('profile.edit')"
+                        class="text-gray-300 hover:text-indigo-400 hover:bg-gray-800">
+                        {{ __('Profile') }}
                     </x-responsive-nav-link>
-                </form>
+
+                    <form method="POST" action="{{ route('logout') }}">
+                        @csrf
+
+                        <x-responsive-nav-link :href="route('logout')"
+                            class="text-gray-300 hover:text-red-400 hover:bg-gray-800"
+                            onclick="event.preventDefault();
+                                        this.closest('form').submit();">
+                            {{ __('Log Out') }}
+                        </x-responsive-nav-link>
+                    </form>
+                </div>
             </div>
         </div>
-    </div>
 </nav>
