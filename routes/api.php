@@ -21,14 +21,14 @@ Route::middleware('auth:sanctum')->group(function () {
 });
 
 Route::middleware('auth:sanctum')->group(function () {
-    
+
     // رابط جلب كل الوجبات
     Route::get('/meals', [MealPlanController::class, 'index']);
-    
+
     // رابط جلب الوجبات الخاصة بي فقط
     Route::get('/meals/my-plans', [MealPlanController::class, 'myPlans']);
     Route::post('/meals/recommend', [MealPlanController::class, 'recommend']);
-    
+});
 Route::middleware('auth:sanctum')->group(function () {
 
     Route::post('/bookings/single', [BookingController::class, 'storeSingleSession']);
