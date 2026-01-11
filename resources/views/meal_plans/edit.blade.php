@@ -12,16 +12,7 @@
                     
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                         
-                        <div class="md:col-span-2 mb-4">
-                            <label class="block text-sm font-medium text-gray-700">المتدرب المستهدف</label>
-                            <select name="user_id" class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500" required>
-                                @foreach($trainees as $trainee)
-                                    <option value="{{ $trainee->id }}" {{ $mealPlan->user_id == $trainee->id ? 'selected' : '' }}>
-                                        {{ $trainee->name }}
-                                    </option>
-                                @endforeach
-                            </select>
-                        </div>
+              
 
                         <div class="mb-4">
                             <label class="block text-sm font-medium text-gray-700">اسم الوجبة</label>

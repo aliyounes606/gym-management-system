@@ -5,20 +5,21 @@
                 {{ __('مكتبة الوجبات ونظام التوصيات') }}
             </h2>
           
-            @role('admin')
+            {{-- السماح للآدمن والمدرب برؤية زر الإضافة --}}
+            @hasanyrole('admin|trainer')
             <div class="flex justify-end">
                 <a href="{{ route('meal-plans.create') }}" class="inline-flex items-center px-5 py-2.5 bg-indigo-600 border border-transparent rounded-lg font-bold text-sm text-white hover:bg-indigo-700 shadow-lg transition">
                     <svg class="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
                     </svg>
-                 إضافة وجبة جديدة
+                    إضافة وجبة جديدة للمكتبة
                 </a>
             </div>
-            @endrole
+            @endhasanyrole
         </div>
     </x-slot>
 
-    <div class="py-12">
+    <div class="py-12" dir="rtl">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             
             @if(session('success'))
@@ -27,21 +28,40 @@
                 </div>
             @endif
 
+            {{-- التعديل الجديد: زر خاص للمتدرب يظهر في أعلى الصفحة --}}
+            @role('member')
+            <div class="mb-8 bg-gradient-to-l from-indigo-600 to-blue-500 rounded-2xl p-6 shadow-xl transform transition hover:scale-[1.01]">
+                <div class="flex flex-col md:flex-row justify-between items-center gap-4">
+                    <div class="text-white text-right">
+                        <h3 class="text-xl font-bold">مرحباً بك في برنامجك الغذائي!</h3>
+                        <p class="text-indigo-100 opacity-90">يمكنك هنا تصفح المكتبة العامة، أو الانتقال مباشرة لمشاهدة ما اختاره لك مدربك.</p>
+                    </div>
+                    <a href="{{ route('meal-plans.my-recommended') }}" class="bg-white text-indigo-600 px-8 py-3 rounded-xl font-black shadow-lg hover:bg-indigo-50 transition flex items-center gap-2">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+                        </svg>
+                        عرض وجباتي الموصى بها
+                    </a>
+                </div>
+            </div>
+            @endrole
+
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6 bg-white border-b border-gray-200">
-                    <h3 class="text-lg font-bold mb-4 text-gray-700 border-r-4 border-indigo-500 pr-3">مكتبة الوجبات العامة</h3>
+                    <h3 class="text-lg font-bold mb-4 text-gray-700 border-r-4 border-indigo-500 pr-3 text-right italic">مكتبة الوجبات العامة</h3>
                     <div class="overflow-x-auto">
-                        <table class="min-w-full divide-y divide-gray-200 text-right" dir="rtl">
+                        <table class="min-w-full divide-y divide-gray-200 text-right">
                             <thead class="bg-gray-50">
                                 <tr>
                                     <th class="px-6 py-3 text-xs font-medium text-gray-500 uppercase">الصورة</th>
                                     <th class="px-6 py-3 text-xs font-medium text-gray-500 uppercase">الوجبة</th>
                                     <th class="px-6 py-3 text-xs font-medium text-gray-500 uppercase">السعرات</th>
                                     <th class="px-6 py-3 text-xs font-medium text-gray-500 uppercase">السعر</th>
-                                    @role('admin')
-                                    <th class="px-6 py-3 text-xs font-medium text-gray-500 uppercase">المتدربين </th>
+                                    
+                                    @hasanyrole('admin|trainer')
+                                    <th class="px-6 py-3 text-xs font-medium text-gray-500 uppercase">المتدربين</th>
                                     <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase">العمليات</th>
-                                    @endrole
+                                    @endhasanyrole
                                 </tr>
                             </thead>
                             <tbody class="bg-white divide-y divide-gray-200">
@@ -63,7 +83,7 @@
                                         <td class="px-6 py-4 whitespace-nowrap text-sm text-orange-600 font-semibold">{{ $plan->calories }} سعرة</td>
                                         <td class="px-6 py-4 whitespace-nowrap text-sm text-indigo-600 font-bold">{{ $plan->price }} $</td>
                                         
-                                        @role('admin')
+                                        @hasanyrole('admin|trainer')
                                         <td class="px-6 py-4 whitespace-nowrap">
                                             <form action="{{ route('meal-plans.recommend') }}" method="POST" class="flex flex-col space-y-2">
                                                 @csrf
@@ -76,7 +96,7 @@
                                                 <button type="submit" class="bg-green-500 hover:bg-green-600 text-white px-2 py-1 rounded text-xs transition font-bold">
                                                     إرسال للمختارين
                                                 </button>
-                                                <span class="text-[9px] text-gray-400">علق على Ctrl للاختيار المتعدد</span>
+                                                <span class="text-[9px] text-gray-400 leading-tight">اضغط Ctrl للاختيار المتعدد</span>
                                             </form>
                                         </td>
 
@@ -89,11 +109,11 @@
                                                 </form>
                                             </div>
                                         </td>
-                                        @endrole
+                                        @endhasanyrole
                                     </tr>
                                 @empty
                                     <tr>
-                                        <td colspan="6" class="px-6 py-10 text-center text-gray-400 italic">لا توجد وجبات في المكتبة حالياً.</td>
+                                        <td colspan="6" class="px-6 py-10 text-center text-gray-400 italic font-bold">لا توجد وجبات في المكتبة حالياً.</td>
                                     </tr>
                                 @endforelse
                             </tbody>

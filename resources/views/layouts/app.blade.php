@@ -34,6 +34,15 @@
             {{ $slot }}
         </main>
     </div>
+    <html>
+
+    <body>
+        <script src="app.js"></script>
+
+        @stack('scripts')
+    </body>
+
+    </html>
 </body>
 
 </html>
