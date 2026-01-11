@@ -9,25 +9,25 @@ return new class extends Migration
     /**
      * Run the migrations.
      */
- public function up()
+public function up()
 {
-    
- Schema::create('meal_plans', function (Illuminate\Database\Schema\Blueprint $table) {
+    // 1. جدول مكتبة الوجبات 
+    Schema::create('meal_plans', function (Blueprint $table) {
         $table->id();
-        $table->string('name'); // الاسم
-        $table->text('description'); // الوصف
-        $table->integer('calories'); // السعرات الحرارية 
-        $table->decimal('price', 8, 2); // السعر
-        $table->foreignId('user_id')->constrained('users')->onDelete('cascade'); // المتدرب المستلم
-        $table->foreignId('trainer_id')->constrained('users')->onDelete('cascade'); // المدرب المرسل
+        $table->string('name'); 
+        $table->text('description')->nullable();
+        $table->integer('calories')->default(0);
+        $table->decimal('price', 8, 2)->default(0);
+$table->foreignId('trainer_id')->constrained('users')->onDelete('cascade');
         $table->timestamps();
     });
 
-    
+    // 2. جدول التوصيات (الربط بين الوجبة والمتدرب)
     Schema::create('meal_recommendations', function (Blueprint $table) {
         $table->id();
-        $table->foreignId('user_id')->constrained()->onDelete('cascade');
-        $table->foreignId('meal_plan_id')->constrained()->onDelete('cascade');
+        $table->foreignId('user_id')->constrained('users')->onDelete('cascade'); // المتدرب
+        $table->foreignId('meal_plan_id')->constrained('meal_plans')->onDelete('cascade'); // الوجبة المختارة
+        $table->foreignId('trainer_id')->constrained('users')->onDelete('cascade'); // المدرب اللي وصى بها
         $table->timestamps();
     });
 }

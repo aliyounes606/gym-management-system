@@ -3,8 +3,11 @@
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\GymSessionController;
 use App\Http\Controllers\Api\CourseController;
+use App\Http\Controllers\Api\BookingController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Api\MealPlanController;
+
 
 Route::get('/user', function (Request $request) {
     return $request->user();
@@ -31,3 +34,19 @@ Route::get('/courses', [CourseController::class, 'index']);
 
 // عرض كورس واحد حسب ID
 Route::get('/courses/{id}', [CourseController::class, 'show']);
+Route::middleware('auth:sanctum')->group(function () {
+
+    // رابط جلب كل الوجبات
+    Route::get('/meals', [MealPlanController::class, 'index']);
+
+    // رابط جلب الوجبات الخاصة بي فقط
+    Route::get('/meals/my-plans', [MealPlanController::class, 'myPlans']);
+    Route::post('/meals/recommend', [MealPlanController::class, 'recommend']);
+});
+Route::middleware('auth:sanctum')->group(function () {
+
+    Route::post('/bookings/single', [BookingController::class, 'storeSingleSession']);
+
+    Route::post('/bookings/course', [BookingController::class, 'storeCourse']);
+
+});

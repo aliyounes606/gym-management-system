@@ -7,13 +7,13 @@ use Illuminate\Database\Eloquent\Model;
 class Course extends Model
 {
     //
-     /**
+    /**
      * Summary of fillable
      * @var array
      */
 
-  protected $table = "courses"; 
-    protected $fillable =[
+    protected $table = "courses";
+    protected $fillable = [
         "name",
         "description",
         "trainer_profile_id",

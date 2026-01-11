@@ -16,9 +16,7 @@ class DatabaseSeeder extends Seeder
 {
     public function run(): void
     {
-        // $this->call([
-        //     MealPlanSeeder::class,
-        // ]);
+
         $adminRole = Role::firstOrCreate(['name' => 'admin']);
         Role::firstOrCreate(['name' => 'trainer']);
         Role::firstOrCreate(['name' => 'member']);
@@ -44,9 +42,10 @@ class DatabaseSeeder extends Seeder
             $user->assignRole('member');
         }
 
-          $this->call([
-        EquipmentSeeder::class,
-    ]);
+        $this->call([
+            MealPlanSeeder::class,
+            EquipmentSeeder::class,
+        ]);
 
 $this->call([ 
       UserSeeder::class, 

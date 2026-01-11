@@ -26,6 +26,8 @@ class StoreTrainerRequest extends FormRequest
             'specialization' => 'required|string|max:100',
             'experience_years' => 'required|integer|min:0',
             'bio' => 'nullable|string|max:1000',
+            'image' => 'nullable|image|mimes:jpg,jpeg,png,gif',
+
         ];
     }
 }

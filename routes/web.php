@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\PaymentController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\EquipmentController;
 use App\Http\Controllers\CourseController;
@@ -31,6 +32,10 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
     Route::resource('roles', RoleController::class);
     Route::resource('permissions', PermissionController::class);
     Route::resource('admin/categories', CategoryController::class)->middleware(['auth', 'role:admin']);
+    //routes of payments
+    Route::get('/admin/payments', [PaymentController::class, 'index'])->name('admin.payments.index');
+    Route::post('/admin/payments/{batch_id}/confirm', [PaymentController::class, 'confirm'])->name('admin.payments.confirm');
+    Route::delete('/admin/payments/{batch_id}', [PaymentController::class, 'destroy'])->name('admin.payments.destroy');
 });
 
 // Route::middleware(['auth'])->group(function () {
@@ -48,24 +53,29 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
 });
 
 // مسارات إدارة الوجبات
-Route::middleware(['auth'])->group(function () {
 
-    // 1. عرض الوجبات (متاح للكل ليشوفوا المنيو)
-    Route::get('/meal-plans', [MealPlanController::class, 'index'])->name('meal-plans.index');
+// Route::middleware(['auth'])->group(function () {
 
-    // 2. عمليات الإدارة (فقط للمدير)
-    // استخدمنا ميزة الصلاحيات can لضمان الأمان
-    Route::middleware(['can:manage meal plans'])->group(function () {
-        Route::post('/meal-plans', [MealPlanController::class, 'store'])->name('meal-plans.store');
-        Route::get('/meal-plans/{mealPlan}/edit', [MealPlanController::class, 'edit'])->name('meal-plans.edit');
-        Route::put('/meal-plans/{mealPlan}', [MealPlanController::class, 'update'])->name('meal-plans.update');
-        Route::delete('/meal-plans/{mealPlan}', [MealPlanController::class, 'destroy'])->name('meal-plans.destroy');
-        Route::get('/meal-plans/create', [MealPlanController::class, 'create'])->name('meal-plans.create');
-        Route::resource('bookings', BookingsController::class)->middleware('auth');
-        Route::post('/bookings/bookCorse', [BookingsController::class, 'bookCorse'])->name('bookings.bookCorse');
-        Route::post('/bookings/bookSession', [BookingsController::class, 'bookSession'])->name('bookings.bookSession')->middleware('auth');
-    });
-});
+// 1. عرض الوجبات (المكتبة العامة) - متاح للجميع
+Route::get('/meal-plans', [MealPlanController::class, 'index'])->name('meal-plans.index');
+
+// 2. عمليات الإدارة (فقط للأدمن)
+// Route::middleware(['role:admin'])->group(function () {
+
+Route::get('/meal-plans/create', [MealPlanController::class, 'create'])->name('meal-plans.create');
+Route::post('/meal-plans', [MealPlanController::class, 'store'])->name('meal-plans.store');
+
+
+Route::get('/meal-plans/{mealPlan}/edit', [MealPlanController::class, 'edit'])->name('meal-plans.edit');
+Route::put('/meal-plans/{mealPlan}', [MealPlanController::class, 'update'])->name('meal-plans.update');
+Route::delete('/meal-plans/{mealPlan}', [MealPlanController::class, 'destroy'])->name('meal-plans.destroy');
+Route::post('/meal-plans/recommend', [MealPlanController::class, 'recommend'])->name('meal-plans.recommend');
+
+Route::resource('bookings', BookingsController::class)->middleware('auth');
+Route::post('/bookings/bookCorse', [BookingsController::class, 'bookCorse'])->name('bookings.bookCorse');
+Route::post('/bookings/bookSession', [BookingsController::class, 'bookSession'])->name('bookings.bookSession')->middleware('auth');
+// });
+// });
 
 
 
@@ -92,9 +102,9 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
 });
 
 
-    Route::resource('gymsessions', GymSessionController::class);
+Route::resource('gymsessions', GymSessionController::class);
 
 //route for schedule 
-Route::get('/sessions/schedule/{id}', [GymSessionController::class, 'schedule']) ->name('sessions.schedule');
+Route::get('/sessions/schedule/{id}', [GymSessionController::class, 'schedule'])->name('sessions.schedule');
 Route::patch('/gymsessions/{id}/status', [GymSessionController::class, 'updateStatus'])
-     ->name('gymsessions.updateStatus');
+    ->name('gymsessions.updateStatus');

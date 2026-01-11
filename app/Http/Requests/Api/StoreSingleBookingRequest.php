@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Http\Requests\Admin;
+namespace App\Http\Requests\Api;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class UpdateTrainerRequest extends FormRequest
+class StoreSingleBookingRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -22,10 +22,14 @@ class UpdateTrainerRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'specialization' => 'required|string|max:100',
-            'experience_years' => 'required|integer|min:0',
-            'bio' => 'nullable|string|max:1000',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'session_id' => ['required', 'integer', 'exists:gymsessions,id'],
+        ];
+    }
+    public function messages()
+    {
+        return [
+            'session_id.required' => 'يرجى اختيار الجلسة المطلوبة.',
+            'session_id.exists' => 'الجلسة المختارة غير موجودة في النظام.',
         ];
     }
 }
