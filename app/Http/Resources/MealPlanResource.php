@@ -12,15 +12,15 @@ class MealPlanResource extends JsonResource
      *
      * @return array<string, mixed>
      */
-public function toArray($request)
-{
-    return [
-        'id'          => $this->id,
-        'name'        => $this->name,
-        'description' => $this->description,
-        'calories'    => $this->calories,
-        'image_url'   => $this->image ? asset('storage/' . $this->image->path) : null,
-        'created_at'  => $this->created_at->format('Y-m-d'),
-    ];
-}
+    public function toArray($request)
+    {
+        return [
+            'id' => $this->id,
+            'name' => $this->name,
+            'description' => $this->description,
+            'calories' => $this->calories,
+            'image_url' => $this->image ? asset('storage/' . $this->image->path) : null,
+            'created_at' => $this->created_at?->format('Y-m-d'),
+        ];
+    }
 }

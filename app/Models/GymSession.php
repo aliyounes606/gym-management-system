@@ -8,10 +8,7 @@ use App\Models\TrainerProfile ;
 use App\Models\Course;
 use App\Models\Equipment;
 class GymSession extends Model
-{    /**
-     * Summary of fillable
-     * @var array
-     */
+{    
      protected $table = "gymsessions";
    //استقبال المتغيرات
     protected $fillable = [
@@ -46,7 +43,7 @@ public function course(){
     }
     //علاقة المدرب مع الجلسات 
 /**
- * Summary of trainer
+ * Summary of trainer 
  * @return \Illuminate\Database\Eloquent\Relations\BelongsTo<TrainerProfile, GymSession>
  */
 public function trainer(){

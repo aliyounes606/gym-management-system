@@ -6,6 +6,7 @@ use App\Models\Course;
 //use App\Http\Requests\Admin\StoreCourseRequest;
 use App\Http\Requests\StoreCourseRequest;
 use App\Http\Requests\UpdateCourseRequest;
+use App\Models\TrainerProfile;
 
 //use App\Http\Requests\Admin\UpdateCourseRequest;
 
@@ -24,9 +25,9 @@ class CourseController extends Controller
         return view('courses.index', compact('courses'));
     }
     /** * Show the form for creating a new course. 
-       * يعرض فورم إنشاء كورس جديد مع تضمين قائمة المدربين المتاحين. 
-       * @return \Illuminate\View\View 
-       * */
+     * يعرض فورم إنشاء كورس جديد مع تضمين قائمة المدربين المتاحين. 
+     * @return \Illuminate\View\View 
+     * */
     // عرض فورم إنشاء كورس جديد
     public function create()
     {//للتجريب تضمين اسم المدرب
@@ -55,8 +56,9 @@ class CourseController extends Controller
     // عرض فورم تعديل كورس
     public function edit($id)
     {
+        $trainerProfiles = TrainerProfile::with('user')->get();
         $course = Course::findOrFail($id);
-        return view('courses.edit', compact('course'));
+        return view('courses.edit', compact('course', 'trainerProfiles'));
     }
     /** * Update the specified course in storage. * * يعدّل بيانات كورس موجود بعد التحقق من صحة البيانات. * * @param \App\Http\Requests\UpdateCourseRequest $request بيانات الطلب بعد التحقق * @param int $id رقم تعريف الكورس * @return \Illuminate\Http\RedirectResponse إعادة التوجيه إلى صفحة الكورسات مع رسالة نجاح * * @throws \Illuminate\Database\Eloquent\ModelNotFoundException إذا لم يتم العثور على الكورس */
     // تحديث الكورس

@@ -49,7 +49,8 @@
                 </div>
 
                 <div class="p-8">
-                    <form action="{{ route('admin.trainers.update', $trainer->id) }}" method="POST">
+                    <form action="{{ route('admin.trainers.update', $trainer->id) }}"
+                        method="POST"enctype="multipart/form-data">
                         @csrf
                         @method('PUT')
 
@@ -105,6 +106,47 @@
                                 </label>
                                 <textarea name="bio" rows="5"
                                     class="w-full bg-gray-800 border border-gray-700 text-white rounded-xl focus:border-indigo-500 focus:ring-indigo-500 py-3 px-4 transition duration-200">{{ old('bio', $trainer->bio) }}</textarea>
+                            </div>
+                            {{-- Current Image Preview --}}
+                            <div class="space-y-2">
+                                <label class="text-sm font-bold text-gray-300">الصورة الحالية</label>
+                                <div
+                                    class="p-4 border border-gray-700 bg-gray-800 rounded-xl flex items-center justify-center h-48">
+                                    @if ($trainer->image)
+                                        <img src="{{ Storage::url($trainer->image->path) }}" alt="Current Image"
+                                            class="max-h-full max-w-full rounded shadow-lg object-contain">
+                                    @else
+                                        <div class="flex flex-col items-center text-gray-500">
+                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 mb-2 opacity-50"
+                                                fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                    d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                                            </svg>
+                                            <span class="text-xs">لا توجد صورة حالياً</span>
+                                        </div>
+                                    @endif
+                                </div>
+                            </div>
+                            {{-- Upload New Image --}}
+                            <div class="space-y-2">
+                                <label class="text-sm font-bold text-gray-300">تحديث الصورة (اختياري)</label>
+                                <label
+                                    class="flex flex-col items-center justify-center w-full h-48 border-2 border-gray-700 border-dashed rounded-xl cursor-pointer bg-gray-800 hover:bg-gray-750 hover:border-indigo-500 transition duration-300 group">
+                                    <div class="flex flex-col items-center justify-center pt-5 pb-6">
+                                        <svg class="w-10 h-10 mb-3 text-gray-400 group-hover:text-indigo-400 transition"
+                                            fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12">
+                                            </path>
+                                        </svg>
+                                        <p class="mb-2 text-sm text-gray-400"><span
+                                                class="font-bold text-indigo-400">اضغط لرفع صورة جديدة</span></p>
+                                        <p class="text-xs text-gray-500">سيتم استبدال الصورة القديمة</p>
+                                    </div>
+                                    <input type="file" name="image" accept="image/*" class="hidden"
+                                        onchange="document.getElementById('file-name-edit').innerText = this.files[0].name">
+                                </label>
+                                <p id="file-name-edit" class="text-xs text-indigo-400 text-center h-4"></p>
                             </div>
 
                         </div>
