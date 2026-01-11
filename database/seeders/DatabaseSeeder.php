@@ -43,16 +43,16 @@ class DatabaseSeeder extends Seeder
         }
 
         $this->call([
-            MealPlanSeeder::class,
+                // MealPlanSeeder::class,
             EquipmentSeeder::class,
         ]);
 
-$this->call([ 
-      UserSeeder::class, 
-      TrainerProfileSeeder::class,
-       CategorySeeder::class,
-       CourseSeeder::class, 
-       SessionSeeder::class,
-   ]);
+        $this->call([
+            UserSeeder::class,
+            TrainerProfileSeeder::class,
+            CategorySeeder::class,
+            CourseSeeder::class,
+            SessionSeeder::class,
+        ]);
     }
 }
