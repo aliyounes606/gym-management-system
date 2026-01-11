@@ -7,6 +7,7 @@ use App\Http\Controllers\Api\BookingController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\MealPlanController;
+use App\Http\Controllers\Api\EquipmentController;
 
 
 Route::get('/user', function (Request $request) {
@@ -50,3 +51,5 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/bookings/course', [BookingController::class, 'storeCourse']);
 
 });
+
+Route::get('/equipment', [EquipmentController::class, 'index']);

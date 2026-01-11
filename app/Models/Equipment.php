@@ -21,7 +21,7 @@ class Equipment extends Model
     return $this->morphOne(Image::class, 'imageable');
   }
 
-  public function categories()
+  public function category()
   {
     return $this->belongsToMany(Category::class);
   }
