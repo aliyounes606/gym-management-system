@@ -18,7 +18,7 @@ public function up()
         $table->text('description')->nullable();
         $table->integer('calories')->default(0);
         $table->decimal('price', 8, 2)->default(0);
-$table->foreignId('trainer_id')->constrained('users')->onDelete('cascade');
+        $table->foreignId('trainer_id')->nullable()->constrained('users')->onDelete('cascade');
         $table->timestamps();
     });
 
@@ -27,7 +27,7 @@ $table->foreignId('trainer_id')->constrained('users')->onDelete('cascade');
         $table->id();
         $table->foreignId('user_id')->constrained('users')->onDelete('cascade'); // المتدرب
         $table->foreignId('meal_plan_id')->constrained('meal_plans')->onDelete('cascade'); // الوجبة المختارة
-        $table->foreignId('trainer_id')->constrained('users')->onDelete('cascade'); // المدرب اللي وصى بها
+        $table->foreignId('trainer_id')->nullable()->constrained('users')->onDelete('cascade'); // المدرب اللي وصى بها
         $table->timestamps();
     });
 }
@@ -38,6 +38,6 @@ $table->foreignId('trainer_id')->constrained('users')->onDelete('cascade');
     public function down(): void
     {
         Schema::dropIfExists('meal_recommendations');
-        Schema::dropIfExists('meals_tables');
+        Schema::dropIfExists('meal_tables');
     }
 };
