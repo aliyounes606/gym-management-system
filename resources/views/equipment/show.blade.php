@@ -28,11 +28,17 @@
             </div>
 
           <!--  عرض صورة المعدة إذا كانت موجودة -->
-          @if ($equipment->image)
-             <img src="{{ Storage::url($equipment->image->path) }}" style="max-width: 100%; hieght:auto;">
-           @else
-           <p> لا توجد صورة للمعدة </p>
-          @endif
+           @if ($equipment->image)
+              <div class="mb-6">
+              <img src="{{ Storage::url($equipment->image->path) }}"
+                alt="{{ $equipment->name }}"
+                class="w-full h-64 object-cover rounded-lg border">
+              </div>
+            @else
+              <div class="mb-6 text-center text-gray-500">
+                    لا توجد صورة للمعدة
+                </div>
+            @endif
 
             <div class="flex gap-4 mt-6">
                 <a href="{{ route('equipment.edit', $equipment->id) }}"

@@ -49,7 +49,6 @@
                         <thead class="bg-black/40 text-gray-400 uppercase text-xs font-bold tracking-wider">
                             <tr>
                                 <th class="p-5">#</th>
-                                <th class="p-5">صورة المعدة</th>
                                 <th class="p-5">اسم المعدة</th>
                                 <th class="p-5 text-center">الحالة</th>
                                 <th class="p-5 text-center">الكمية</th>
@@ -62,29 +61,7 @@
                                     {{-- ID --}}
                                     <td class="p-5 text-gray-500 font-mono text-sm">
                                         {{ $loop->iteration }}
-                                    </td>
-
-                                    {{-- Image --}}
-                                    <td class="p-5">
-                                        @if ($item->image)
-                                            <div
-                                                class="relative w-16 h-16 rounded-lg overflow-hidden border border-gray-700 group-hover:border-indigo-500/50 transition">
-                                                <img src="{{ Storage::url($item->image->path) }}"
-                                                    alt="{{ $item->name }}"
-                                                    class="w-full h-full object-cover transform group-hover:scale-110 transition duration-500">
-                                            </div>
-                                        @else
-                                            <div
-                                                class="w-16 h-16 rounded-lg bg-gray-800 border border-gray-700 flex items-center justify-center text-gray-600">
-                                                <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none"
-                                                    viewBox="0 0 24 24" stroke="currentColor">
-                                                    <path stroke-linecap="round" stroke-linejoin="round"
-                                                        stroke-width="2"
-                                                        d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                                                </svg>
-                                            </div>
-                                        @endif
-                                    </td>
+                                    </td> 
 
                                     {{-- Name --}}
                                     <td class="p-5">
@@ -123,6 +100,17 @@
                                     {{-- Actions --}}
                                     <td class="p-5 text-center">
                                         <div class="flex justify-center gap-3">
+                                            <a href="{{ route('equipment.show', $item->id) }}"
+                                               class="p-2 bg-gray-800 text-green-400 rounded-lg hover:bg-green-500 hover:text-white transition shadow border border-gray-700 hover:border-green-500"
+                                               title="عرض">
+                                               <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none"
+                                                   viewBox="0 0 24 24" stroke="currentColor">
+                                                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                   d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                   d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                                                </svg>
+                                            </a>
                                             <a href="{{ route('equipment.edit', $item->id) }}"
                                                 class="p-2 bg-gray-800 text-indigo-400 rounded-lg hover:bg-indigo-500 hover:text-white transition shadow border border-gray-700 hover:border-indigo-500"
                                                 title="تعديل">
