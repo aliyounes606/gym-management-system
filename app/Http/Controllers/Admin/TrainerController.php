@@ -117,15 +117,23 @@ class TrainerController extends Controller
     public function destroy($id)
     {
         $trainer = TrainerProfile::findOrFail($id);
+
+        if ($trainer->gymsessions()->exists()) {
+            return redirect()->back()->with('error', 'عذراً، لا يمكن حذف هذا المدرب لأنه مرتبط بجلسات تدريبية (حالية أو سابقة). يرجى إلغاء الجلسات أو تعيين مدرب آخر لها أولاً.');
+        }
+
         if ($trainer->image) {
             Storage::disk('public')->delete($trainer->image->path);
             $trainer->image()->delete();
         }
-        $user = User::find($trainer->user_id);
 
-        $user->removeRole('trainer'); // سحب الرتبة 
+        $user = User::find($trainer->user_id);
+        if ($user) {
+            $user->removeRole('trainer');
+        }
+
         $trainer->delete();
 
-        return redirect()->route('admin.trainers.index')->with('success', '  تم إزالة المدرب وإعادته لمستخدم عادي   ');
+        return redirect()->route('admin.trainers.index')->with('success', 'تم إزالة المدرب وإعادته لمستخدم عادي.');
     }
 }

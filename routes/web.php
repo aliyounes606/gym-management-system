@@ -9,6 +9,7 @@ use App\Http\Controllers\GymSessionController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\MealPlanController;
 use App\Http\Controllers\BookingsController;
+use App\Http\Controllers\TrainerDashboardController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\TrainerController;
 use App\Http\Controllers\Admin\RoleController;
@@ -26,6 +27,10 @@ Route::middleware(['auth:sanctum', 'verified'])->get('/dashboard', function () {
         return redirect()->route('admin.dashboard');
     }
 
+    if ($user->hasRole('trainer')) {
+        return redirect()->route('trainer.dashboard');
+    }
+
     return view('dashboard');
 
 })->name('dashboard');
@@ -36,6 +41,11 @@ Route::middleware(['auth:sanctum', 'verified', 'role:admin'])->prefix('admin')->
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
 });
+
+Route::middleware(['auth:sanctum', 'verified', 'role:trainer'])->prefix('trainer')->name('trainer.')->group(function () {
+    Route::get('/dashboard', [TrainerDashboardController::class, 'index'])->name('dashboard');
+});
+
 // ملفات الملف الشخصي (متاحة لكل المسجلين)
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');

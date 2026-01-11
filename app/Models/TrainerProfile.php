@@ -23,4 +23,12 @@ class TrainerProfile extends Model
     {
         return $this->morphOne(Image::class, 'imageable');
     }
+    public function gymsessions()
+    {
+        return $this->hasMany(GymSession::class);
+    }
+    public function courses()
+    {
+        return $this->hasMany(Course::class);
+    }
 }
