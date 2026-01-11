@@ -58,9 +58,11 @@ Route::middleware(['auth'])->group(function () {
 
     // 1. عرض الوجبات (المكتبة العامة) - متاح للجميع
     Route::get('/meal-plans', [MealPlanController::class, 'index'])->name('meal-plans.index');
-
+Route::get('/my-recommended-meals', [MealPlanController::class, 'myRecommendedMeals'])
+    ->middleware('auth')
+    ->name('meal-plans.my-recommended');
     // 2. عمليات الإدارة (فقط للأدمن)
-    Route::middleware(['role:admin'])->group(function () {
+  Route::middleware(['role:admin|trainer'])->group(function () {
        
         Route::get('/meal-plans/create', [MealPlanController::class, 'create'])->name('meal-plans.create');
         Route::post('/meal-plans', [MealPlanController::class, 'store'])->name('meal-plans.store');
