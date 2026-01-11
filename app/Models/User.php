@@ -65,9 +65,8 @@ class User extends Authenticatable
             GymSession::class,
             'bookings',
             'user_id',
-            'gym_session_id'
-        )->withPivot('booking_type')
-            ->withTimestamps();
+            'session_id'
+        )->withTimestamps();
     }
 
 }
