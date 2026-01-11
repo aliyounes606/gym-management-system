@@ -29,6 +29,9 @@ class UserFactory extends Factory
             'email_verified_at' => now(),
             'password' => static::$password ??= Hash::make('password'),
             'remember_token' => Str::random(10),
+            //add age and weight its requier in database
+            'age' => $this->faker->numberBetween(18, 50), 
+            'weight' => $this->faker->numberBetween(50, 100),
         ];
     }
 

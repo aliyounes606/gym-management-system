@@ -21,7 +21,7 @@ class Course extends Model
     ];
     
 /**
- * Summary of sessions
+ * Summary of sessions the relations with sessions
  * @return \Illuminate\Database\Eloquent\Relations\HasMany<GymSession, Course>
  */
 public function sessions()
@@ -29,7 +29,7 @@ public function sessions()
     return $this->hasMany(GymSession::class, 'course_id');
 }
 /**
- * Summary of trainerProfile
+ * Summary of trainerProfile the relation with trainer
  * @return \Illuminate\Database\Eloquent\Relations\BelongsTo<TrainerProfile, Course>
  */
 public function trainerProfile()
