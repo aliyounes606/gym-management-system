@@ -77,9 +77,9 @@ class BookingController extends Controller
     {
         try {
             $user = auth()->user();
-            $course = Course::with('gymsessions')->findOrFail($request->course_id);
+            $course = Course::with('sessions')->findOrFail($request->course_id);
 
-            if ($course->gymsessions->isEmpty()) {
+            if ($course->sessions->isEmpty()) {
                 return response()->json(['message' => 'هذا الكورس لا يحتوي على جلسات حالياً.'], 400);
             }
 
@@ -89,7 +89,7 @@ class BookingController extends Controller
                 $createdBookings = [];
                 $totalPriceToPay = 0;
 
-                foreach ($course->gymsessions as $session) {
+                foreach ($course->sessions as $session) {
 
                     $exists = Booking::where('user_id', $user->id)
                         ->where('session_id', $session->id)
