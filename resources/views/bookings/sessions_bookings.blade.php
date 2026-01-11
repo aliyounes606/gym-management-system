@@ -53,6 +53,10 @@
                                 <td class="px-6 py-4">{{ $session->max_capacity }}</td>
                                 <td class="px-6 py-4">{{ $session->start_time }}</td>
                                 <td class="px-6 py-4">{{ $session->end_time }}</td>
+                                <td class="px-6 py-4">
+                                    {{ $InSessionCounter }} / {{ $session->max_capacity }}
+                                </td>
+                    
                             </tr>
                             <td class="px-6 py-4 flex gap-2 justify-end">
                                 <!-- زر تأكيد الحجز -->
@@ -60,10 +64,11 @@
                                     @csrf
                                     <input type="hidden" name="session_id" value="{{ $session->id }}">
                                     <input type="hidden" name="single_price" value="{{ $session->single_price }}">
+                                    <input type="hidden" name="max_capacity" value="{{ $session->max_capacity }}">
                                     <button
                                         type="submit"
                                         class="bg-green-600 text-white px-3 py-1 rounded hover:bg-green-700"
-                                        {{ $session->max_capacity <= 0 ? 'disabled' : '' }}
+                                        {{ $session->bookings_count >= $session->max_capacity ? 'disabled' : '' }}
                                     >
                                         حجز
                                     </button>

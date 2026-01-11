@@ -36,16 +36,32 @@
         @endforeach
     </select>
      </div>
-                <div class="mb-4">
+                {{-- <div class="mb-4">
                     <label class="block text-gray-700">الكورس</label>
                     <select name="course_id" class="w-full border-gray-300 rounded" >
                         @foreach($courses as $course)
-                            <option value="{{ $course->id }}" {{ $session->course_id == $course->id ? 'selected' : '' }}>
+                            <option 
+                            value=""
+                            {{ $course->id }}"  --}}
+                            {{-- {{ $session->course_id == $course->id ? 'selected' : '' }}>
                                 {{ $course->name }}
-                            </option>
-                        @endforeach
+                            {{-- </option> --}}
+                        {{-- @endforeach
                     </select>
-                </div>
+                </div> --}} 
+                <div class="mb-4">
+    <label class="block text-gray-700">الكورس</label>
+    <select name="course_id" class="w-full border-gray-300 rounded">
+        <option value="">اختر الكورس</option>
+        @foreach($courses as $course)
+            <option 
+                value="{{ $course->id }}" 
+                {{ $session->course_id == $course->id ? 'selected' : '' }}>
+                {{ $course->name }}
+            </option>
+        @endforeach
+    </select>
+</div>
 
                 <div class="mb-4">
                     <label class="block text-gray-700">السعر</label>

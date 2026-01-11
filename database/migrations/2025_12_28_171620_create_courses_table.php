@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('courses', function (Blueprint $table) {
     $table->id();
     $table->string("name"); // اسم الكورس
-    $table->text("description"); // وصفه
+    $table->text("description")->nullable(); // وصفه
     $table->foreignId("trainer_profile_id")->nullable()->constrained("trainer_profiles")->onDelete("restrict"); // المدرب المسؤول
     $table->decimal("total_price", 8, 2); // السعر النهائي
     $table->timestamps();

@@ -8,18 +8,32 @@ use App\Http\Requests\Admin\UpdateTrainerRequest;
 use App\Models\TrainerProfile;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class TrainerController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * Summary of index
+     * @return \Illuminate\Contracts\View\View
      */
     public function index()
     {
         $trainers = TrainerProfile::with('user')->get();
-        // جلب المستخدمين العاديين لتحوليهم الى مدربين 
-        $availableUsers = User::role('member')->get(); // جلب الأعضاء فقط للترقية
-        return view('admin.trainers.index', compact('trainers', 'availableUsers'));
+        return view('admin.trainers.index', compact('trainers'));
+    }
+    /**
+     * Summary of create
+     * @return \Illuminate\Contracts\View\View
+     */
+    public function create()
+    {
+
+        $availableUsers = User::role('member')
+            ->whereDoesntHave('trainerProfile')
+            ->get();
+
+        return view('admin.trainers.create', compact('availableUsers'));
+
     }
     /**
      * Summary of store
@@ -34,9 +48,28 @@ class TrainerController extends Controller
         $user = User::find($validated['user_id']);
         $user->assignRole('trainer');
 
-        TrainerProfile::create($validated);
+        $trainer = TrainerProfile::create($validated);
+
+        if ($request->hasFile('image')) {
+            $imagePath = $request->file('image')->store('trainer_images', 'public');
+
+            $trainer->image()->create([
+                'path' => $imagePath
+            ]);
+        }
 
         return redirect()->route('admin.trainers.index')->with('success', 'تمت إضافة المدرب بنجاح');
+    }
+    /**
+     * Summary of show
+     * @param mixed $id
+     * @return \Illuminate\Contracts\View\View
+     */
+    public function show($id)
+    {
+        $trainer = TrainerProfile::with(['user', 'image'])->findOrFail($id);
+
+        return view('admin.trainers.show', compact('trainer'));
     }
     /**
      * Summary of edit
@@ -60,7 +93,21 @@ class TrainerController extends Controller
 
         $trainer->update($request->validated());
 
-        return redirect()->route('admin.trainers.index')->with('success', 'تم تحديث بيانات المدرب');
+        if ($request->hasFile('image')) {
+
+            if ($trainer->image && $trainer->image->path) {
+                Storage::disk('public')->delete($trainer->image->path);
+            }
+
+            $imagePath = $request->file('image')->store('trainer_images', 'public');
+
+            $trainer->image()->updateOrCreate(
+                [],
+                ['path' => $imagePath]
+            );
+        }
+
+        return redirect()->route('admin.trainers.index')->with('success', 'تم تحديث بيانات المدرب والصورة بنجاح');
     }
     /**
      * Summary of destroy
@@ -70,11 +117,15 @@ class TrainerController extends Controller
     public function destroy($id)
     {
         $trainer = TrainerProfile::findOrFail($id);
+        if ($trainer->image) {
+            Storage::disk('public')->delete($trainer->image->path);
+            $trainer->image()->delete();
+        }
         $user = User::find($trainer->user_id);
 
-        $user->removeRole('trainer'); // سحب الرتبة منه
-        $trainer->delete(); // حذف البروفايل
+        $user->removeRole('trainer'); // سحب الرتبة 
+        $trainer->delete();
 
-        return back()->with('success', 'تم إزالة المدرب وإعادته لمستخدم عادي');
+        return redirect()->route('admin.trainers.index')->with('success', '  تم إزالة المدرب وإعادته لمستخدم عادي   ');
     }
 }

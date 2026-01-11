@@ -13,6 +13,8 @@ use Illuminate\Support\Facades\Auth;
 
 class BookingsController extends Controller
 {
+    private $counter = 0;
+
     public function index()
     {
         $bookings = Booking::all();
@@ -23,8 +25,9 @@ class BookingsController extends Controller
     {
         function session_booking()
         {
+            $InSessionCounter = Booking::where('session_id','3')->count();
             $gymSessions = GymSession::where('course_id',Null)->get();
-            return view('bookings.sessions_bookings', compact('gymSessions'));
+            return view('bookings.sessions_bookings', compact('gymSessions','InSessionCounter'));
         }
         function course_booking()
         {
@@ -42,9 +45,11 @@ class BookingsController extends Controller
 
     public function bookCorse(Request $request)
     {
+    
     $request->validate([
     'course_id'  => 'required|nullable|exists:courses,id',
     ]);
+
     
        Booking::create([
            'user_id'=>Auth::user()->id,
@@ -61,6 +66,7 @@ class BookingsController extends Controller
     
     public function bookSession(request $request)
     {
+
        Booking::create([
            'user_id'=>Auth::user()->id,
            'session_id'=>$request->session_id,

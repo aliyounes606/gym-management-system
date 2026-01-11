@@ -19,4 +19,15 @@ class TrainerProfile extends Model
     {
         return $this->belongsTo(User::class);
     }
+    public function image()
+    {
+        return $this->morphOne(Image::class, 'imageable');
+    }
+
+
+    // morph relation for review the meal plan
+    public function review()
+    {
+        return $this->morphMany(Review::class,'reviewable');
+    }
 }

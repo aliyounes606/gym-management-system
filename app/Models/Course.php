@@ -7,20 +7,31 @@ use Illuminate\Database\Eloquent\Model;
 class Course extends Model
 {
     //
+    /**
+     * Summary of fillable
+     * @var array
+     */
 
-  protected $table = "courses"; 
-    protected $fillable =[
+    protected $table = "courses";
+    protected $fillable = [
         "name",
         "description",
         "trainer_profile_id",
         "total_price"
     ];
-    
- 
+
+/**
+ * Summary of sessions the relations with sessions
+ * @return \Illuminate\Database\Eloquent\Relations\HasMany<GymSession, Course>
+ */
 public function sessions()
 {
     return $this->hasMany(GymSession::class, 'course_id');
 }
+/**
+ * Summary of trainerProfile the relation with trainer
+ * @return \Illuminate\Database\Eloquent\Relations\BelongsTo<TrainerProfile, Course>
+ */
 public function trainerProfile()
 {
     return $this->belongsTo(TrainerProfile::class, 'trainer_profile_id');
@@ -28,5 +39,10 @@ public function trainerProfile()
 public function booking()
 {
     return $this->belongsTo(BookingsController::class, 'booking_course');
+}
+
+public function review()
+{
+    return $this->morphMany(Review::class,'reviewable');
 }
 }
