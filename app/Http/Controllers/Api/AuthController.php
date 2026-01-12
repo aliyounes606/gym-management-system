@@ -1,38 +1,54 @@
 <?php
+
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Validation\ValidationException;
 
 class AuthController extends Controller
 {
-    // Register
+    /**
+     * Summary of register
+     * @param \Illuminate\Http\Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function register(Request $request)
     {
         $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|unique:users',
             'password' => 'required|string|min:8|confirmed',
+            'age' => 'nullable|integer|min:10|max:100',
+            'weight' => 'nullable|numeric|min:20|max:300',
         ]);
 
+        //  إنشاء المستخدم
         $user = User::create([
             'name' => $request->name,
             'email' => $request->email,
             'password' => Hash::make($request->password),
+            'age' => $request->age,
+            'weight' => $request->weight,
         ]);
+
         $user->assignRole('member');
 
+        $token = $user->createToken('auth_token')->plainTextToken;
 
         return response()->json([
-            'message' => 'User registered successfully!',
+            'message' => 'تم إنشاء الحساب بنجاح!',
             'user' => $user,
+            'token' => $token,
         ], 201);
     }
 
-    // Login (Issue Token)
+    /**
+     * Summary of login
+     * @param \Illuminate\Http\Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function login(Request $request)
     {
         $request->validate([
@@ -43,26 +59,31 @@ class AuthController extends Controller
         $user = User::where('email', $request->email)->first();
 
         if (!$user || !Hash::check($request->password, $user->password)) {
-            throw ValidationException::withMessages([
-                'email' => ['The provided credentials are incorrect.'],
-            ]);
+            return response()->json([
+                'message' => 'بيانات الدخول غير صحيحة.',
+            ], 401);
         }
 
-        $token = $user->createToken('api-token')->plainTextToken;
+        $token = $user->createToken('auth_token')->plainTextToken;
 
         return response()->json([
-            'message' => 'Login successful!',
+            'message' => 'تم تسجيل الدخول بنجاح!',
             'token' => $token,
+            'user' => $user,
         ]);
     }
 
-    // Logout (Revoke Token)
+    /**
+     * Summary of logout
+     * @param \Illuminate\Http\Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function logout(Request $request)
     {
         $request->user()->currentAccessToken()->delete();
 
         return response()->json([
-            'message' => 'Logged out successfully!',
+            'message' => 'تم تسجيل الخروج بنجاح!',
         ]);
     }
 }
