@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Course;
+use App\Models\User;
 use App\Models\Review;
 use App\Models\MealPlan;
 use App\Models\GymSession;
@@ -16,6 +17,10 @@ class ReviewController extends Controller
     // this mithode for review by morph relationship
     public function storeReview(Request $requset, $model) {
 
+        $data = $requset->validate([
+            'rating'=>'required|integer|min:1|max:5',
+            'comment'=>'nullable|string|max:1000',
+        ]);
         $model->review()->create([
            'user_id'=>Auth::user()->id,
            'rating'=>$requset->rating,
@@ -36,7 +41,7 @@ class ReviewController extends Controller
     public function TrainerReview(Request $request,TrainerProfile $trainer)
     {
         $this->storeReview($request,$trainer);
-        return response()->json(['massege'=>'تم تقييم الكورس'], 200);
+        return response()->json(['massege'=>'تم تقييم المدرب'], 200);
     }
 
     // review a mealPlan
@@ -56,5 +61,22 @@ class ReviewController extends Controller
             $this->storeReview($request,$gymsession);
         return response()->json(['massege'=>'تم تقييم الجسلة'], 200);
         }
+    }
+
+    public function index()
+    {
+        $reviews = Review::all();
+        return view('reviews.index', compact('reviews'));
+    }
+    public function show()
+    {
+        
+    }
+
+    public function GoToTrainerReviews()
+    {
+
+        $traniner_reviews = Review::with('user')->where( 'reviewable_type', 'trainer')->get();
+        return view('reviews.trainer_reviews', compact('traniner_reviews'));
     }
 }

@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\ReviewController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\PaymentController;
 use App\Http\Controllers\CategoryController;
@@ -137,5 +138,8 @@ Route::get('/sessions/schedule/{id}', [GymSessionController::class, 'schedule'])
 Route::patch('/gymsessions/{id}/status', [GymSessionController::class, 'updateStatus'])
     ->name('gymsessions.updateStatus');
 
+
+Route::get('/reviews', action: [ReviewController::class, 'index'])->name('reviews.index');
+Route::get('/reviews/trainers', action: [ReviewController::class, 'GoToTrainerReviews'])->name('reviews.trainers.index');
 
 Route::get('/monthly-report', [DashboardController::class, 'monthlyReport'])->name('monthly.report');
