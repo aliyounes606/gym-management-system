@@ -47,7 +47,7 @@ class EquipmentController extends Controller
         }
 
         if ($request->categories) {
-            $equipment->categories()->attach($request->categories);
+            $equipment->category()->attach($request->categories);
         }
 
         return redirect()->route('equipment.index')
@@ -61,7 +61,7 @@ class EquipmentController extends Controller
      */
     public function show($id)
     {
-        $equipment = Equipment::with('category','image')->findOrFail($id);
+        $equipment = Equipment::with('category', 'image')->findOrFail($id);
         return view('equipment.show', compact('equipment'));
     }
 
@@ -105,7 +105,7 @@ class EquipmentController extends Controller
         }
 
         if ($request->categories) {
-            $equipment->categories()->sync($request->categories);
+            $equipment->category()->sync($request->categories);
         }
 
         return redirect()->route('equipment.index')
