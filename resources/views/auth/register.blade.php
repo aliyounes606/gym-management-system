@@ -72,7 +72,7 @@
                     <x-input-error :messages="$errors->get('email')" class="mt-2 text-red-400 text-sm" />
                 </div>
 
-                <div class="grid grid-cols-2 gap-5">
+                {{-- <div class="grid grid-cols-2 gap-5">
                     <div class="group">
                         <label
                             class="block text-xs font-bold text-indigo-400 uppercase tracking-wider mb-2">العمر</label>
@@ -94,7 +94,7 @@
                                 class="absolute left-3 top-1/2 -translate-y-1/2 text-indigo-400 text-xs font-bold bg-indigo-500/10 px-2 py-1 rounded border border-indigo-500/20">KG</span>
                         </div>
                     </div>
-                </div>
+                </div> --}}
 
                 <div class="space-y-4">
                     <div class="group">
