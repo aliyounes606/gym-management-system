@@ -100,7 +100,7 @@
                                     @foreach ($categories as $category)
                                         <option value="{{ $category->id }}"
                                             class="p-2 hover:bg-indigo-600 rounded cursor-pointer"
-                                            {{ $equipment->categories->contains($category->id) ? 'selected' : '' }}>
+                                            {{ $equipment->category->contains($category->id) ? 'selected' : '' }}>
                                             {{ $category->name }}
                                         </option>
                                     @endforeach
