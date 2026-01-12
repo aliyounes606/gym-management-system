@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Api\AttendanceController;
+use App\Http\Controllers\ReviewController;
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\GymSessionController;
 use App\Http\Controllers\Api\CourseController;
@@ -52,6 +53,11 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/bookings/course', [BookingController::class, 'storeCourse']);
 
     Route::post('/attendance/mark', [AttendanceController::class, 'markAttendance']);
+
+    Route::post('course/{course}/review',[ReviewController::class, 'CourseReview']);
+    Route::post('trainer/{trainer}/review',[ReviewController::class, 'TrainerReview']);
+    Route::post('mealplan/{mealplan}/review',[ReviewController::class, 'MealPlanReview']);
+    Route::post('gymsession/{gymsession}/review',[ReviewController::class, 'GymSessionReview']);
 
 });
 

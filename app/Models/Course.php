@@ -40,4 +40,10 @@ public function booking()
 {
     return $this->belongsTo(BookingsController::class, 'booking_course');
 }
+    // morph relation for review the meal plan
+public function review()
+{
+    return $this->morphMany(Review::class,'reviewable');
+}
+
 }
