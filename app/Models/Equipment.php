@@ -17,7 +17,7 @@ class Equipment extends Model
 
   public function image()
   {
-    return $this->morphOne(Image::class, 'imageable');
+    return $this->morphOne(\App\Models\Image::class, 'imageable');
   }
 
   public function category()
@@ -28,17 +28,8 @@ class Equipment extends Model
     // accessor لرابط الصورة
     public function getImageUrlAttribute()
 {
-    // إذا العلاقة غير موجودة أو فاضية
-    if (!$this->relationLoaded('images') || $this->images->isEmpty()) {
-        return null;
-    }
-
-    $image = $this->images->first();
-
-    return $image
-        ? asset('storage/' . $image->path)
-        : null;
+    return $this->image
+        ? asset('storage/' . $this->image->path): null;
 }
-
-}
+} 
 

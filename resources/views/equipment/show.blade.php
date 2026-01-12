@@ -17,7 +17,7 @@
                <div class="mb-4">
                 <strong>التصنيفات:</strong>
                 <div class="mt-1">
-                    @forelse($equipment->categories as $category)
+                    @forelse($equipment->category as $category)
                         <span class="inline-block bg-gray-200 px-2 py-1 rounded text-sm">
                             {{ $category->name }}
                         </span>
@@ -28,7 +28,7 @@
             </div>
 
           <!--  عرض صورة المعدة إذا كانت موجودة -->
-           @if ($equipment->image)
+           @if ($equipment->image_url)
               <div class="mb-6">
               <img src="{{ Storage::url($equipment->image->path) }}"
                 alt="{{ $equipment->name }}"

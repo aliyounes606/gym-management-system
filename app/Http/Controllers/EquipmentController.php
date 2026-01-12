@@ -61,7 +61,7 @@ class EquipmentController extends Controller
      */
     public function show($id)
     {
-        $equipment = Equipment::with('image')->findOrFail($id);
+        $equipment = Equipment::with('category','image')->findOrFail($id);
         return view('equipment.show', compact('equipment'));
     }
 
@@ -72,7 +72,7 @@ class EquipmentController extends Controller
      */
     public function edit($id)
     {
-        $equipment = Equipment::with('image')->findOrFail($id);
+        $equipment = Equipment::with('category', 'image')->findOrFail($id);
         $categories = Category::all();
         return view('equipment.edit', compact('equipment', 'categories'));
     }
