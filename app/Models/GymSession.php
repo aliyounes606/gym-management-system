@@ -74,5 +74,10 @@ class GymSession extends Model
     {
         return $this->belongsTo(Category::class);
     }
+    // morph relation for review the meal plan
+    public function review()
+    {
+        return $this->morphMany(Review::class,'reviewable');
+    }
 
 }

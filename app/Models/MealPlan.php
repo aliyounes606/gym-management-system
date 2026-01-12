@@ -36,4 +36,9 @@ class MealPlan extends Model
     {
         return $this->belongsToMany(User::class, 'meal_recommendations', 'meal_plan_id', 'user_id');
     }
+    // morph relation for review the meal plan
+     public function review()
+    {
+        return $this->morphMany(Review::class,'reviewable');
+    }
 }
