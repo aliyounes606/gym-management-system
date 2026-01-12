@@ -11,10 +11,5 @@ class Image extends Model
     public function imageable()
     {
         return $this->morphTo();
-    }
-
-    /*  public function images()
-    {
-        return $this->morphMany(Image::class,'imageable');
-    }*/
+    } 
 }

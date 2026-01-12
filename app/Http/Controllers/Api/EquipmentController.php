@@ -13,12 +13,12 @@ class EquipmentController extends Controller
     {
         try {
             // تحميل العلاقات مع المعدات
-            $query = Equipment::with(['category']);
+            $query = Equipment::with(['category','image']);
 
             // فلترة حسب category (عن طريق العلاقة)
             if ($request->filled('category_id')) {
                 $query->whereHas('category', function ($q) use ($request) {
-                    $q->where('id', $request->category_id);
+                    $q->where('categories.id', $request->category_id);
                 });
             }
 
