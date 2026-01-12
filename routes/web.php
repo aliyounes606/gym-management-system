@@ -15,6 +15,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\TrainerController;
 use App\Http\Controllers\Admin\RoleController;
 use App\Http\Controllers\Admin\PermissionController;
+use App\Http\Controllers\Admin\ReportController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -141,3 +142,4 @@ Route::patch('/gymsessions/{id}/status', [GymSessionController::class, 'updateSt
 Route::get('/reviews', action: [ReviewController::class, 'index'])->name('reviews.index');
 Route::get('/reviews/trainers', action: [ReviewController::class, 'GoToTrainerReviews'])->name('reviews.trainers.index');
 
+Route::get('/monthly-report', [DashboardController::class, 'monthlyReport'])->name('monthly.report');
