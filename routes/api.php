@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\AttendanceController;
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\GymSessionController;
 use App\Http\Controllers\Api\CourseController;
@@ -25,8 +26,8 @@ Route::middleware('auth:sanctum')->group(function () {
 
 
 
-    Route::get('/gymsessions', [GymSessionController::class, 'index']);
-    Route::get('/gymsessions/{id}', [GymSessionController::class, 'show']);
+Route::get('/gymsessions', [GymSessionController::class, 'index']);
+Route::get('/gymsessions/{id}', [GymSessionController::class, 'show']);
 
 
 
@@ -49,6 +50,8 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/bookings/single', [BookingController::class, 'storeSingleSession']);
 
     Route::post('/bookings/course', [BookingController::class, 'storeCourse']);
+
+    Route::post('/attendance/mark', [AttendanceController::class, 'markAttendance']);
 
 });
 

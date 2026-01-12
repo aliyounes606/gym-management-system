@@ -23,7 +23,7 @@ class Booking extends Model
     }
     public function gymsessions()
     {
-        return $this->belongsTo(GymSession::class, 'session_id');
+        return $this->belongsTo(\App\Models\GymSession::class, 'session_id', 'id');
     }
     public function courses()
     {
