@@ -9,7 +9,7 @@ use App\Models\GymSession;
 use App\Models\TrainerProfile;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
-
+use Barryvdh\DomPDF\Facade\Pdf;
 class DashboardController extends Controller
 {
     /**
@@ -81,6 +81,20 @@ class DashboardController extends Controller
             'chartLabels',
             'dailyRevenueData',
             'dailyMembersData'
-        ));
-    }
+        ));}
+        public function monthlyReport() { 
+            $startOfMonth = Carbon::now()->startOfMonth(); 
+            $endOfMonth = Carbon::now()->endOfMonth(); 
+            $stats = [ 
+                'totalMembers' => User::role('member')->count(),
+             'totalTrainers' => TrainerProfile::count(), 
+             'monthlyRevenue' => Booking::where('payment_status', 'paid') ->whereMonth('created_at', Carbon::now()->month) ->sum('price'), 
+             'pendingPayments' => Booking::where('payment_status', 'unpaid')->sum('price'), 
+             'pendingRequestsCount' => Booking::where('status', 'pending')->count(), 
+             'activeSessions' => GymSession::where('status', 'active')->count(), 
+             'start' => $startOfMonth->toDateString(), 'end' => $endOfMonth->toDateString(), 
+             'dateGenerated' => Carbon::now()->toDateString(), ]; 
+             $pdf = Pdf::loadView('admin.reports.monthly', $stats)->setPaper('a4', 'portrait'); 
+        return $pdf->download('monthly_report.pdf'); }
+    
 }
