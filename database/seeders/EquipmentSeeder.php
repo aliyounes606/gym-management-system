@@ -1,7 +1,7 @@
 <?php
 
 namespace Database\Seeders;
-
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use App\Models\Equipment;
@@ -127,13 +127,27 @@ class EquipmentSeeder extends Seeder
             'quantity' => 29,],
          ];
 
-        foreach ($equipments as $item) {
+        // foreach ($equipments as $item) {
+        // $equipment = Equipment::create($item);
+
+        // $equipment->image()->create([
+        //     'path' => 'equipment_images/default.png',
+        //      ]);
+        // }
+         $images = Storage::disk('public')->files('equipment_images');
+
+    foreach ($equipments as $item) {
+
         $equipment = Equipment::create($item);
 
+        // اختيار صورة عشوائية
+        $imagePath = collect($images)->random();
+
         $equipment->image()->create([
-            'path' => 'equipment_images/default.png',
-             ]);
-        }
+            'path' => $imagePath, // مسار ديناميكي
+        ]);
     }
 }
+    }
+
    
