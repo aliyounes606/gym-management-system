@@ -37,7 +37,7 @@ class AttendanceController extends Controller
         }
 
         if ($booking->status === 'attended') {
-            return response()->json(['status' => false, 'message' => 'تم تسجيل حضورك مسبقاً! ✅'], 400);
+            return response()->json(['status' => false, 'message' => 'تم تسجيل حضورك مسبقاً! '], 400);
         }
 
         $session = $booking->gymsessions;
@@ -73,7 +73,7 @@ class AttendanceController extends Controller
 
             return response()->json([
                 'status' => true,
-                'message' => 'تم تسجيل الحضور بنجاح! 💪',
+                'message' => 'تم تسجيل الحضور بنجاح! ',
                 'data' => [
                     'session' => $session->title,
                     'user' => $user->name,
