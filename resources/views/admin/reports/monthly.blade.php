@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <title>Monthly Report</title>
@@ -10,39 +11,47 @@
             margin: 40px;
             color: #333;
         }
+
         h1 {
             text-align: center;
             color: #1f2937;
             margin-bottom: 20px;
             font-size: 26px;
         }
+
         p.period {
             text-align: center;
             font-size: 15px;
             color: #374151;
             margin-bottom: 30px;
         }
+
         table {
             width: 100%;
             border-collapse: collapse;
             margin-top: 10px;
             font-size: 14px;
         }
-        th, td {
+
+        th,
+        td {
             border: 1px solid #ccc;
             padding: 12px;
             text-align: left;
         }
+
         th {
             background-color: #f9fafb;
             color: #1f2937;
             font-weight: bold;
         }
+
         td.value {
             font-weight: bold;
             color: #1f2937;
             font-size: 16px;
         }
+
         .footer {
             margin-top: 40px;
             text-align: center;
@@ -51,6 +60,7 @@
         }
     </style>
 </head>
+
 <body>
     <h1> Monthly Gym Report</h1>
     <p class="period">Period: from {{ $start }} to {{ $end }}</p>
@@ -86,4 +96,5 @@
         Report generated on {{ $dateGenerated }}
     </div>
 </body>
+
 </html>
