@@ -4,6 +4,7 @@ use App\Http\Controllers\ReviewController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\PaymentController;
 use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\DailyAttendanceController;
 use App\Http\Controllers\EquipmentController;
 use App\Http\Controllers\CourseController;
 use App\Http\Controllers\GymSessionController;
@@ -99,6 +100,8 @@ Route::middleware(['auth'])->group(function () {
         Route::put('/meal-plans/{mealPlan}', [MealPlanController::class, 'update'])->name('meal-plans.update');
         Route::delete('/meal-plans/{mealPlan}', [MealPlanController::class, 'destroy'])->name('meal-plans.destroy');
         Route::post('/meal-plans/recommend', [MealPlanController::class, 'recommend'])->name('meal-plans.recommend');
+
+        Route::get('/daily-attendance', [DailyAttendanceController::class, 'index'])->name('daily.attendance');
 
         Route::resource('bookings', BookingsController::class)->middleware('auth');
         Route::post('/bookings/bookCorse', [BookingsController::class, 'bookCorse'])->name('bookings.bookCorse');
