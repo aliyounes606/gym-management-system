@@ -80,12 +80,14 @@
                                             </div>
                                         </td>
 
-                                        {{-- المدرب --}}
-                                        <td class="px-6 py-5">
-                                            <div class="flex items-center gap-2">
-                                                <span class="w-1.5 h-1.5 rounded-full bg-blue-500"></span>
-                                                <span class="text-gray-300 text-sm font-medium">
-                                                    {{ optional($tr->trainer)->name ?? 'مدرب غير محدد' }}
+                                        {{-- المدرب المقيم --}}
+                                        <td class="px-6 py-5 bg-white group-hover:bg-transparent border-y border-gray-50 group-hover:border-transparent">
+                                            <div class="flex items-center gap-2 text-indigo-700">
+                                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                                                </svg>
+                                                <span class="font-bold text-sm">
+                                                    {{ optional(($tr->reviewable)->user)->name ?? 'مدرب محذوف' }}
                                                 </span>
                                             </div>
                                         </td>
