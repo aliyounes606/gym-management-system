@@ -28,20 +28,34 @@ use App\Http\Controllers\Api\EquipmentController;
 //for members
 
 Route::middleware('auth:sanctum')->group(function () {
-    Route::post('/bookings/single', [BookingController::class, 'storeSingleSession']);
-    Route::post('/bookings/course', [BookingController::class, 'storeCourse']);
-    Route::post('/attendance/mark', [AttendanceController::class, 'markAttendance']);
-     // رابط جلب الوجبات الخاصة بي فقط
-    Route::get('/meals/my-plans', [MealPlanController::class, 'myPlans']);
-    Route::post('/meals/recommend', [MealPlanController::class, 'recommend']);
-    // Protected Routes (Require Token)
-    Route::post('/logout', [AuthController::class, 'logout']);
+    Route::post('/bookings/single', [BookingController::class, 'storeSingleSession'])
+        ->middleware('permission:bookings.create')
+        ->name('bookings.single');
+
+    Route::post('/bookings/course', [BookingController::class, 'storeCourse'])
+        ->middleware('permission:bookings.create')
+        ->name('bookings.course');
+
+    Route::post('/attendance/mark', [AttendanceController::class, 'markAttendance'])
+        ->middleware('permission:attendance.mark_present')
+        ->name('attendance.mark');
+
+   
+    Route::get('/meals/my-plans', [MealPlanController::class, 'myPlans'])
+        ->middleware('permission:plans.view')
+        ->name('meals.my-plans');
+
+    Route::post('/meals/recommend', [MealPlanController::class, 'recommend'])
+        ->middleware('permission:plans.subscribe')
+        ->name('meals.recommend');
+
+    Route::post('/logout', [AuthController::class, 'logout'])
+        ->name('logout');
+
     Route::get('/user', function (Request $request) {
-    return $request->user();});
+        return $request->user();
+    })->middleware('permission:users.view')->name('user.profile');
 });
-
-
-
 
 
 

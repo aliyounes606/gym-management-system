@@ -10,10 +10,21 @@ use App\Models\Category;
 use Illuminate\Http\Request;
 use App\Http\Requests\StoreSessionRequest;
 use App\Http\Requests\UpdateSessionRequest;
+use Illuminate\Routing\Controllers\HasMiddleware;
+use Illuminate\Routing\Controllers\Middleware;
 
-class GymSessionController extends Controller
+class GymSessionController extends Controller implements HasMiddleware
 {
+   public static function middleware(): array
+    {
+        return [ new Middleware('can:sessions.view', only: ['index', 'show']),
+            new Middleware('can:sessions.create', only: ['create', 'store']),
+            new Middleware('can:sessions.update', only: ['edit', 'update']),
+            new Middleware('can:sessions.delete', only: ['destroy']),
+        ];
+    }
 
+   
     /**
      * Display a listing of the gym sessions.
      *
