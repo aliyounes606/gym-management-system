@@ -26,15 +26,20 @@ class ReviewController extends Controller
            'rating'=>$requset->rating,
            'comment'=>$requset->comment,
         ]);
-    }
+ 
+}
 
 
         // review a Course
 
     public function CourseReview(Request $request,Course $course)
     {
+         try{
         $this->storeReview($request,$course,$t);
         return response()->json(['message'=>'تم تقييم الكورس',$t,'course'=>$course->name], 200);
+    } catch (\Exception $e) {
+        return response()->json(['message'=>'حدث خطأ أثناء إضافة التقييم: '.$e->getMessage()],500);
+    }
     }
 
     // review a trainer
@@ -68,14 +73,9 @@ class ReviewController extends Controller
         $reviews = Review::all();
         return view('reviews.index', compact('reviews'));
     }
-    public function show()
-    {
-        
-    }
-
+   
     public function GoToTrainerReviews()
     {
-
         $traniner_reviews = Review::with(['user', 'reviewable'])
         ->where( 'reviewable_type', 'trainer')
         ->get();
@@ -84,7 +84,6 @@ class ReviewController extends Controller
 
     public function GoToMealPlanReviews()
     {
-
         $mealplan = Review::with(['user', 'reviewable'])
         ->where( 'reviewable_type', 'mealplan')
         ->get();
