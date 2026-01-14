@@ -20,15 +20,16 @@ class DatabaseSeeder extends Seeder
         // $managePermission = Permission::firstOrCreate(['name' => 'manage meal plans']);
         // $adminRole->givePermissionTo($managePermission);
         $this->call([
-              PermissionSeeder::class,
-              RolePermissionSeeder::class,
-              UserSeeder::class,
-              TrainerProfileSeeder::class,
-              CategorySeeder::class,
-              CourseSeeder::class,
-              SessionSeeder::class,
-              MealPlanSeeder::class,
-             EquipmentSeeder::class,
+            PermissionSeeder::class,
+            RolePermissionSeeder::class,
+            UserSeeder::class,
+            TrainerProfileSeeder::class,
+            CategorySeeder::class,
+            CourseSeeder::class,
+            SessionSeeder::class,
+            MealPlanSeeder::class,
+            EquipmentSeeder::class,
+            BookingSeeder::class,
         ]);
     }
 }
