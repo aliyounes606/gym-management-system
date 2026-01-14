@@ -15,13 +15,13 @@ class ReviewController extends Controller
 {
 
     // this mithode for review by morph relationship
-    public function storeReview(Request $requset, $model) {
+    public function storeReview(Request $requset, $model,&$t) {
 
         $data = $requset->validate([
             'rating'=>'required|integer|min:1|max:5',
             'comment'=>'nullable|string|max:1000',
         ]);
-        $model->review()->create([
+        $t = $model->review()->create([
            'user_id'=>Auth::user()->id,
            'rating'=>$requset->rating,
            'comment'=>$requset->comment,
@@ -33,33 +33,33 @@ class ReviewController extends Controller
 
     public function CourseReview(Request $request,Course $course)
     {
-        $this->storeReview($request,$course);
-        return response()->json('تم تقييم الكورس');
+        $this->storeReview($request,$course,$t);
+        return response()->json(['message'=>'تم تقييم الكورس',$t]);
     }
 
     // review a trainer
     public function TrainerReview(Request $request,TrainerProfile $trainer)
     {
-        $this->storeReview($request,$trainer);
-        return response()->json(['massege'=>'تم تقييم المدرب'], 200);
+        $this->storeReview($request,$trainer,$t);
+        return response()->json(['message'=>'تم تقييم المدرب',$t], 200);
     }
 
     // review a mealPlan
     public function MealPlanReview(Request $request,MealPlan $mealplan)
     {
-        $this->storeReview($request,$mealplan);
-        return response()->json(['massege'=>'تم تقييم الخطة'], 200);
+        $this->storeReview($request,$mealplan,$t);
+        return response()->json(['message'=>'تم تقييم الخطة'],$t);
     }
 
     public function GymSessionReview(Request $request,GymSession $gymsession)
     {
         if ($gymsession->course_id !== null)
         {
-            return response()->json(['massege'=>'لا يمكن تقيم الجلسات المنتمية لكورس'],403);
+            return response()->json(['message'=>'لا يمكن تقيم الجلسات المنتمية لكورس'],403);
         }
         else {
-            $this->storeReview($request,$gymsession);
-        return response()->json(['massege'=>'تم تقييم الجسلة'], 200);
+            $this->storeReview($request,$gymsession,$t);
+        return response()->json(['message'=>'تم تقييم الجسلة'],$t);
         }
     }
 
