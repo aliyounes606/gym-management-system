@@ -35,6 +35,6 @@ class AppServiceProvider extends ServiceProvider
         Relation::morphMap([
              'trainer' => TrainerProfile::class, 
              'equipment' => Equipment::class, 
-             'meal' => MealPlan::class, ]);
+        ]);
     }
 }

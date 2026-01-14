@@ -60,6 +60,9 @@ Route::middleware('auth')->group(function () {
         ->name('meal-plans.my-recommended');
      Route::get('/reviews', action: [ReviewController::class, 'index'])->name('reviews.index');
      Route::get('/reviews/trainers', action: [ReviewController::class, 'GoToTrainerReviews'])->name('reviews.trainers.index');
+  Route::get('/reviews/mealplans', action: [ReviewController::class, 'GoToMealPlanReviews'])->name('reviews.mealplans.index');
+Route::get('/reviews/gymsessions', action: [ReviewController::class, 'GoToGymSessionReviews'])->name('reviews.gymsessions.index');
+Route::get('/reviews/courses', action: [ReviewController::class, 'GoToCourseReviews'])->name('reviews.courses.index');
     });
 Route::middleware(['auth', 'role:admin'])->group(function () {
    Route::get('/admin/equipment', [EquipmentController::class, 'dashboard'])->name('admin.equipment.dashboard');

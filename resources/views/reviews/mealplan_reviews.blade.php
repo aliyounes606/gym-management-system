@@ -2,12 +2,12 @@
     <x-slot name="header">
         <div class="flex justify-between items-center" dir="rtl">
             <h2 class="font-black text-2xl text-gray-800 leading-tight">
-                {{ __('سجل تقييمات المتدربين للمدربين') }}
+                {{ __('سجل تقييمات الخطط الغذائية') }}
             </h2>
             
             <div class="flex items-center gap-2 bg-indigo-50 px-4 py-2 rounded-2xl border border-indigo-100">
                 <span class="text-indigo-600 font-bold text-sm">إجمالي المراجعات:</span>
-                <span class="bg-indigo-600 text-white px-3 py-0.5 rounded-lg text-xs font-black">{{ count($traniner_reviews) }}</span>
+                <span class="bg-indigo-600 text-white px-3 py-0.5 rounded-lg text-xs font-black">{{ count($mealplan) }}</span>
             </div>
         </div>
     </x-slot>
@@ -23,14 +23,14 @@
                             <thead>
                                 <tr class="text-gray-400 text-xs font-black uppercase tracking-widest px-6">
                                     <th class="px-6 py-4">المتدرب</th>
-                                    <th class="px-6 py-4">المدرب المقيم</th>
+                                    <th class="px-6 py-4">الخطة المقيمة</th>
                                     <th class="px-6 py-4 text-center">التقييم الرقمي</th>
                                     <th class="px-6 py-4">التعليق والملاحظات</th>
                                     <th class="px-6 py-4 text-center">الحالة البصرية</th>
                                 </tr>
                             </thead>
                             <tbody class="divide-y divide-gray-50">
-                                @foreach($traniner_reviews as $tr)
+                                @foreach($mealplan as $tr)
                                     <tr class="hover:bg-indigo-50/50 transition-all duration-300 group">
                                         {{-- اسم المتدرب --}}
                                         <td class="px-6 py-5 bg-white group-hover:bg-transparent rounded-r-2xl border-y border-r border-gray-50 group-hover:border-transparent">
@@ -47,14 +47,12 @@
                                             </div>
                                         </td>
 
-                                        {{-- المدرب المقيم --}}
+                                        {{-- الخطة المقيمة --}}
                                         <td class="px-6 py-5 bg-white group-hover:bg-transparent border-y border-gray-50 group-hover:border-transparent">
-                                            <div class="flex items-center gap-2 text-indigo-700">
-                                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-                                                </svg>
-                                                <span class="font-bold text-sm">
-                                                    {{ optional($tr->trainer)->name ?? 'مدرب غير محدد' }}
+                                            <div class="flex items-center gap-2">
+                                                <div class="w-2 h-2 rounded-full bg-orange-500 shadow-sm shadow-orange-200"></div>
+                                                <span class="font-bold text-gray-700 text-sm">
+                                                    {{ optional($tr->reviewable)->name ?? 'خطة غير موجودة' }}
                                                 </span>
                                             </div>
                                         </td>
@@ -100,13 +98,13 @@
             </div>
 
             {{-- حالة عدم وجود بيانات --}}
-            @if($traniner_reviews->isEmpty())
+            @if($mealplan->isEmpty())
                 <div class="bg-white p-20 text-center rounded-3xl border-2 border-dashed border-gray-100 shadow-inner">
-                    <div class="w-24 h-24 bg-indigo-50 rounded-full flex items-center justify-center mx-auto mb-6 text-indigo-200 animate-pulse">
-                        <svg class="w-12 h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" /></svg>
+                    <div class="w-24 h-24 bg-orange-50 rounded-full flex items-center justify-center mx-auto mb-6 text-orange-200 animate-pulse">
+                        <svg class="w-12 h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" /></svg>
                     </div>
-                    <h3 class="text-2xl font-black text-gray-700">لا توجد مراجعات للمدربين</h3>
-                    <p class="text-gray-400 mt-2 font-bold">بمجرد تقييم المتدربين للمدربين الخاصين بهم، ستظهر هنا.</p>
+                    <h3 class="text-2xl font-black text-gray-700">لا توجد مراجعات للخطط الغذائية</h3>
+                    <p class="text-gray-400 mt-2 font-bold">بمجرد تقييم المتدربين لخطط الوجبات الخاصة بهم، ستظهر هنا.</p>
                 </div>
             @endif
 
