@@ -147,6 +147,32 @@ class EquipmentSeeder extends Seeder
             'path' => $imagePath, // مسار ديناميكي
         ]);
     }
+    //   $images = Storage::disk('public')->files('equipment_images');
+
+    //     foreach ($equipments as $item) {
+    //         $equipment = Equipment::create($item);
+
+    //         // تجهيز اسم المعدة ليطابق اسم الصورة
+    //         $normalizedName = str_replace(' ', '_', strtolower($item['name']));
+    //         // مثال: "Ab Coaster" → "ab_coaster"
+
+    //         // البحث عن صورة بنفس الاسم
+    //         $imagePath = collect($images)->first(function ($img) use ($normalizedName) {
+    //             return str_contains(strtolower($img), $normalizedName);
+    //         });
+
+    //         // إذا لقينا صورة مطابقة، نربطها
+    //         if ($imagePath) {
+    //             $equipment->image()->create([
+    //                 'path' => $imagePath,
+    //             ]);
+    //         } else {
+    //             // إذا ما في صورة مطابقة، نحط صورة افتراضية
+    //             $equipment->image()->create([
+    //                 'path' => 'equipment_images/default.png',
+    //             ]);
+    //         }
+        // }
 }
     }
 

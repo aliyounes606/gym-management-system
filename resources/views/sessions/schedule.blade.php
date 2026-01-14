@@ -1,3 +1,4 @@
+@role('trainer')
 <x-app-layout>
     <div class="py-12">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
@@ -38,23 +39,32 @@
                         جلسة</span>
                 </div>
 
-                <div class="overflow-x-auto">
-                    <table class="w-full text-right">
-                        <thead class="bg-black/40 text-gray-400 uppercase text-xs font-bold tracking-wider">
+                <table class="min-w-full divide-y divide-gray-200 text-right">
+                    <thead class="bg-gray-50">
+                        <tr>
+                            <th class="px-6 py-3 text-xs font-medium text-gray-500 uppercase">العنوان</th>
+                            <th class="px-6 py-3 text-xs font-medium text-gray-500 uppercase">الكورس</th>
+                            {{-- <th class="px-6 py-3 text-xs font-medium text-gray-500 uppercase">الفئة</th> --}}
+                            {{-- <th class="px-6 py-3 text-xs font-medium text-gray-500 uppercase">السعر</th> --}}
+                            <th class="px-6 py-3 text-xs font-medium text-gray-500 uppercase">السعة</th>
+                            <th class="px-6 py-3 text-xs font-medium text-gray-500 uppercase">من</th>
+                            <th class="px-6 py-3 text-xs font-medium text-gray-500 uppercase">إلى</th>
+                            {{-- <th class="px-6 py-3 text-xs font-medium text-gray-500 uppercase">عدد الأعضاء</th> --}}
+                            <th class="px-6 py-3 text-xs font-medium text-gray-500 uppercase">الحالة</th>
+                            {{-- <th class="px-6 py-3 text-xs font-medium text-gray-500 uppercase">الإجراءات</th> --}}
+                        </tr>
+                    </thead>
+                    <tbody class="bg-white divide-y divide-gray-200">
+                        @foreach($sessions as $session)
                             <tr>
-                                <th class="p-5">العنوان</th>
-                                <th class="p-5">الكورس</th>
-                                <th class="p-5 text-center">السعة / الأعضاء</th>
-                                <th class="p-5 text-center">التوقيت</th>
-                                <th class="p-5 text-center">تحديث الحالة</th>
-                                <th class="p-5 text-center">الإجراءات</th>
-                            </tr>
-                        </thead>
-                        <tbody class="divide-y divide-gray-800">
-                            @foreach ($sessions as $session)
-                                <tr class="hover:bg-white/5 transition duration-200 group">
-                                    {{-- Title --}}
-                                    <td class="p-5 font-bold text-white">{{ $session->title }}</td>
+                                <td class="px-6 py-4">{{ $session->title }}</td>
+                                <td class="px-6 py-4">{{ $session->course?->name ?? '---' }}</td>
+                                {{-- <td class="px-6 py-4">{{ $session->category?->name ?? '---' }}</td> --}}
+                                {{-- <td class="px-6 py-4">{{ $session->single_price }}</td> --}}
+                                <td class="px-6 py-4">{{ $session->max_capacity }}</td>
+                                <td class="px-6 py-4">{{ $session->start_time }}</td>
+                                <td class="px-6 py-4">{{ $session->end_time }}</td>
+                                {{-- <td class="px-6 py-4">{{ $session->members_count ?? 0 }}</td> --}}
 
                                     {{-- Course --}}
                                     <td class="p-5 text-gray-300">
@@ -78,52 +88,23 @@
                                         </div>
                                     </td>
 
-                                    {{-- Time --}}
-                                    <td class="p-5 text-center">
-                                        <div class="flex flex-col items-center justify-center text-sm">
-                                            <span class="text-gray-300 font-bold">
-                                                {{ \Carbon\Carbon::parse($session->start_time)->format('h:i A') }}
-                                            </span>
-                                            <span class="text-gray-500 text-xs">إلى</span>
-                                            <span class="text-gray-400">
-                                                {{ \Carbon\Carbon::parse($session->end_time)->format('h:i A') }}
-                                            </span>
-                                        </div>
-                                    </td>
-
-                                    {{-- Status Update Form --}}
-                                    <td class="p-5">
-                                        <form action="{{ route('gymsessions.updateStatus', $session->id) }}"
-                                            method="POST" class="flex items-center justify-center gap-2">
-                                            @csrf
-                                            @method('PATCH')
-                                            <select name="status"
-                                                class="bg-gray-800 border border-gray-700 text-white text-xs rounded-lg focus:ring-indigo-500 focus:border-indigo-500 block p-2 w-32 cursor-pointer hover:bg-gray-700 transition">
-                                                <option value="pending"
-                                                    {{ $session->status == 'pending' ? 'selected' : '' }}>⏳ قيد
-                                                    الانتظار</option>
-                                                <option value="started"
-                                                    {{ $session->status == 'started' ? 'selected' : '' }}>▶️ بدأت
-                                                </option>
-                                                <option value="ended"
-                                                    {{ $session->status == 'ended' ? 'selected' : '' }}>✅ انتهت
-                                                </option>
-                                                <option value="cancelled"
-                                                    {{ $session->status == 'cancelled' ? 'selected' : '' }}>❌ ملغاة
-                                                </option>
-                                            </select>
-                                            <button type="submit"
-                                                class="p-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-500 transition shadow-md"
-                                                title="حفظ الحالة">
-                                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4"
-                                                    viewBox="0 0 20 20" fill="currentColor">
-                                                    <path fill-rule="evenodd"
-                                                        d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
-                                                        clip-rule="evenodd" />
-                                                </svg>
-                                            </button>
-                                        </form>
-                                    </td>
+                                <!-- الإجراءات 
+                                <td class="px-6 py-4 flex gap-2 justify-end">
+                                    <a href="{{ route('gymsessions.show', $session->id) }}"
+                                       class="text-indigo-600 hover:text-indigo-900">عرض</a>
+                                    <a href="{{ route('gymsessions.edit', $session->id) }}"
+                                       class="text-yellow-600 hover:text-yellow-900">تعديل</a>
+                                    <form action="{{ route('gymsessions.destroy', $session->id) }}" method="POST"
+                                          onsubmit="return confirm('هل أنت متأكد من الحذف؟');">
+                                        @csrf @method('DELETE')
+                                        <button type="submit" class="text-red-600 hover:text-red-900">حذف</button>
+                                    </form>
+                                </td>
+                                -->
+                            </tr>
+                        @endforeach
+                    </tbody>
+                </table>
 
                                     {{-- Actions --}}
                                     <td class="p-5 text-center">
@@ -175,3 +156,4 @@
         </div>
     </div>
 </x-app-layout>
+@endrole

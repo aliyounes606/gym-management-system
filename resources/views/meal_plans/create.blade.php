@@ -1,3 +1,4 @@
+         @hasanyrole('admin|trainer')
 <x-app-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">إرسال توصية وجبة لمتدرب</h2>
@@ -60,3 +61,4 @@
         </div>
     </div>
 </x-app-layout>
+   @endhasanyrole
