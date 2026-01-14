@@ -76,7 +76,32 @@ class ReviewController extends Controller
     public function GoToTrainerReviews()
     {
 
-        $traniner_reviews = Review::with('user')->where( 'reviewable_type', 'trainer')->get();
+        $traniner_reviews = Review::with(['user', 'reviewable'])
+        ->where( 'reviewable_type', 'trainer')
+        ->get();
         return view('reviews.trainer_reviews', compact('traniner_reviews'));
+    }
+
+    public function GoToMealPlanReviews()
+    {
+
+        $mealplan = Review::with(['user', 'reviewable'])
+        ->where( 'reviewable_type', 'mealplan')
+        ->get();
+        return view('reviews.mealplan_reviews', compact('mealplan'));
+    }
+    public function GoToGymSessionReviews()
+    {
+        $gym_session_reviews = Review::with(['user', 'reviewable'])
+        ->where( 'reviewable_type', 'gymsession')
+        ->get();
+        return view('reviews.gym_session_reviews', compact('gym_session_reviews'));
+    }
+    public function GoToCourseReviews()
+    {
+        $course_reviews = Review::with(['user', 'reviewable'])
+        ->where( 'reviewable_type', 'course')
+        ->get();
+        return view('reviews.course_reviews', compact('course_reviews'));
     }
 }
