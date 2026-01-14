@@ -11,6 +11,7 @@ use App\Models\User;
 use Spatie\Permission\Models\Role;
 use Spatie\Permission\Models\Permission;
 use Database\Seeders\EquipmentSeeder;
+use Database\Seeders\MealPlanSeeder;
 
 class DatabaseSeeder extends Seeder
 {
@@ -43,13 +44,14 @@ class DatabaseSeeder extends Seeder
         }
 
         $this->call([
-            MealPlanSeeder::class,
+          MealPlanSeeder::class,
             EquipmentSeeder::class,
         ]);
 
         $this->call([
             UserSeeder::class,
             TrainerProfileSeeder::class,
+            
             CategorySeeder::class,
             CourseSeeder::class,
             SessionSeeder::class,

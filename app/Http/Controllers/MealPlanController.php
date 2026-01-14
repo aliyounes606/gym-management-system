@@ -13,7 +13,7 @@ class MealPlanController extends Controller
 {
     // 1. عرض جدول الوجبات (مكتبة الوجبات العامة)
     public function index() {
-        $plans = MealPlan::with(['image'])->latest()->get();
+        $plans = MealPlan::with(['image'])->latest()->paginate(10);
         $trainees = User::role('member')->get();
 
         return view('meal_plans.index', compact('plans', 'trainees'));
@@ -103,4 +103,12 @@ class MealPlanController extends Controller
 
         return redirect()->route('meal-plans.index')->with('success', 'تم تحديث الوجبة بنجاح');
     }
+    
+public function show(MealPlan $mealPlan)
+{
+   
+    $mealPlan->load('image');
+    
+    return view('meal_plans.show', compact('mealPlan'));
+}
 }
