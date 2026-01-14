@@ -1,4 +1,11 @@
 <x-app-layout>
+    
+  
+    <style>
+        .pagination-container nav svg { width: 1.5rem !important; display: inline !important; }
+        .pagination-container nav div:first-child { margin-bottom: 1rem; }
+    </style>
+
     <x-slot name="header">
         <div class="flex justify-between items-center">
             <h2 class="font-semibold text-xl text-gray-800 leading-tight">
@@ -28,7 +35,6 @@
                 </div>
             @endif
 
-            {{-- التعديل الجديد: زر خاص للمتدرب يظهر في أعلى الصفحة --}}
             @role('member')
             <div class="mb-8 bg-gradient-to-l from-indigo-600 to-blue-500 rounded-2xl p-6 shadow-xl transform transition hover:scale-[1.01]">
                 <div class="flex flex-col md:flex-row justify-between items-center gap-4">
@@ -53,27 +59,20 @@
                         <table class="min-w-full divide-y divide-gray-200 text-right">
                             <thead class="bg-gray-50">
                                 <tr>
-                                    <th class="px-6 py-3 text-xs font-medium text-gray-500 uppercase">الصورة</th>
                                     <th class="px-6 py-3 text-xs font-medium text-gray-500 uppercase">الوجبة</th>
                                     <th class="px-6 py-3 text-xs font-medium text-gray-500 uppercase">السعرات</th>
                                     <th class="px-6 py-3 text-xs font-medium text-gray-500 uppercase">السعر</th>
                                     
                                     @hasanyrole('admin|trainer')
                                     <th class="px-6 py-3 text-xs font-medium text-gray-500 uppercase">المتدربين</th>
-                                    <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase">العمليات</th>
                                     @endhasanyrole
+                                    
+                                    <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase">العمليات</th>
                                 </tr>
                             </thead>
                             <tbody class="bg-white divide-y divide-gray-200">
                                 @forelse($plans as $plan)
                                     <tr class="hover:bg-gray-50 transition-colors">
-                                        <td class="px-6 py-4 whitespace-nowrap">
-                                            @if($plan->image)
-                                                <img src="{{ asset('storage/' . $plan->image->path) }}" class="w-12 h-12 rounded-lg object-cover border shadow-sm">
-                                            @else
-                                                <div class="w-12 h-12 rounded-lg bg-gray-100 flex items-center justify-center text-gray-400 text-[10px]">بلا صورة</div>
-                                            @endif
-                                        </td>
 
                                         <td class="px-6 py-4">
                                             <div class="text-sm font-medium text-gray-900">{{ $plan->name }}</div>
@@ -88,7 +87,7 @@
                                             <form action="{{ route('meal-plans.recommend') }}" method="POST" class="flex flex-col space-y-2">
                                                 @csrf
                                                 <input type="hidden" name="meal_plan_id" value="{{ $plan->id }}">
-                                                <select name="user_ids[]" required multiple class="text-xs border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500 min-h-[80px]">
+                                                <select name="user_ids[]" required multiple class="text-xs border-gray-300 rounded-md shadow-sm min-h-[80px]">
                                                     @foreach($trainees as $trainee)
                                                         <option value="{{ $trainee->id }}">{{ $trainee->name }}</option>
                                                     @endforeach
@@ -96,20 +95,28 @@
                                                 <button type="submit" class="bg-green-500 hover:bg-green-600 text-white px-2 py-1 rounded text-xs transition font-bold">
                                                     إرسال للمختارين
                                                 </button>
-                                                <span class="text-[9px] text-gray-400 leading-tight">اضغط Ctrl للاختيار المتعدد</span>
                                             </form>
                                         </td>
+                                        @endhasanyrole
 
                                         <td class="px-6 py-4 whitespace-nowrap text-center text-sm font-medium">
                                             <div class="flex items-center justify-center space-x-2 space-x-reverse">
-                                                <a href="{{ route('meal-plans.edit', $plan->id) }}" class="text-indigo-600 hover:text-indigo-900 bg-indigo-50 px-3 py-1 rounded-full text-xs transition">تعديل</a>
-                                                <form action="{{ route('meal-plans.destroy', $plan->id) }}" method="POST" onsubmit="return confirm('هل أنت متأكد من حذف هذه الوجبة؟')">
-                                                    @csrf @method('DELETE')
-                                                    <button type="submit" class="text-red-600 hover:text-red-900 bg-red-50 px-3 py-1 rounded-full text-xs transition">حذف</button>
-                                                </form>
+                                                
+                                                {{-- زر عرض التفاصيل: متاح للجميع (متدرب، مدرب، آدمن) --}}
+                                                <a href="{{ route('meal-plans.show', $plan->id) }}" class="text-blue-600 hover:bg-blue-50 px-3 py-1 rounded-full text-xs font-bold border border-blue-200 transition">
+                                                    عرض التفاصيل
+                                                </a>
+
+                                                @hasanyrole('admin|trainer')
+                                                    <a href="{{ route('meal-plans.edit', $plan->id) }}" class="text-indigo-600 hover:text-indigo-900 bg-indigo-50 px-3 py-1 rounded-full text-xs transition">تعديل</a>
+                                                    <form action="{{ route('meal-plans.destroy', $plan->id) }}" method="POST" onsubmit="return confirm('هل أنت متأكد؟')">
+                                                        @csrf @method('DELETE')
+                                                        <button type="submit" class="text-red-600 hover:text-red-900 bg-red-50 px-3 py-1 rounded-full text-xs transition">حذف</button>
+                                                    </form>
+                                                @endhasanyrole
+                                                
                                             </div>
                                         </td>
-                                        @endhasanyrole
                                     </tr>
                                 @empty
                                     <tr>
@@ -118,6 +125,9 @@
                                 @endforelse
                             </tbody>
                         </table>
+                    </div>
+                    <div class="mt-6 pagination-container">
+                        {{ $plans->links() }}
                     </div>
                 </div>
             </div>

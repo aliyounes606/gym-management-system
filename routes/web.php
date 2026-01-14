@@ -83,6 +83,8 @@ Route::middleware(['role:admin|trainer'])->group(function () {
         Route::put('/meal-plans/{mealPlan}', [MealPlanController::class, 'update'])->name('meal-plans.update');
         Route::delete('/meal-plans/{mealPlan}', [MealPlanController::class, 'destroy'])->name('meal-plans.destroy');
         Route::post('/meal-plans/recommend', [MealPlanController::class, 'recommend'])->name('meal-plans.recommend');
+        Route::get('/meal-plans/{mealPlan}', [MealPlanController::class, 'show'])->name('meal-plans.show');
+
         Route::get('/daily-attendance', [DailyAttendanceController::class, 'index'])->name('daily.attendance');
         Route::resource('bookings', BookingsController::class)->middleware('auth');
         Route::post('/bookings/bookCorse', [BookingsController::class, 'bookCorse'])->name('bookings.bookCorse');
