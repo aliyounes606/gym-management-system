@@ -2,28 +2,72 @@
 
 namespace Database\Seeders;
 
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Database\Seeder;
 use App\Models\MealPlan;
 
+
 class MealPlanSeeder extends Seeder
 {
-    /**
-     * Run the database seeds.
-     */
     public function run(): void
     {
-        MealPlan::firstOrCreate([
-            'name' => 'سلطة السيزر الصحية',
-            'description' => 'صدر دجاج مشوي مع خس طازج وصلصة قليلة الدسم',
-            'calories' => 350,
-            'price' => 15.00
-        ]);
 
-        MealPlan::firstOrCreate([
-            'name' => 'سمك السلمون المشوي',
-            'description' => 'قطعة سلمون غنية بالأوميغا 3 مع خضار سوتيه',
-            'calories' => 500,
-            'price' => 25.00
-        ]);
+        // جلب الصور من مجلد meals_images بالترتيب
+        $images = Storage::disk('public')->files('meals_images');
+
+        $mealPlans = [
+            
+             [
+                'name' => 'صدر دجاج مشوي',
+                'description' => 'صدور دجاج متبلة بالأعشاب تقدم مع سلطة خضراء.',
+                'calories' => 480,
+                'price' => 18,
+            ],
+           
+          
+            [
+                'name' => 'شوفان بالموز والعسل',
+                'description' => 'وجبة إفطار متكاملة تمنحك طاقة طوال اليوم.',
+                'calories' => 420,
+                'price' => 12,
+            ],
+           
+           
+              [
+                'name' => 'ستيك بقر مشوي',
+                'description' => 'شريحة لحم بقر قليلة الدسم مشوية مع بطاطا مهروسة.',
+                'calories' => 600,
+                'price' => 40,
+            ],
+             [
+                'name' => 'أومليت خضار صحي',
+                'description' => 'بيض مخفوق مع فلفل ألوان، سبانخ، وفطر.',
+                'calories' => 300,
+                'price' => 10,
+            ],
+             [
+                'name' => 'تونة بالخردل والليمون',
+                'description' => 'سلطة تونة خفيفة مع الخيار والذرة والليمون.',
+                'calories' => 280,
+                'price' => 14,
+            ],
+        ];
+
+        // توزيع الوجبات على المدربين والصور بالترتيب
+        foreach ($mealPlans as $index => $mealPlan) {
+    
+
+            // إنشاء الوجبة
+            $meal = MealPlan::create($mealPlan, 
+                
+           );
+
+            // ربط الصورة بالترتيب (نفس ترتيب المصفوفة أو الملفات)
+            if (isset($images[$index])) {
+                $meal->image()->create([
+                    'path' => $images[$index], // الصورة المقابلة للوجبة
+                ]);
+            }
+        }
     }
 }

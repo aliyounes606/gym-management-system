@@ -36,9 +36,12 @@
                 {{ __('أدوات المدرب') }}
             </div>
 
-            <x-dropdown-link :href="route('meal-plans.index')">
-                {{ __('إدارة خطط الوجبات') }}
-            </x-dropdown-link>
+  {{-- الرابط يظهر فقط للآدمن والمدرب --}}
+@hasanyrole('admin|trainer')
+    <x-nav-link :href="route('meal-plans.index')" :active="request()->routeIs('meal-plans.index')">
+        {{ __('إدارة الوجبات') }}
+    </x-nav-link>
+@endhasanyrole
 
             {{-- التحقق من وجود ملف المدرب --}}
             @if (auth()->user()->trainerProfile)
