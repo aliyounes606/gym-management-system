@@ -1,110 +1,127 @@
 <x-app-layout>
-    <x-slot name="header">
-        <div class="flex justify-between items-center" dir="rtl">
-            <h2 class="font-black text-2xl text-gray-800 leading-tight">
-                {{ __('سجل تقييمات الجلسات التدريبية') }}
-            </h2>
-            
-            <div class="flex items-center gap-2 bg-indigo-50 px-4 py-2 rounded-2xl border border-indigo-100">
-                <span class="text-indigo-600 font-bold text-sm">إجمالي المراجعات:</span>
-                <span class="bg-indigo-600 text-white px-3 py-0.5 rounded-lg text-xs font-black">{{ count($gym_session_reviews) }}</span>
-            </div>
-        </div>
-    </x-slot>
+    {{-- خلفية فاتحة للصفحة كاملة --}}
+    <div class="py-12 bg-gray-50 min-h-screen" dir="rtl">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-10">
 
-    <div class="py-12" dir="rtl">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            
-            {{-- بطاقة عرض التقييمات --}}
-            <div class="bg-white overflow-hidden shadow-sm sm:rounded-3xl border border-gray-100 shadow-xl shadow-gray-100/50">
-                <div class="p-8">
+            {{-- الهيدر --}}
+            <div class="flex flex-col md:flex-row justify-between items-center gap-4 border-b border-gray-200 pb-6">
+                <div>
+                    <h2 class="text-3xl font-black text-gray-800 tracking-tight">
+                        تقييمات الجلسات التدريبية 🏋️
+                    </h2>
+                    <p class="text-gray-500 mt-1">
+                        آراء المتدربين حول جودة الحصص والتمارين.
+                    </p>
+                </div>
+
+                {{-- إحصائية سريعة --}}
+                <div class="flex items-center gap-3 bg-white px-5 py-3 rounded-2xl shadow-sm border border-gray-200">
+                    <span class="text-gray-500 font-bold text-sm">إجمالي المراجعات</span>
+                    <span
+                        class="bg-indigo-600 text-white px-3 py-1 rounded-lg text-sm font-black shadow-md shadow-indigo-200">
+                        {{ count($gym_session_reviews) }}
+                    </span>
+                </div>
+            </div>
+
+            {{-- جدول التقييمات (داخل بطاقة داكنة) --}}
+            <div class="bg-gray-900 border border-gray-800 rounded-2xl overflow-hidden shadow-2xl">
+
+                {{-- رأس الجدول --}}
+                <div class="bg-gray-800/50 px-6 py-4 border-b border-gray-800 flex items-center justify-between">
+                    <h3 class="text-white font-bold flex items-center gap-2">
+                        <span class="w-2 h-2 rounded-full bg-purple-500 animate-pulse"></span>
+                        أحدث التقييمات
+                    </h3>
+                </div>
+
+                @if ($gym_session_reviews->isEmpty())
+                    <div class="p-20 text-center flex flex-col items-center justify-center">
+                        <div
+                            class="w-20 h-20 bg-gray-800 rounded-full flex items-center justify-center mb-4 border border-gray-700">
+                            <svg class="w-10 h-10 text-gray-600" fill="none" stroke="currentColor"
+                                viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                            </svg>
+                        </div>
+                        <h3 class="text-xl font-bold text-white mb-2">لا توجد تقييمات للجلسات</h3>
+                        <p class="text-gray-500">لم يتم تقييم أي جلسة تدريبية حتى الآن.</p>
+                    </div>
+                @else
                     <div class="overflow-x-auto">
-                        <table class="w-full text-right border-separate border-spacing-y-3">
-                            <thead>
-                                <tr class="text-gray-400 text-xs font-black uppercase tracking-widest px-6">
+                        <table class="w-full text-right">
+                            <thead class="bg-black/40 text-gray-400 uppercase text-xs font-bold tracking-wider">
+                                <tr>
                                     <th class="px-6 py-4">المتدرب</th>
-                                    <th class="px-6 py-4">الجلسة المقيمة</th>
-                                    <th class="px-6 py-4 text-center">التقييم الرقمي</th>
-                                    <th class="px-6 py-4">التعليق والملاحظات</th>
-                                    <th class="px-6 py-4 text-center">الحالة البصرية</th>
+                                    <th class="px-6 py-4">الجلسة</th>
+                                    <th class="px-6 py-4 text-center">التقييم</th>
+                                    <th class="px-6 py-4">التعليق</th>
                                 </tr>
                             </thead>
-                            <tbody class="divide-y divide-gray-50">
-                                @foreach($gym_session_reviews as $tr)
-                                    <tr class="hover:bg-indigo-50/50 transition-all duration-300 group">
-                                        {{-- اسم المتدرب --}}
-                                        <td class="px-6 py-5 bg-white group-hover:bg-transparent rounded-r-2xl">
+                            <tbody class="divide-y divide-gray-800">
+                                @foreach ($gym_session_reviews as $tr)
+                                    <tr class="hover:bg-white/5 transition-colors duration-200 group">
+
+                                        {{-- المتدرب --}}
+                                        <td class="px-6 py-5">
                                             <div class="flex items-center gap-3">
-                                                <div class="w-10 h-10 bg-indigo-100 text-indigo-600 rounded-xl flex items-center justify-center font-black shadow-sm">
+                                                <div
+                                                    class="w-10 h-10 rounded-full bg-gradient-to-br from-indigo-600 to-purple-600 flex items-center justify-center text-white font-bold text-sm shadow-lg border border-indigo-500/30">
                                                     {{ mb_substr($tr->user->name ?? 'م', 0, 1) }}
                                                 </div>
                                                 <div>
-                                                    <div class="font-black text-gray-900 group-hover:text-indigo-600 transition-colors text-sm">
+                                                    <div
+                                                        class="text-white font-bold text-sm group-hover:text-indigo-400 transition-colors">
                                                         {{ $tr->user->name }}
                                                     </div>
-                                                    <div class="text-[10px] text-gray-400 font-bold uppercase tracking-widest">Verified Trainee</div>
+                                                    <div class="text-xs text-gray-500">مشترك موثق</div>
                                                 </div>
                                             </div>
                                         </td>
 
-                                        {{-- الجلسة المقيمة --}}
-                                        <td class="px-6 py-5 bg-white group-hover:bg-transparent">
+                                        {{-- الجلسة --}}
+                                        <td class="px-6 py-5">
                                             <div class="flex items-center gap-2">
-                                                <div class="w-2 h-2 rounded-full bg-indigo-500 animate-pulse"></div>
-                                                <span class="font-bold text-gray-700 text-sm">
-                                                    {{ optional($tr->reviewable)->title ?? 'جلسة غير موجودة' }}
+                                                <span class="w-1.5 h-1.5 rounded-full bg-purple-500"></span>
+                                                <span class="text-gray-300 text-sm font-medium">
+                                                    {{ optional($tr->reviewable)->title ?? 'جلسة محذوفة' }}
                                                 </span>
                                             </div>
                                         </td>
 
-                                        {{-- التقييم الرقمي --}}
-                                        <td class="px-6 py-5 bg-white group-hover:bg-transparent text-center">
-                                            <div class="inline-flex items-center px-3 py-1 bg-yellow-50 border border-yellow-100 rounded-lg">
-                                                <span class="text-yellow-700 font-black text-sm">{{ $tr->rating }}</span>
-                                                <svg class="w-3 h-3 text-yellow-500 mr-1 fill-current" viewBox="0 0 20 20">
-                                                    <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-                                                </svg>
+                                        {{-- التقييم والنجوم --}}
+                                        <td class="px-6 py-5 text-center">
+                                            <div class="flex flex-col items-center justify-center gap-1">
+                                                <span class="text-2xl font-black text-white">{{ $tr->rating }}</span>
+                                                <div class="flex gap-0.5">
+                                                    @for ($i = 1; $i <= 5; $i++)
+                                                        <svg class="w-3 h-3 {{ $i <= $tr->rating ? 'text-yellow-400' : 'text-gray-700' }} fill-current transition-colors duration-200"
+                                                            viewBox="0 0 20 20">
+                                                            <path
+                                                                d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                                                        </svg>
+                                                    @endfor
+                                                </div>
                                             </div>
                                         </td>
 
                                         {{-- التعليق --}}
-                                        <td class="px-6 py-5 bg-white group-hover:bg-transparent">
-                                            <p class="text-gray-600 text-xs leading-relaxed max-w-xs italic">
+                                        <td class="px-6 py-5">
+                                            <p
+                                                class="text-gray-400 text-sm italic leading-relaxed bg-gray-800/50 p-3 rounded-lg border border-gray-700/50 min-w-[200px]">
                                                 "{{ $tr->comment ?? 'لا يوجد تعليق' }}"
                                             </p>
                                         </td>
 
-                                        {{-- التقييم بالنجوم --}}
-                                        <td class="px-6 py-5 bg-white group-hover:bg-transparent rounded-l-2xl text-center">
-                                            <div class="flex items-center justify-center gap-0.5">
-                                                @for($i = 1; $i <= 5; $i++)
-                                                    <svg class="w-4 h-4 {{ $i <= $tr->rating ? 'text-yellow-400' : 'text-gray-200' }} fill-current transition-colors duration-200" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-                                                        <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-                                                    </svg>
-                                                @endfor
-                                            </div>
-                                            <div class="mt-1 text-[9px] font-black text-gray-400 uppercase">
-                                                {{ $tr->rating }} / 5
-                                            </div>
-                                        </td>
                                     </tr>
                                 @endforeach
                             </tbody>
                         </table>
                     </div>
-                </div>
-            </div>
+                @endif
 
-            {{-- حالة عدم وجود بيانات --}}
-            @if($gym_session_reviews->isEmpty())
-                <div class="bg-white p-20 text-center rounded-3xl border-2 border-dashed border-gray-100 shadow-inner">
-                    <div class="w-24 h-24 bg-indigo-50 rounded-full flex items-center justify-center mx-auto mb-6 text-indigo-200 animate-bounce">
-                        <svg class="w-12 h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
-                    </div>
-                    <h3 class="text-2xl font-black text-gray-700">لا توجد مراجعات للجلسات حتى الآن</h3>
-                    <p class="text-gray-400 mt-2 font-bold">سيتم إدراج تقييمات المتدربين للجلسات الرياضية هنا تلقائياً.</p>
-                </div>
-            @endif
+            </div>
 
         </div>
     </div>
