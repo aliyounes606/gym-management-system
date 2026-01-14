@@ -5,8 +5,24 @@ namespace App\Http\Controllers;
 use App\Models\Category;
 use Illuminate\Http\Request;
 
-class CategoryController extends Controller
+use Illuminate\Routing\Controllers\HasMiddleware;
+use Illuminate\Routing\Controllers\Middleware;
+
+// 2. إضافة implements HasMiddleware
+class CategoryController extends Controller implements HasMiddleware
 {
+    // 3. استبدال __construct بهذه الدالة الثابتة
+    public static function middleware(): array
+    {
+        return [ new Middleware('can:sessions.view', only: ['index', 'show']),
+            new Middleware('can:sessions.create', only: ['create', 'store']),
+            new Middleware('can:sessions.update', only: ['edit', 'update']),
+            new Middleware('can:sessions.delete', only: ['destroy']),
+        ];
+    }
+
+
+
     /**
      * Summary of index
      * @return \Illuminate\Contracts\View\View

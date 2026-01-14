@@ -21,11 +21,14 @@ class RolePermissionSeeder extends Seeder
 
         // المدرب: جلسات، حضور، تقييمات، الأجهزة 
         $trainer->syncPermissions([
-            'sessions.view', 'sessions.create', 'sessions.update', 'sessions.delete', 'sessions.accept_member', 'sessions.update_status',
-            'attendance.view', 'attendance.mark_present', 'attendance.mark_absent',
+            'sessions.view', 'sessions.create',
+             'sessions.update', 'sessions.delete',
+              'sessions.accept_member', 'sessions.update_status',
+            'attendance.view', 'attendance.mark_present',
+             'attendance.mark_absent',
             'reviews.view', 'reviews.create',
             'equipment.view',
-            'dashboard.metrics.view',
+            'dashboard.metrics.view','sessions.schedule'
         ]);
 
         // العضو: حجوزات، خطط، تقييمات، عرض فقط

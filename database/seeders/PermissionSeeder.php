@@ -18,12 +18,21 @@ class PermissionSeeder extends Seeder
             'sessions.delete',
             'sessions.accept_member',
             'sessions.update_status',
-
+            //النقرير الشهري
+"dashboard.monthly_report.view",
+//الجدول
+  "sessions.schedule",
             // الأجهزة الرياضية
             'equipment.view',
             'equipment.create',
             'equipment.update',
             'equipment.delete',
+//الفئات 
+
+             'category.view',
+            'category.create',
+            'category.update',
+            'category.delete',
 
             // ادراة الاعضاء
             'users.view',
@@ -64,6 +73,10 @@ class PermissionSeeder extends Seeder
             // لوحة التحكم
             'dashboard.access',
             'dashboard.metrics.view',
+            // الدفع
+            'payments.view',
+             'payments.confirm',
+             'payments.delete',
         ];
 
         // إنشاء الصلاحيات بدون تكرار

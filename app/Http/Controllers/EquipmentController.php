@@ -7,9 +7,20 @@ use App\Models\Category;
 use App\Http\Requests\StoreEquipmentRequest;
 use App\Http\Requests\UpdateEquipmentRequest;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Routing\Controllers\HasMiddleware;
+use Illuminate\Routing\Controllers\Middleware;
 
-class EquipmentController extends Controller
+class EquipmentController extends Controller implements HasMiddleware
 {
+     public static function middleware(): array
+    {
+        return [ new Middleware('can:sessions.view', only: ['index', 'show']),
+            new Middleware('can:sessions.create', only: ['create', 'store']),
+            new Middleware('can:sessions.update', only: ['edit', 'update']),
+            new Middleware('can:sessions.delete', only: ['destroy']),
+        ];
+    }
+
     /**
      * Summary of index
      * @return \Illuminate\Contracts\View\View

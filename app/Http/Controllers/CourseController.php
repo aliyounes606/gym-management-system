@@ -7,11 +7,23 @@ use App\Models\Course;
 use App\Http\Requests\StoreCourseRequest;
 use App\Http\Requests\UpdateCourseRequest;
 use App\Models\TrainerProfile;
+use Illuminate\Routing\Controllers\HasMiddleware;
+use Illuminate\Routing\Controllers\Middleware;
 
 //use App\Http\Requests\Admin\UpdateCourseRequest;
 
-class CourseController extends Controller
-{/**
+class CourseController extends Controller implements HasMiddleware
+{
+     public static function middleware(): array
+    {
+        return [ new Middleware('can:sessions.view', only: ['index', 'show']),
+            new Middleware('can:sessions.create', only: ['create', 'store']),
+            new Middleware('can:sessions.update', only: ['edit', 'update']),
+            new Middleware('can:sessions.delete', only: ['destroy']),
+        ];
+    }
+
+    /**
  * Display a listing of all courses.
  *
  * يعرض قائمة بجميع الكورسات الموجودة في النظام.
