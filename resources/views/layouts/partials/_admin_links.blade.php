@@ -71,9 +71,9 @@
             <x-dropdown-link :href="route('categories.index')">
                 {{ __('أقسام التدريبات') }}
             </x-dropdown-link>
-             <x-dropdown-link :href="route('reviews.index')">
+            {{-- <x-dropdown-link :href="route('reviews.index')">
                 {{ __('التقييمات') }}
-            </x-dropdown-link>
+            </x-dropdown-link> --}}
         </x-slot>
     </x-dropdown>
 </div>

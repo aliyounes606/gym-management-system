@@ -16,7 +16,7 @@ class EquipmentController extends Controller
      */
     public function index()
     {
-        $equipment = Equipment::with('image')->get();
+        $equipment = Equipment::with('image')->paginate(10);
         return view('equipment.index', compact('equipment'));
     }
     /**
