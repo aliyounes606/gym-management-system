@@ -29,17 +29,19 @@
 
                     {{-- 2. طلبات الدفع (تم إصلاح الوضوح عند التفعيل) --}}
                     {{-- إذا كان الرابط نشطاً: لون أبيض وخط سفلي ملون. غير نشط: رمادي --}}
+                       @role('admin')
                     <x-nav-link :href="route('admin.payments.index')" :active="request()->routeIs('admin.payments.*')"
                         class="transition duration-150 ease-in-out {{ request()->routeIs('admin.payments.*') ? 'text-white border-indigo-500 font-bold' : 'text-gray-400 hover:text-gray-200 hover:border-gray-700' }}">
                         {{ __('طلبات الدفع') }}
                     </x-nav-link>
-
+                      @endrole
+    @hasanyrole('admin|trainer')
                     {{-- 3. تسجيل الحضور (تم جعله يشبه باقي الروابط تماماً) --}}
                     <x-nav-link :href="route('daily.attendance')" :active="request()->routeIs('daily.attendance')"
                         class="transition duration-150 ease-in-out {{ request()->routeIs('daily.attendance') ? 'text-white border-indigo-500 font-bold' : 'text-gray-400 hover:text-gray-200 hover:border-gray-700' }}">
                         {{ __('تسجيل الحضور') }}
                     </x-nav-link>
-
+  @endhasanyrole
                     {{-- بقية الروابط (Dropdowns/Includes) --}}
                     <div class="flex space-x-8">
                         @include('layouts.partials._admin_links')
@@ -121,15 +123,16 @@
             <x-responsive-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')" class="text-gray-300 hover:text-white">
                 {{ __('Dashboard') }}
             </x-responsive-nav-link>
-
+            @role('admin')
             <x-responsive-nav-link :href="route('admin.payments.index')" :active="request()->routeIs('admin.payments.*')" class="text-gray-300 hover:text-white">
                 {{ __('طلبات الدفع') }}
             </x-responsive-nav-link>
-
+          @endrole
+  @hasanyrole('admin|trainer')
             <x-responsive-nav-link :href="route('daily.attendance')" :active="request()->routeIs('daily.attendance')" class="text-gray-300 hover:text-white">
                 {{ __('تسجيل الحضور') }}
             </x-responsive-nav-link>
-
+   @endhasanyrole
             @include('layouts.partials._admin_links')
             @include('layouts.partials._trainer_links')
             @include('layouts.partials._member_links')

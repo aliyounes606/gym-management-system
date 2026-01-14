@@ -1,3 +1,4 @@
+@role('trainer')
 <x-app-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 leading-tight text-right">
@@ -25,9 +26,9 @@
                             <th class="px-6 py-3 text-xs font-medium text-gray-500 uppercase">السعة</th>
                             <th class="px-6 py-3 text-xs font-medium text-gray-500 uppercase">من</th>
                             <th class="px-6 py-3 text-xs font-medium text-gray-500 uppercase">إلى</th>
-                            <th class="px-6 py-3 text-xs font-medium text-gray-500 uppercase">عدد الأعضاء</th>
+                            {{-- <th class="px-6 py-3 text-xs font-medium text-gray-500 uppercase">عدد الأعضاء</th> --}}
                             <th class="px-6 py-3 text-xs font-medium text-gray-500 uppercase">الحالة</th>
-                            <th class="px-6 py-3 text-xs font-medium text-gray-500 uppercase">الإجراءات</th>
+                            {{-- <th class="px-6 py-3 text-xs font-medium text-gray-500 uppercase">الإجراءات</th> --}}
                         </tr>
                     </thead>
                     <tbody class="bg-white divide-y divide-gray-200">
@@ -40,7 +41,7 @@
                                 <td class="px-6 py-4">{{ $session->max_capacity }}</td>
                                 <td class="px-6 py-4">{{ $session->start_time }}</td>
                                 <td class="px-6 py-4">{{ $session->end_time }}</td>
-                                <td class="px-6 py-4">{{ $session->members_count ?? 0 }}</td>
+                                {{-- <td class="px-6 py-4">{{ $session->members_count ?? 0 }}</td> --}}
 
                                 <!-- الحالة -->
                                <td class="px-6 py-4">
@@ -62,7 +63,7 @@
 </td>
 
 
-                                <!-- الإجراءات -->
+                                <!-- الإجراءات 
                                 <td class="px-6 py-4 flex gap-2 justify-end">
                                     <a href="{{ route('gymsessions.show', $session->id) }}"
                                        class="text-indigo-600 hover:text-indigo-900">عرض</a>
@@ -74,6 +75,7 @@
                                         <button type="submit" class="text-red-600 hover:text-red-900">حذف</button>
                                     </form>
                                 </td>
+                                -->
                             </tr>
                         @endforeach
                     </tbody>
@@ -83,3 +85,4 @@
         </div>
     </div>
 </x-app-layout>
+@endrole
