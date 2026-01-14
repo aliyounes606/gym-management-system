@@ -11,6 +11,7 @@ use App\Models\User;
 use Spatie\Permission\Models\Role;
 use Spatie\Permission\Models\Permission;
 use Database\Seeders\EquipmentSeeder;
+use Database\Seeders\MealPlanSeeder;
 
 class DatabaseSeeder extends Seeder
 {

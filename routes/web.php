@@ -61,6 +61,9 @@ Route::middleware(['auth'])->group(function () {
 
     Route::get('/reviews', [ReviewController::class, 'index'])->middleware('permission:reviews.view')->name('reviews.index');
     Route::get('/reviews/trainers', [ReviewController::class, 'GoToTrainerReviews'])->middleware('permission:reviews.view')->name('reviews.trainers.index');
+   Route::get('/reviews/mealplans', action: [ReviewController::class, 'GoToMealPlanReviews'])->name('reviews.mealplans.index');
+Route::get('/reviews/gymsessions', action: [ReviewController::class, 'GoToGymSessionReviews'])->name('reviews.gymsessions.index');
+Route::get('/reviews/courses', action: [ReviewController::class, 'GoToCourseReviews'])->name('reviews.courses.index');
 });
 
 // روابط الأدمن
@@ -91,7 +94,7 @@ Route::middleware(['auth', 'role:admin|trainer'])->group(function () {
     Route::put('/meal-plans/{mealPlan}', [MealPlanController::class, 'update'])->middleware('permission:plans.subscribe')->name('meal-plans.update');
     Route::delete('/meal-plans/{mealPlan}', [MealPlanController::class, 'destroy'])->middleware('permission:plans.unsubscribe')->name('meal-plans.destroy');
     Route::post('/meal-plans/recommend', [MealPlanController::class, 'recommend'])->middleware('permission:plans.subscribe')->name('meal-plans.recommend');
-
+Route::get('/meal-plans/{mealPlan}', [MealPlanController::class, 'show'])->name('meal-plans.show');
     Route::get('/daily-attendance', [DailyAttendanceController::class, 'index'])->middleware('permission:attendance.view')->name('daily.attendance');
 
     Route::resource('bookings', BookingsController::class);
