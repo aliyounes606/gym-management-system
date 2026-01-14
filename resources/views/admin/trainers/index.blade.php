@@ -1,3 +1,4 @@
+@role('admin')
 <x-app-layout>
     <div class="py-12">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
@@ -180,8 +181,17 @@
                             @endforelse
                         </tbody>
                     </table>
+                    {{-- Pagination Section --}}
+                    <div class="p-4 border-t border-gray-800 bg-gray-900/50 rounded-b-2xl">
+                        <div class="mt-2" dir="ltr">
+                            {{ $trainers->links() }}
+                        </div>
+                    </div>
                 </div>
             </div>
+
         </div>
+
     </div>
 </x-app-layout>
+@endrole
