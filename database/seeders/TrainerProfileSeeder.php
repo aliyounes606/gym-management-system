@@ -34,6 +34,8 @@ class TrainerProfileSeeder extends Seeder
             ],
         ];
 
+        $startIndex = 2; //  كي لا ياخد حساب الادمن يبدأ من الثاني 
+         $trainers = $trainers->slice($startIndex);
         // ربط كل مدرب ببروفايل
         foreach ($trainers as $index => $trainer) {
             //توزيع البيانات الموجودة للبروفايلات على المستخدمين

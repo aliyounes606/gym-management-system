@@ -16,137 +16,96 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\TrainerController;
 use App\Http\Controllers\Admin\RoleController;
 use App\Http\Controllers\Admin\PermissionController;
-use App\Http\Controllers\Admin\ReportController;
 
 Route::get('/', function () {
     return view('welcome');
 });
 
-Route::middleware(['auth:sanctum', 'verified'])->get('/dashboard', function () {
+// لوحة التحكم الرئيسية
+Route::middleware(['auth:sanctum', 'verified', 'permission:dashboard.access'])
+    ->get('/dashboard', function () {
+        $user = auth()->user();
 
-    $user = auth()->user();
+        if ($user->hasRole('admin')) {
+            return redirect()->route('admin.dashboard');
+        }
 
-    if ($user->hasRole('admin')) {
-        return redirect()->route('admin.dashboard');
-    }
+        if ($user->hasRole('trainer')) {
+            return redirect()->route('trainer.dashboard');
+        }
 
-    if ($user->hasRole('trainer')) {
-        return redirect()->route('trainer.dashboard');
-    }
+        return view('dashboard');
+    })->name('dashboard');
 
-    return view('dashboard');
-
-})->name('dashboard');
-
-
-Route::middleware(['auth:sanctum', 'verified', 'role:admin'])->prefix('admin')->name('admin.')->group(function () {
-
-    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
-
-});
-
-Route::middleware(['auth:sanctum', 'verified', 'role:trainer'])->prefix('trainer')->name('trainer.')->group(function () {
-    Route::get('/dashboard', [TrainerDashboardController::class, 'index'])->name('dashboard');
-});
-
-// ملفات الملف الشخصي (متاحة لكل المسجلين)
-Route::middleware('auth')->group(function () {
-    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
-    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
-    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
-});
-Route::middleware(['auth', 'role:admin'])->group(function () {
-    Route::resource('admin/trainers', TrainerController::class)->names('admin.trainers');
-    Route::resource('roles', RoleController::class);
-    Route::resource('permissions', PermissionController::class);
-    Route::resource('admin/categories', CategoryController::class)->middleware(['auth', 'role:admin']);
-    //routes of payments
-    Route::get('/admin/payments', [PaymentController::class, 'index'])->name('admin.payments.index');
-    Route::post('/admin/payments/{batch_id}/confirm', [PaymentController::class, 'confirm'])->name('admin.payments.confirm');
-    Route::delete('/admin/payments/{batch_id}', [PaymentController::class, 'destroy'])->name('admin.payments.destroy');
-});
-
-// Route::middleware(['auth'])->group(function () {
-//     // عرض المعدات في الداشبورد للمستخدمين العاديين
-//     Route::get('/dashboard', [EquipmentController::class, 'dashboard'])->name('dashboard');
-
-//     // عرض المعدات في الداشبورد للمسؤولين فقط (مديرين)
-//     Route::middleware(['role:admin'])->get('/admin/equipment', [EquipmentController::class, 'dashboard'])->name('admin.equipment.dashboard');
-// });
-
-
-Route::middleware(['auth', 'role:admin'])->group(function () {
-    Route::get('/admin/equipment', [EquipmentController::class, 'dashboard'])->name('admin.equipment.dashboard');
-
-});
-
-// مسارات إدارة الوجبات
-
-Route::middleware(['auth'])->group(function () {
-
-    // 1. عرض الوجبات (المكتبة العامة) - متاح للجميع
-    Route::get('/meal-plans', [MealPlanController::class, 'index'])->name('meal-plans.index');
-    Route::get('/my-recommended-meals', [MealPlanController::class, 'myRecommendedMeals'])
-        ->middleware('auth')
-        ->name('meal-plans.my-recommended');
-    // 2. عمليات الإدارة (فقط للأدمن)
-    Route::middleware(['role:admin|trainer'])->group(function () {
-
-        Route::get('/meal-plans/create', [MealPlanController::class, 'create'])->name('meal-plans.create');
-        Route::post('/meal-plans', [MealPlanController::class, 'store'])->name('meal-plans.store');
-
-
-        Route::get('/meal-plans/{mealPlan}/edit', [MealPlanController::class, 'edit'])->name('meal-plans.edit');
-        Route::put('/meal-plans/{mealPlan}', [MealPlanController::class, 'update'])->name('meal-plans.update');
-        Route::delete('/meal-plans/{mealPlan}', [MealPlanController::class, 'destroy'])->name('meal-plans.destroy');
-        Route::post('/meal-plans/recommend', [MealPlanController::class, 'recommend'])->name('meal-plans.recommend');
-
-        Route::get('/daily-attendance', [DailyAttendanceController::class, 'index'])->name('daily.attendance');
-
-        Route::resource('bookings', BookingsController::class)->middleware('auth');
-        Route::post('/bookings/bookCorse', [BookingsController::class, 'bookCorse'])->name('bookings.bookCorse');
-        Route::post('/bookings/bookSession', [BookingsController::class, 'bookSession'])->name('bookings.bookSession')->middleware('auth');
+/****************************************************************************************** */
+// لوحة تحكم الأدمن
+Route::middleware(['auth:sanctum', 'verified', 'role:admin', 'permission:dashboard.metrics.view'])
+    ->prefix('admin')->name('admin.')->group(function () {
+        Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
     });
-});
 
+// لوحة تحكم المدرب
+Route::middleware(['auth:sanctum', 'verified', 'role:trainer', 'permission:dashboard.metrics.view'])
+    ->prefix('trainer')->name('trainer.')->group(function () {
+        Route::get('/dashboard', [TrainerDashboardController::class, 'index'])->name('dashboard');
+    });
 
+// روابط عامة للمستخدمين المسجلين
+Route::middleware(['auth'])->group(function () {
+    Route::get('/profile', [ProfileController::class, 'edit'])->middleware('permission:users.view')->name('profile.edit');
+    Route::patch('/profile', [ProfileController::class, 'update'])->middleware('permission:users.update')->name('profile.update');
+    Route::delete('/profile', [ProfileController::class, 'destroy'])->middleware('permission:users.delete')->name('profile.destroy');
 
+    Route::get('/meal-plans', [MealPlanController::class, 'index'])->middleware('permission:plans.view')->name('meal-plans.index');
+    Route::get('/my-recommended-meals', [MealPlanController::class, 'myRecommendedMeals'])->middleware('permission:plans.view')->name('meal-plans.my-recommended');
 
-//course routes for admin only
-Route::middleware(['auth', 'role:admin'])->group(function () {
-    Route::resource('courses', CourseController::class);
-});
-//course routes for admin only
-Route::middleware(['auth', 'role:admin'])->group(function () {
-    Route::resource('gymsessions', GymSessionController::class);
-});
-require __DIR__ . '/auth.php';
-
-Route::resource('equipment', EquipmentController::class);
-//Route::get('/dashboard',[EquipmentController::class,'dashboard'])->name('dashboard');
-
-// Route::resource('bookings', BookingsController::class);
-
-
-//equipment routes for admin only
-Route::middleware(['auth', 'role:admin'])->group(function () {
-    Route::resource('equipment', EquipmentController::class);
-});
-
-
-Route::resource('gymsessions', GymSessionController::class);
-
-//route for schedule 
-Route::get('/sessions/schedule/{id}', [GymSessionController::class, 'schedule'])->name('sessions.schedule');
-Route::patch('/gymsessions/{id}/status', [GymSessionController::class, 'updateStatus'])
-    ->name('gymsessions.updateStatus');
-
-
-Route::get('/reviews', action: [ReviewController::class, 'index'])->name('reviews.index');
-Route::get('/reviews/trainers', action: [ReviewController::class, 'GoToTrainerReviews'])->name('reviews.trainers.index');
-Route::get('/reviews/mealplans', action: [ReviewController::class, 'GoToMealPlanReviews'])->name('reviews.mealplans.index');
+    Route::get('/reviews', [ReviewController::class, 'index'])->middleware('permission:reviews.view')->name('reviews.index');
+    Route::get('/reviews/trainers', [ReviewController::class, 'GoToTrainerReviews'])->middleware('permission:reviews.view')->name('reviews.trainers.index');
+   Route::get('/reviews/mealplans', action: [ReviewController::class, 'GoToMealPlanReviews'])->name('reviews.mealplans.index');
 Route::get('/reviews/gymsessions', action: [ReviewController::class, 'GoToGymSessionReviews'])->name('reviews.gymsessions.index');
 Route::get('/reviews/courses', action: [ReviewController::class, 'GoToCourseReviews'])->name('reviews.courses.index');
+});
 
+// روابط الأدمن
+Route::middleware(['auth', 'role:admin'])->group(function () {
+    Route::get('/admin/equipment', [EquipmentController::class, 'dashboard'])->middleware('permission:equipment.view')->name('admin.equipment.dashboard');
+    Route::resource('admin/trainers', TrainerController::class)->middleware('permission:users.view')->names('admin.trainers');
+    Route::resource('roles', RoleController::class);
+    Route::resource('permissions', PermissionController::class);
+    Route::resource('admin/categories', CategoryController::class);
 
-Route::get('/monthly-report', [DashboardController::class, 'monthlyReport'])->name('monthly.report');
+    // المدفوعات
+    Route::get('/admin/payments', [PaymentController::class, 'index'])->middleware('permission:payments.view')->name('admin.payments.index');
+    Route::post('/admin/payments/{batch_id}/confirm', [PaymentController::class, 'confirm'])->middleware('permission:payments.confirm')->name('admin.payments.confirm');
+    Route::delete('/admin/payments/{batch_id}', [PaymentController::class, 'destroy'])->middleware('permission:payments.delete')->name('admin.payments.destroy');
+//المعدات والكورسات 
+    Route::resource('equipment', EquipmentController::class);
+    Route::resource('courses', CourseController::class);
+    Route::get('/monthly-report', [DashboardController::class, 'monthlyReport'])->middleware("permission:dashboard.monthly_report.view")->name('monthly.report');
+});
+
+// روابط مشتركة بين الأدمن والمدرب
+Route::middleware(['auth', 'role:admin|trainer'])->group(function () {
+    Route::resource('gymsessions', GymSessionController::class)->middleware('permission:sessions.view');
+
+    Route::get('/meal-plans/create', [MealPlanController::class, 'create'])->middleware('permission:plans.view')->name('meal-plans.create');
+    Route::post('/meal-plans', [MealPlanController::class, 'store'])->middleware('permission:plans.subscribe')->name('meal-plans.store');
+    Route::get('/meal-plans/{mealPlan}/edit', [MealPlanController::class, 'edit'])->middleware('permission:plans.view')->name('meal-plans.edit');
+    Route::put('/meal-plans/{mealPlan}', [MealPlanController::class, 'update'])->middleware('permission:plans.subscribe')->name('meal-plans.update');
+    Route::delete('/meal-plans/{mealPlan}', [MealPlanController::class, 'destroy'])->middleware('permission:plans.unsubscribe')->name('meal-plans.destroy');
+    Route::post('/meal-plans/recommend', [MealPlanController::class, 'recommend'])->middleware('permission:plans.subscribe')->name('meal-plans.recommend');
+Route::get('/meal-plans/{mealPlan}', [MealPlanController::class, 'show'])->name('meal-plans.show');
+    Route::get('/daily-attendance', [DailyAttendanceController::class, 'index'])->middleware('permission:attendance.view')->name('daily.attendance');
+
+    Route::resource('bookings', BookingsController::class);
+    Route::post('/bookings/bookCorse', [BookingsController::class, 'bookCorse'])->middleware('permission:bookings.create')->name('bookings.bookCorse');
+    Route::post('/bookings/bookSession', [BookingsController::class, 'bookSession'])->middleware('permission:bookings.create')->name('bookings.bookSession');
+});
+
+// روابط خاصة بالمدرب
+Route::middleware(['auth', 'role:trainer'])->group(function () {
+    Route::get('/sessions/schedule/{id}', [GymSessionController::class, 'schedule'])->middleware('permission:sessions.schedule')->name('sessions.schedule');
+    Route::patch('/gymsessions/{id}/status', [GymSessionController::class, 'updateStatus'])->middleware('permission:sessions.update_status')->name('gymsessions.updateStatus');
+});
+
+require __DIR__ . '/auth.php';
