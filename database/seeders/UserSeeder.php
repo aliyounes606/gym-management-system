@@ -1,33 +1,59 @@
 <?php
 
 namespace Database\Seeders;
-use App\Models\User;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+
 use Illuminate\Database\Seeder;
+use App\Models\User;
+use Illuminate\Support\Facades\Hash;
+use Carbon\Carbon;
 
 class UserSeeder extends Seeder
 {
-    /**
-     * Run the database seeds.
-     */
     public function run(): void
     {
-        //fake members
-        $bookingDate = fake()->dateTimeBetween('2026-01-01', 'now');
+        $password = Hash::make('password');
 
-        $members = User::factory(10)->create();
-        foreach ($members as $member) {
-            $member->assignRole('member');
+        $fixedDate = Carbon::create(2026, 1, 1, 10, 0, 0);
+
+        $names = [
+            'John Smith',
+            'Emily Johnson',
+            'Michael Brown',
+            'Jessica Davis',
+            'David Wilson',
+            'Sarah Miller',
+            'James Taylor',
+            'Laura Anderson',
+            'Robert Thomas',
+            'Jennifer Martinez',
+            'William White',
+            'Elizabeth Harris',
+            'Christopher Clark',
+            'Linda Lewis',
+            'Matthew Robinson',
+            'Barbara Walker',
+            'Anthony Hall',
+            'Susan Allen',
+            'Steven King',
+            'Karen Scott'
+        ];
+
+        foreach ($names as $index => $name) {
+
+            $emailNumber = $index + 1;
+            $email = "user{$emailNumber}@gym.com";
+
+            $user = User::firstOrCreate(
+                ['email' => $email],
+                [
+                    'name' => $name,
+                    'password' => $password,
+                    'created_at' => $fixedDate,
+                    'updated_at' => $fixedDate,
+                    'email_verified_at' => $fixedDate,
+                ]
+            );
+            $user->assignRole('member');
         }
-        //fake trainer
-        User::firstOrCreate([
-            'name' => 'مدرب كارديو',
-            'email' => 'cardio@example.com',
-            'password' => bcrypt('password'),
-            'created_at' => $bookingDate,
-            'updated_at' => $bookingDate,
-        ])->assignRole('trainer');
-
-
     }
 }
