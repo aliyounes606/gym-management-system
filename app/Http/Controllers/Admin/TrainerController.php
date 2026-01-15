@@ -18,7 +18,7 @@ class TrainerController extends Controller
      */
     public function index()
     {
-        $trainers = TrainerProfile::with('user')->get();
+        $trainers = TrainerProfile::with('user')->paginate(10);
         return view('admin.trainers.index', compact('trainers'));
     }
     /**

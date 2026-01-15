@@ -1,3 +1,4 @@
+@role('admin')
 <x-app-layout>
     <x-slot name="header">
         <h2 class="font-bold text-xl text-gray-100 leading-tight flex items-center gap-2">
@@ -167,3 +168,4 @@
         </div>
     </div>
 </x-app-layout>
+@endrole

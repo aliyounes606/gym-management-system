@@ -3,15 +3,27 @@
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
 
             {{-- Header --}}
-            <div class="flex items-center justify-between">
-                <div>
-                    <h2 class="text-3xl font-bold text-gray-100">لوحة التحكم</h2>
-                    <p class="text-gray-400 mt-1">أهلاً بك، إليك ملخص لما يحدث في الجيم اليوم.</p>
-                </div>
-                <div class="text-right">
-                    <span class="text-sm text-gray-400 block">{{ \Carbon\Carbon::now()->format('l, d F Y') }}</span>
-                </div>
-            </div>
+           {{-- Header --}}
+<div class="flex items-center justify-between">
+    <div>
+        <h2 class="text-3xl font-bold text-gray-100">لوحة التحكم</h2>
+        <p class="text-gray-400 mt-1">أهلاً بك، إليك ملخص لما يحدث في الجيم اليوم.</p>
+    </div>
+
+    <div class="text-right">
+        <span class="text-sm text-gray-400 block">
+            {{ \Carbon\Carbon::now()->format('l, d F Y') }}
+        </span>
+
+        <div class="mt-4">
+            <a href="{{ route('monthly.report') }}" 
+               class="inline-block px-6 py-2 bg-gray-800 text-white font-semibold rounded-lg shadow-md hover:bg-gray-600 transition">
+                📄 pdf التقرير الشهري
+            </a>
+        </div>
+    </div>
+</div>
+
 
             {{-- 1. بطاقات الإحصائيات --}}
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">

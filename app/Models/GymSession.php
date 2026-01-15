@@ -10,7 +10,10 @@ use App\Models\Equipment;
 class GymSession extends Model
 {
     protected $table = "gymsessions";
-    //استقبال المتغيرات
+    /**
+     * Summary of fillable has a relation with trainerprofile , course and category
+     * @var array
+     */
     protected $fillable = [
         "title",
         "trainer_profile_id",
@@ -33,20 +36,14 @@ class GymSession extends Model
         return $this->belongsTo(Course::class, 'course_id');
     }
     //علاقة المعدات k
-    /**
-     * Summary of equipment
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany<Equipment, GymSession, \Illuminate\Database\Eloquent\Relations\Pivot>
-     */
+   
     public function equipment()
     {
         return
             $this->belongsToMany(Equipment::class, 'session_equipment');
     }
     //علاقة المدرب مع الجلسات 
-    /**
-     * Summary of trainer 
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo<TrainerProfile, GymSession>
-     */
+  
     public function trainer()
     {
         return $this->belongsTo(TrainerProfile::class, 'trainer_profile_id');
@@ -74,7 +71,7 @@ class GymSession extends Model
     {
         return $this->belongsTo(Category::class);
     }
-    // morph relation for review the meal plan
+    // morph relation for review the session
     public function review()
     {
         return $this->morphMany(Review::class,'reviewable');

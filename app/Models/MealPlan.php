@@ -41,4 +41,9 @@ class MealPlan extends Model
     {
         return $this->morphMany(Review::class,'reviewable');
     }
+
+     public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
 }
