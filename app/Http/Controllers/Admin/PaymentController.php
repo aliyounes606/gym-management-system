@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Booking;
 use Illuminate\Http\Request;
+use App\Events\BookingPaid;
 
 class PaymentController extends Controller
 {
@@ -20,7 +21,6 @@ class PaymentController extends Controller
         return view('admin.payments.index', compact('pendingBookings'));
     }
 
-
     public function confirm(Request $request, $batchId)
     {
         Booking::where('batch_id', $batchId)->update([
@@ -28,9 +28,15 @@ class PaymentController extends Controller
             'status' => 'confirmed'
         ]);
 
-        return redirect()->back()->with('success', 'تم تأكيد الدفع وتفعيل الاشتراك بنجاح ✅');
-    }
+        $booking = Booking::with('users')->where('batch_id', $batchId)->first();
 
+        // 3. إطلاق حدث الإيميل
+        if ($booking) {
+            event(new BookingPaid($booking));
+        }
+
+        return redirect()->back()->with('success', 'تم التفعيل وإرسال إيميل التأكيد للمستخدم ');
+    }
 
     public function destroy($batchId)
     {
