@@ -8,7 +8,7 @@ class Course extends Model
 {
     //
     /**
-     * Summary of fillable
+     * Summary of fillable has profile id for the trainer
      * @var array
      */
 
@@ -21,7 +21,7 @@ class Course extends Model
     ];
     
 /**
- * Summary of sessions the relations with sessions
+ * Summary of sessions the relations with sessions one to many the course can have many session
  * @return \Illuminate\Database\Eloquent\Relations\HasMany<GymSession, Course>
  */
 public function sessions()
@@ -29,7 +29,7 @@ public function sessions()
     return $this->hasMany(GymSession::class, 'course_id');
 }
 /**
- * Summary of trainerProfile the relation with trainer
+ * Summary of trainerProfile the relation with trainer one to one the trainer have one course 
  * @return \Illuminate\Database\Eloquent\Relations\BelongsTo<TrainerProfile, Course>
  */
 public function trainerProfile()
@@ -40,7 +40,7 @@ public function booking()
 {
     return $this->belongsTo(BookingsController::class, 'booking_course');
 }
-    // morph relation for review the meal plan
+    // morph relation for review the course
 public function review()
 {
     return $this->morphMany(Review::class,'reviewable');

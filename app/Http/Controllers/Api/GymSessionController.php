@@ -28,6 +28,12 @@ class GymSessionController extends Controller
                 $query->where('course_id', $request->course_id);
             }
 
+
+           // فلترة حسب المدرب 
+            if ($request->has('trainer_profile_id')) 
+            { $query->where('trainer_profile_id', $request->trainer_profile_id); }
+            
+            
             $sessions = $query->get();
 
             return response()->json([
