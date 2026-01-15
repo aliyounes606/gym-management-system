@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Course;
+use App\Models\User;
 use App\Models\Review;
 use App\Models\MealPlan;
 use App\Models\GymSession;
@@ -14,47 +15,92 @@ class ReviewController extends Controller
 {
 
     // this mithode for review by morph relationship
-    public function storeReview(Request $requset, $model) {
+    public function storeReview(Request $requset, $model,&$t) {
 
-        $model->review()->create([
+        $data = $requset->validate([
+            'rating'=>'required|integer|min:1|max:5',
+            'comment'=>'nullable|string|max:1000',
+        ]);
+        $t = $model->review()->create([
            'user_id'=>Auth::user()->id,
            'rating'=>$requset->rating,
            'comment'=>$requset->comment,
         ]);
-    }
+ 
+}
 
 
         // review a Course
 
     public function CourseReview(Request $request,Course $course)
     {
-        $this->storeReview($request,$course);
-        return response()->json('تم تقييم الكورس');
+         try{
+        $this->storeReview($request,$course,$t);
+        return response()->json(['message'=>'تم تقييم الكورس',$t,'course'=>$course->name], 200);
+    } catch (\Exception $e) {
+        return response()->json(['message'=>'حدث خطأ أثناء إضافة التقييم: '.$e->getMessage()],500);
+    }
     }
 
     // review a trainer
     public function TrainerReview(Request $request,TrainerProfile $trainer)
     {
-        $this->storeReview($request,$trainer);
-        return response()->json(['massege'=>'تم تقييم الكورس'], 200);
+        $this->storeReview($request,$trainer,$t);
+        return response()->json(['message'=>'تم تقييم المدرب',$t,'trainer'=>$trainer->user_id], 200);
     }
 
     // review a mealPlan
     public function MealPlanReview(Request $request,MealPlan $mealplan)
     {
-        $this->storeReview($request,$mealplan);
-        return response()->json(['massege'=>'تم تقييم الخطة'], 200);
+        $this->storeReview($request,$mealplan,$t);
+        return response()->json(['message'=>'تم تقييم الخطة',$t,'mealplan'=>$mealplan->name], 200);
     }
 
     public function GymSessionReview(Request $request,GymSession $gymsession)
     {
         if ($gymsession->course_id !== null)
         {
-            return response()->json(['massege'=>'لا يمكن تقيم الجلسات المنتمية لكورس'],403);
+            return response()->json(['message'=>'لا يمكن تقيم الجلسات المنتمية لكورس'],403);
         }
         else {
-            $this->storeReview($request,$gymsession);
-        return response()->json(['massege'=>'تم تقييم الجسلة'], 200);
+            $this->storeReview($request,$gymsession,$t);
+        return response()->json(['message'=>'تم تقييم الجسلة',$t,'gymsession'=>$gymsession->title], 200);
         }
+    }
+
+    public function index()
+    {
+        $reviews = Review::all();
+        return view('reviews.index', compact('reviews'));
+    }
+   
+    public function GoToTrainerReviews()
+    {
+        $traniner_reviews = Review::with(['user', 'reviewable'])
+        ->where( 'reviewable_type', 'trainer')
+        ->get();
+        return view('reviews.trainer_reviews', compact('traniner_reviews'));
+    }
+
+    public function GoToMealPlanReviews()
+    {
+        $mealplan = Review::with(['user', 'reviewable'])
+        ->where( 'reviewable_type', 'mealplan')
+        ->get();
+        return view('reviews.mealplan_reviews', compact('mealplan'));
+    }
+    public function GoToGymSessionReviews()
+    {
+        $gym_session_reviews = Review::with(['user', 'reviewable'])
+        ->where( 'reviewable_type', 'gymsession')
+        ->get();
+        return view('reviews.gym_session_reviews', compact('gym_session_reviews'));
+    }
+    public function GoToCourseReviews()
+    {
+        $course_reviews = Review::with(['user', 'reviewable'])
+        ->where( 'reviewable_type', 'course')
+        ->get();
+        return view('reviews.course_reviews', compact('course_reviews'));
     }
 }

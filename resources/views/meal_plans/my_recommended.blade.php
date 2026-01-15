@@ -1,3 +1,4 @@
+ @role('member')
 <x-app-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 leading-tight text-right">وجباتي الموصى بها</h2>
@@ -27,3 +28,4 @@
         </div>
     </div>
 </x-app-layout>
+@endrole

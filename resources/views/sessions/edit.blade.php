@@ -1,92 +1,174 @@
+@role('admin')
 <x-app-layout>
-    <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight text-right">
-            تعديل الجلسة
-        </h2>
-    </x-slot>
-
     <div class="py-12">
-        <div class="max-w-md mx-auto sm:px-6 lg:px-8 bg-white p-6 rounded shadow">
-            <form action="{{ route('gymsessions.update', $session->id) }}" method="POST">
-                @csrf
-                @method('PUT')
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
 
-                <div class="mb-4">
-                    <label class="block text-gray-700">العنوان</label>
-                    <input type="text" name="title" class="w-full border-gray-300 rounded" value="{{ $session->title }}" required>
+            {{-- Header & Back Button --}}
+            <div class="flex items-center justify-between">
+                <div>
+                    <h2 class="text-3xl font-bold text-gray-100 mb-2">تعديل بيانات الجلسة</h2>
+                    <p class="text-gray-400">تحديث تفاصيل الحصة التدريبية المجدولة.</p>
                 </div>
+                <a href="{{ route('gymsessions.index') }}"
+                    class="text-gray-400 hover:text-white transition flex items-center gap-2 group">
+                    <div
+                        class="p-2 bg-gray-800 rounded-lg group-hover:bg-gray-700 transition border border-gray-700 group-hover:border-gray-600">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                            <path fill-rule="evenodd"
+                                d="M10 18a8 8 0 100-16 8 8 0 000 16zm.707-10.293a1 1 0 00-1.414-1.414l-3 3a1 1 0 000 1.414l3 3a1 1 0 001.414-1.414L9.414 11H13a1 1 0 100-2H9.414l1.293-1.293z"
+                                clip-rule="evenodd" />
+                        </svg>
+                    </div>
+                    <span>إلغاء وعودة</span>
+                </a>
+            </div>
 
-                <div class="mb-4">
-                    <label class="block text-gray-700">المدرب</label>
-                    <select name="trainer_id" class="w-full border-gray-300 rounded" >
-                        @foreach($trainers as $trainer)
-                            <option value="{{ $trainer->id }}" {{ $session->trainer_id == $trainer->id ? 'selected' : '' }}>
-                                {{ $trainer->user->name  }}
-                            </option>
+            {{-- Error Alerts --}}
+            @if ($errors->any())
+                <div class="p-4 rounded-xl bg-red-900/80 border border-red-700 text-red-100 shadow-lg animate-pulse">
+                    <ul class="list-disc list-inside">
+                        @foreach ($errors->all() as $error)
+                            <li>{{ $error }}</li>
                         @endforeach
-                    </select>
+                    </ul>
+                </div>
+            @endif
+
+            {{-- Edit Session Form Card --}}
+            <div class="bg-gray-900 border border-gray-800 rounded-2xl overflow-hidden shadow-2xl">
+
+                {{-- Card Header --}}
+                <div class="p-6 border-b border-gray-800 bg-gray-800/30 flex items-center gap-3">
+                    <div class="p-2 bg-indigo-500/20 rounded-lg text-indigo-400">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
+                            stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                        </svg>
+                    </div>
+                    <h3 class="text-lg font-bold text-white">تعديل: {{ $session->title }}</h3>
                 </div>
 
-                <div class="mb-4">
-                <label for="category_id">اختر الفئة</label>
-    <select name="category_id" id="category_id" class="w-full border-gray-300 rounded">
-        <option value=""> اختر الفئة </option>
-        @foreach($categories as $category)
-            <option value="{{ $category->id }}">{{ $category->name }}</option>
-        @endforeach
-    </select>
-     </div>
-                {{-- <div class="mb-4">
-                    <label class="block text-gray-700">الكورس</label>
-                    <select name="course_id" class="w-full border-gray-300 rounded" >
-                        @foreach($courses as $course)
-                            <option 
-                            value=""
-                            {{ $course->id }}"  --}}
-                            {{-- {{ $session->course_id == $course->id ? 'selected' : '' }}>
-                                {{ $course->name }}
-                            {{-- </option> --}}
-                        {{-- @endforeach
-                    </select>
-                </div> --}} 
-                <div class="mb-4">
-    <label class="block text-gray-700">الكورس</label>
-    <select name="course_id" class="w-full border-gray-300 rounded">
-        <option value="">اختر الكورس</option>
-        @foreach($courses as $course)
-            <option 
-                value="{{ $course->id }}" 
-                {{ $session->course_id == $course->id ? 'selected' : '' }}>
-                {{ $course->name }}
-            </option>
-        @endforeach
-    </select>
-</div>
+                <div class="p-8">
+                    <form action="{{ route('gymsessions.update', $session->id) }}" method="POST">
+                        @csrf
+                        @method('PUT')
 
-                <div class="mb-4">
-                    <label class="block text-gray-700">السعر</label>
-                    <input type="number" name="single_price" class="w-full border-gray-300 rounded" value="{{ $session->single_price }}" required>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+
+                            {{-- Title --}}
+                            <div class="md:col-span-2 space-y-2">
+                                <label class="text-sm font-bold text-gray-300">عنوان الجلسة</label>
+                                <input type="text" name="title" value="{{ old('title', $session->title) }}"
+                                    required
+                                    class="w-full bg-gray-800 border border-gray-700 text-white rounded-xl focus:border-indigo-500 focus:ring-indigo-500 py-3 px-4 transition duration-200">
+                            </div>
+
+                            {{-- Category --}}
+                            <div class="space-y-2">
+                                <label class="text-sm font-bold text-gray-300">الفئة (Category)</label>
+                                <select name="category_id"
+                                    class="w-full bg-gray-800 border border-gray-700 text-white rounded-xl focus:border-indigo-500 focus:ring-indigo-500 py-3 px-4 transition duration-200">
+                                    <option value="">-- اختر الفئة --</option>
+                                    @foreach ($categories as $category)
+                                        <option value="{{ $category->id }}"
+                                            {{ old('category_id', $session->category_id) == $category->id ? 'selected' : '' }}>
+                                            {{ $category->name }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                            </div>
+
+                            {{-- Course --}}
+                            <div class="space-y-2">
+                                <label class="text-sm font-bold text-gray-300">تابع لكورس (اختياري)</label>
+                                <select name="course_id"
+                                    class="w-full bg-gray-800 border border-gray-700 text-white rounded-xl focus:border-indigo-500 focus:ring-indigo-500 py-3 px-4 transition duration-200">
+                                    <option value="">-- اختر الكورس --</option>
+                                    @foreach ($courses as $course)
+                                        <option value="{{ $course->id }}"
+                                            {{ old('course_id', $session->course_id) == $course->id ? 'selected' : '' }}>
+                                            {{ $course->name }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                            </div>
+
+                            {{-- Trainer --}}
+                            <div class="md:col-span-2 space-y-2">
+                                <label class="text-sm font-bold text-gray-300">المدرب المسؤول</label>
+                                <select name="trainer_profile_id"
+                                    class="w-full bg-gray-800 border border-gray-700 text-white rounded-xl focus:border-indigo-500 focus:ring-indigo-500 py-3 px-4 transition duration-200">
+                                    <option value="">-- بدون مدرب --</option>
+                                    @foreach ($trainers as $trainer)
+                                        <option value="{{ $trainer->id }}"
+                                            {{ old('trainer_profile_id', $session->trainer_profile_id) == $trainer->id ? 'selected' : '' }}>
+                                            {{ $trainer->user->name }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                            </div>
+
+                            {{-- Price --}}
+                            <div class="space-y-2">
+                                <label class="text-sm font-bold text-gray-300">سعر الجلسة</label>
+                                <div class="relative">
+                                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                        <span class="text-gray-500 font-bold">$</span>
+                                    </div>
+                                    <input type="number" name="single_price" step="0.01"
+                                        value="{{ old('single_price', $session->single_price) }}" required
+                                        class="w-full bg-gray-800 border border-gray-700 text-white rounded-xl focus:border-indigo-500 focus:ring-indigo-500 py-3 px-4 pl-8 transition duration-200">
+                                </div>
+                            </div>
+
+                            {{-- Capacity --}}
+                            <div class="space-y-2">
+                                <label class="text-sm font-bold text-gray-300">السعة القصوى</label>
+                                <div class="relative">
+                                    <input type="number" name="max_capacity"
+                                        value="{{ old('max_capacity', $session->max_capacity) }}" required
+                                        class="w-full bg-gray-800 border border-gray-700 text-white rounded-xl focus:border-indigo-500 focus:ring-indigo-500 py-3 px-4 pl-12 transition duration-200">
+                                    <span
+                                        class="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500 text-sm font-bold">شخص</span>
+                                </div>
+                            </div>
+
+                            {{-- Start Time --}}
+                            <div class="space-y-2">
+                                <label class="text-sm font-bold text-gray-300">وقت البداية</label>
+                                <input type="datetime-local" name="start_time"
+                                    value="{{ old('start_time', $session->start_time) }}" required
+                                    class="w-full bg-gray-800 border border-gray-700 text-white rounded-xl focus:border-indigo-500 focus:ring-indigo-500 py-3 px-4 transition duration-200 [color-scheme:dark]">
+                            </div>
+
+                            {{-- End Time --}}
+                            <div class="space-y-2">
+                                <label class="text-sm font-bold text-gray-300">وقت النهاية</label>
+                                <input type="datetime-local" name="end_time"
+                                    value="{{ old('end_time', $session->end_time) }}" required
+                                    class="w-full bg-gray-800 border border-gray-700 text-white rounded-xl focus:border-indigo-500 focus:ring-indigo-500 py-3 px-4 transition duration-200 [color-scheme:dark]">
+                            </div>
+
+                        </div>
+
+                        {{-- Submit Button --}}
+                        <div class="mt-8 pt-6 border-t border-gray-800 flex justify-end gap-4">
+                            <button type="submit"
+                                class="bg-indigo-600 hover:bg-indigo-500 text-white px-8 py-3 rounded-xl font-bold transition duration-300 shadow-lg shadow-indigo-500/20 flex items-center gap-2 transform hover:-translate-y-1">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20"
+                                    fill="currentColor">
+                                    <path fill-rule="evenodd"
+                                        d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                                        clip-rule="evenodd" />
+                                </svg>
+                                حفظ التعديلات
+                            </button>
+                        </div>
+                    </form>
                 </div>
-
-                <div class="mb-4">
-                    <label class="block text-gray-700">السعة القصوى</label>
-                    <input type="number" name="max_capacity" class="w-full border-gray-300 rounded" value="{{ $session->max_capacity }}" required>
-                </div>
-
-                <div class="mb-4">
-                    <label class="block text-gray-700">وقت البداية</label>
-                    <input type="datetime-local" name="start_time" class="w-full border-gray-300 rounded" value="{{ $session->start_time }}" required>
-                </div>
-
-                <div class="mb-4">
-                    <label class="block text-gray-700">وقت النهاية</label>
-                    <input type="datetime-local" name="end_time" class="w-full border-gray-300 rounded" value="{{ $session->end_time }}" required>
-                </div>
-
-                <button type="submit" class="bg-green-600 text-white px-6 py-2 rounded hover:bg-green-700">
-                    تحديث
-                </button>
-            </form>
+            </div>
         </div>
     </div>
 </x-app-layout>
+@endrole
