@@ -26,29 +26,34 @@ class ReviewController extends Controller
            'rating'=>$requset->rating,
            'comment'=>$requset->comment,
         ]);
-    }
+ 
+}
 
 
         // review a Course
 
     public function CourseReview(Request $request,Course $course)
     {
+         try{
         $this->storeReview($request,$course,$t);
-        return response()->json(['message'=>'تم تقييم الكورس',$t]);
+        return response()->json(['message'=>'تم تقييم الكورس',$t,'course'=>$course->name], 200);
+    } catch (\Exception $e) {
+        return response()->json(['message'=>'حدث خطأ أثناء إضافة التقييم: '.$e->getMessage()],500);
+    }
     }
 
     // review a trainer
     public function TrainerReview(Request $request,TrainerProfile $trainer)
     {
         $this->storeReview($request,$trainer,$t);
-        return response()->json(['message'=>'تم تقييم المدرب',$t], 200);
+        return response()->json(['message'=>'تم تقييم المدرب',$t,'trainer'=>$trainer->user_id], 200);
     }
 
     // review a mealPlan
     public function MealPlanReview(Request $request,MealPlan $mealplan)
     {
         $this->storeReview($request,$mealplan,$t);
-        return response()->json(['message'=>'تم تقييم الخطة'],$t);
+        return response()->json(['message'=>'تم تقييم الخطة',$t,'mealplan'=>$mealplan->name], 200);
     }
 
     public function GymSessionReview(Request $request,GymSession $gymsession)
@@ -59,7 +64,7 @@ class ReviewController extends Controller
         }
         else {
             $this->storeReview($request,$gymsession,$t);
-        return response()->json(['message'=>'تم تقييم الجسلة'],$t);
+        return response()->json(['message'=>'تم تقييم الجسلة',$t,'gymsession'=>$gymsession->title], 200);
         }
     }
 
@@ -68,14 +73,9 @@ class ReviewController extends Controller
         $reviews = Review::all();
         return view('reviews.index', compact('reviews'));
     }
-    public function show()
-    {
-        
-    }
-
+   
     public function GoToTrainerReviews()
     {
-
         $traniner_reviews = Review::with(['user', 'reviewable'])
         ->where( 'reviewable_type', 'trainer')
         ->get();
@@ -84,7 +84,6 @@ class ReviewController extends Controller
 
     public function GoToMealPlanReviews()
     {
-
         $mealplan = Review::with(['user', 'reviewable'])
         ->where( 'reviewable_type', 'mealplan')
         ->get();
