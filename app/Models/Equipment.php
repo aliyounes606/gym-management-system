@@ -7,7 +7,8 @@ use Illuminate\Database\Eloquent\Model;
 /**
  * represents gym equipment entity.
  * 
- * handles relationships with images and categories and provides computed such as image_url.
+ * defines relationships with images and categories and images, and exposes computed attributes such as image_url 
+ * for both web and API responsees.
  */
 
 class Equipment extends Model
