@@ -11,7 +11,10 @@ use Illuminate\Support\Facades\Storage;
 class EquipmentController extends Controller
 {
     /**
-     * Summary of index
+     * displays a list of all equipment with related images.
+     * 
+     * retrivevs equipment records and passes them to the index view.
+     * 
      * @return \Illuminate\Contracts\View\View
      */
     public function index()

@@ -1,3 +1,8 @@
+{{--
+displays detailed information about a single equipment item.
+shows status, categories, and associated image if available.
+--}}
+
 <x-app-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 leading-tight text-right">

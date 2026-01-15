@@ -1,3 +1,8 @@
+{{--
+displays a form for editing existing equipment.
+pre-fills current data and allows updating image and categories.
+--}}
+
 <x-app-layout>
     <div class="py-12">
         <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
