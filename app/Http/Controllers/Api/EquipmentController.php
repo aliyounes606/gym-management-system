@@ -26,16 +26,24 @@ class EquipmentController extends Controller
  * @return \Illuminate\Http\JsonResponse
  */
     
-    public function index(Request $request): JsonResponse
+public function index(Request $request): JsonResponse
 {
     try {
-        $equipment = Equipment::with(['category', 'image'])
+        $query = Equipment::with(['category', 'image'])
             ->when($request->filled('category_id'), function ($query) use ($request) {
                 $query->whereHas('category', function ($q) use ($request) {
                     $q->where('categories.id', $request->category_id);
                 });
-            })
-            ->get();
+            });
+
+        $equipment = $query->get();
+
+        if ($request->filled('category_id') && $equipment->isEmpty()) {
+            return response()->json([
+                'status'  => false,
+                'message' => 'No equipment found for this category'
+            ], 404);
+        }
 
         return response()->json([
             'status'  => true,
@@ -52,4 +60,5 @@ class EquipmentController extends Controller
         ], 500);
     }
 }
+    
 }
