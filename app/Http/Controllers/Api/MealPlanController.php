@@ -14,6 +14,11 @@ use Exception;
 class MealPlanController extends Controller
 {
     // 1. جلب كل الوجبات (المكتبة العامة)
+    /** 
+     * Get a listing of all meal plans from the general library
+     * Returns a collection of meal plans with their images as an API resource
+     * @return \Illuminate\Http\JsonResponse|\Illuminate\Http\Resources\Json\AnonymousResourceCollection
+     */
     public function index()
     {
         try {
@@ -28,6 +33,11 @@ class MealPlanController extends Controller
     }
 
     // 2. جلب الوجبات الخاصة بالمتدرب (التي أوصى بها المدرب)
+    /**
+     * Retrieve the specific meal plans recommended for the authenticated trainee
+     * Filters through recommendations to provide only the associated meal plan data
+     * @return \Illuminate\Http\JsonResponse|\Illuminate\Http\Resources\Json\AnonymousResourceCollection
+     */
     public function myPlans()
     {
         try {
@@ -47,6 +57,12 @@ class MealPlanController extends Controller
     }
 
     // 3. دالة الإرسال للمتدربين (الاختيار المتعدد) عبر الـ API
+    /**
+     * Assign a specific meal plan to multiple trainees 
+     * Uses database transactions to ensure data integrity during mass insertion
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function recommend(Request $request)
     {
         try {
