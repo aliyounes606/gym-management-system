@@ -7,7 +7,14 @@ use App\Models\Course;
 use Illuminate\Http\Request;
 
 class CourseController extends Controller
-{
+{/**
+ * show the session to the user with json response 
+ * he can filter it by cateroy_id 
+ *
+ * @param Request $request
+    * @return \Illuminate\Http\JsonResponse
+
+ */
     // عرض كل الكورسات مع فلترة
     public function index(Request $request)
     {
@@ -37,7 +44,13 @@ class CourseController extends Controller
             ], 500);
         }
     }
+/**
+ * show session by using session_id
+ *
+ * @param [type] $id
+ * @return \Illuminate\Http\JsonResponse
 
+ */
     // عرض كورس واحد حسب ID
     public function show($id)
     {

@@ -21,8 +21,21 @@
                 📄 pdf التقرير الشهري
             </a>
         </div>
+        
     </div>
-</div>
+</div>  
+{{-- رسائل النجاح أو الخطأ --}}
+            @if(session('success'))
+                <div class="bg-green-400 text-white px-4 py-2 rounded-lg shadow-md">
+                    {{ session('success') }}
+                </div>
+            @endif
+
+            @if(session('error'))
+                <div class="bg-red-600 text-white px-4 py-2 rounded-lg shadow-md">
+                    {{ session('error') }}
+                </div>
+            @endif
 
 
             {{-- 1. بطاقات الإحصائيات --}}
@@ -268,6 +281,7 @@
                     </div>
                 </div>
             </div>
+  
 
             {{-- سكريبت Chart.js --}}
             @push('scripts')

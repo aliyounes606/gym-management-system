@@ -7,7 +7,14 @@ use App\Models\GymSession;
 use Illuminate\Http\Request;
 
 class GymSessionController extends Controller
-{
+{/**
+ * show the session to the user with json response 
+ * he can filter it by course_id cateroy_id profile_trainer_id
+ *
+ * @param Request $request
+    * @return \Illuminate\Http\JsonResponse
+
+ */
     // عرض كل الجلسات مع فلترة
     public function index(Request $request)
     {
@@ -49,7 +56,13 @@ class GymSessionController extends Controller
             ], 500);
         }
     }
+/**
+ * show session by using session_id
+ *
+ * @param [type] $id
+ * @return \Illuminate\Http\JsonResponse
 
+ */
     // عرض جلسة واحدة
     public function show($id)
     {
