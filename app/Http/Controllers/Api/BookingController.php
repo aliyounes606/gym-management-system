@@ -16,7 +16,9 @@ use Exception;
 class BookingController extends Controller
 {
     /**
-     * Summary of storeSingleSession
+     * Handle the process of booking a single gym session.
+     * This method validates session capacity and checks for duplicate bookings 
+     * before creating a new pending booking record for the authenticated user.
      * @param \App\Http\Requests\Api\StoreSingleBookingRequest $request
      * @return \Illuminate\Http\JsonResponse
      */
@@ -70,7 +72,9 @@ class BookingController extends Controller
     }
 
     /**
-     * Summary of storeCourse
+     * Handle the bulk booking process for a complete course and its associated sessions.
+     * This method executes a database transaction to create pending booking records for all 
+     * unbooked sessions within the course, grouping them under a unique batch ID.
      * @param \App\Http\Requests\Api\StoreCourseBookingRequest $request
      */
     public function storeCourse(StoreCourseBookingRequest $request)
