@@ -26,9 +26,9 @@ class CourseController extends Controller implements HasMiddleware
     /**
  * Display a listing of all courses.
  *
- * يعرض قائمة بجميع الكورسات الموجودة في النظام.
+ * show the list of the courses in the system 
  *
- * @return \Illuminate\View\View صفحة عرض الكورسات (courses.index)
+ * @return \Illuminate\View\View    (courses.index)
  */
     // عرض كل الكورسات
     public function index()
@@ -37,17 +37,22 @@ class CourseController extends Controller implements HasMiddleware
         return view('courses.index', compact('courses'));
     }
     /** * Show the form for creating a new course. 
-     * يعرض فورم إنشاء كورس جديد مع تضمين قائمة المدربين المتاحين. 
-     * @return \Illuminate\View\View 
+     * show the form to create a new course withthe avilable trainer
+     * @return \Illuminate\View\View (courses.create)
      * */
     // عرض فورم إنشاء كورس جديد
     public function create()
-    {//للتجريب تضمين اسم المدرب
-        $trainerProfiles = \App\Models\TrainerProfile::with('user')->get();
+    {
+        $trainerProfiles = TrainerProfile::with('user')->get();
         return view('courses.create', compact('trainerProfiles'));
     }
 
-
+/**
+ * store the course after validated it 
+ *
+ * @param StoreCourseRequest $request
+ *
+ */
     // حفظ الكورس الجديد
     public function store(StoreCourseRequest $request)
     {
@@ -57,7 +62,6 @@ class CourseController extends Controller implements HasMiddleware
         return redirect()->route('courses.show', $course->id)
             ->with('success', 'تم إنشاء الكورس بنجاح');
     }
-
     // عرض كورس محدد
     public function show($id)
     {
@@ -72,7 +76,13 @@ class CourseController extends Controller implements HasMiddleware
         $course = Course::findOrFail($id);
         return view('courses.edit', compact('course', 'trainerProfiles'));
     }
-    /** * Update the specified course in storage. * * يعدّل بيانات كورس موجود بعد التحقق من صحة البيانات. * * @param \App\Http\Requests\UpdateCourseRequest $request بيانات الطلب بعد التحقق * @param int $id رقم تعريف الكورس * @return \Illuminate\Http\RedirectResponse إعادة التوجيه إلى صفحة الكورسات مع رسالة نجاح * * @throws \Illuminate\Database\Eloquent\ModelNotFoundException إذا لم يتم العثور على الكورس */
+    /** * Update the specified course in storage. * 
+     * *after validated it 
+     * * * @param \App\Http\Requests\UpdateCourseRequest $request     
+     * * @param int $id    
+     * * @return \Illuminate\Http\RedirectResponse 
+     *  * @throws \Illuminate\Database\Eloquent\ModelNotFoundException 
+     * */
     // تحديث الكورس
     public function update(UpdateCourseRequest $request, $id)
     {
@@ -84,7 +94,11 @@ class CourseController extends Controller implements HasMiddleware
         return redirect()->route('courses.index')
             ->with('success', 'تم تحديث الكورس بنجاح');
     }
-    /** * Remove the specified course from storage. * * يحذف كورس محدد من قاعدة البيانات. * * @param int $id رقم تعريف الكورس * @return \Illuminate\Http\RedirectResponse إعادة التوجيه إلى صفحة الكورسات مع رسالة نجاح */
+    /** * Remove the specified course from storage. *
+     *  * delete course  *
+     *  * @param int $id course_id
+     * * @return \Illuminate\Http\RedirectResponse 
+     * */
     // حذف الكورس
     public function destroy($id)
     {

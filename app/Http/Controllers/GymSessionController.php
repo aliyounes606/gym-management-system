@@ -37,7 +37,7 @@ class GymSessionController extends Controller implements HasMiddleware
         return view('sessions.index', compact('sessions'));
     }
     /**
-     * Store a newly created gym session in storage.
+     * create a newly created gym session in storage.
      *
      * @return \Illuminate\View\View
      */
@@ -50,7 +50,7 @@ class GymSessionController extends Controller implements HasMiddleware
         return view('sessions.create', compact('courses', 'trainerProfiles', 'categories'));
     }
     /**
-     * Undocumented function
+     * Store  created gym session in storage.
      *
      * @param StoreSessionRequest $request
      * @return \Illuminate\Http\RedirectResponse
@@ -66,7 +66,7 @@ class GymSessionController extends Controller implements HasMiddleware
             ->with('success', 'تم إنشاء الجلسة بنجاح');
     }
     /** * Display the specified gym session. 
-     * يعرض تفاصيل جلسة معينة.
+     * show detailes for the gym session
      * @param int $id 
      * @return \Illuminate\View\View 
      * */
@@ -78,7 +78,11 @@ class GymSessionController extends Controller implements HasMiddleware
     }
 
     // صفحة تعديل جلسة
-
+    /**
+     * Summary of edit
+     * @param mixed $id
+     * @return \Illuminate\Contracts\View\View
+     */
     public function edit($id)
     {
         $session = GymSession::findOrFail($id);
@@ -88,7 +92,6 @@ class GymSessionController extends Controller implements HasMiddleware
         return view('sessions.edit', compact('session', 'trainers', 'courses', 'categories'));
     }
     /** * Update the specified gym session in storage. *
-     * يعدّل بيانات جلسة معينة. *
      * @param \Illuminate\Http\Request 
      * @param int $id * @return \Illuminate\Http\RedirectResponse
      */
@@ -105,7 +108,7 @@ class GymSessionController extends Controller implements HasMiddleware
             ->with('success', 'تم تعديل الجلسة بنجاح');
     }
     /** * Remove the specified gym session from storage. * 
-     * يحذف جلسة معينة من قاعدة البيانات. 
+     * delete it based on the id from the database
      * @param int $id 
      * @return \Illuminate\Http\RedirectResponse 
      */
@@ -122,9 +125,10 @@ class GymSessionController extends Controller implements HasMiddleware
     /**
  * Display the schedule of a specific trainer.
 
- * @param  int  $id  رقم تعريف المدرب (TrainerProfile ID)
- * @return \Illuminate\View\View  صفحة العرض التي تحتوي على بيانات المدرب والجلسات
- *
+ * @param  int  $id  (TrainerProfile ID)
+ * @return \Illuminate\View\View  
+ * صفحة العرض التي تحتوي على بيانات المدرب والجلسات
+ *display the data for the trainer 
  */
     public function schedule($id)
     //find if trainner id exist 
@@ -143,8 +147,8 @@ class GymSessionController extends Controller implements HasMiddleware
 
     /**
      * Update the status of the specified gym session.
-     *
-     * يحدّث حالة الجلسة (قيد الانتظار، بدأت، انتهت، ملغاة).
+     * its type enum
+     *    (قيد الانتظار، بدأت، انتهت، ملغاة).
      *
      * @param  \Illuminate\Http\Request  $request
      * @param  int  $id
