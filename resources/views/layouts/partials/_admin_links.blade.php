@@ -61,9 +61,6 @@
                     {{ __('إدارة الجلسات') }}
                 </x-dropdown-link>
 
-                <x-dropdown-link :href="route('bookings.index')" :active="request()->routeIs('bookings.*')" class="text-right">
-                    {{ __('إدارة الحجوزات') }}
-                </x-dropdown-link>
 
                 <div class="border-t border-gray-100 my-1"></div>
 
@@ -75,10 +72,7 @@
                     {{ __('أقسام التدريبات') }}
                 </x-dropdown-link>
 
-                {{-- تم تفعيل رابط التقييمات وإضافة أيقونة --}}
-                {{-- <x-dropdown-link :href="route('reviews.index')" class="text-right flex items-center justify-end gap-2">
-                    {{ __('التقييمات والمراجعات') }}
-                </x-dropdown-link> --}}
+
 
             </x-slot>
         </x-dropdown>
