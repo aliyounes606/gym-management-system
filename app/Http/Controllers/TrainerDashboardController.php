@@ -11,7 +11,10 @@ use Carbon\Carbon;
 class TrainerDashboardController extends Controller
 {
     /**
-     * Summary of index
+     *Display the trainer's dashboard with key performance metrics.
+     * This method retrieves the authenticated trainer's profile to calculate statistics such as 
+     * daily session counts, monthly completion rates, and the number of active students 
+     * before rendering the dashboard view.
      * @return \Illuminate\Contracts\View\View
      */
     public function index()
