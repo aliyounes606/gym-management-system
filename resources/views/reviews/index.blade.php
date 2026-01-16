@@ -15,6 +15,76 @@
                 </div>
             </div>
 
+            {{-- قسم الأعلى تقييماً - يظهر في المقدمة كإحصائيات سريعة --}}
+            <div class="space-y-6">
+                <h3 class="text-2xl font-black text-gray-800 flex items-center gap-2">
+                    <span class="bg-orange-100 p-2 rounded-lg">🔥</span>
+                    الأعلى تقييماً (المعدل العام)
+                </h3>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                    {{-- أفضل مدرب --}}
+                    @if(isset($bestTrainer) && $bestTrainer)
+                    <div class="bg-gray-900 rounded-3xl p-6 border border-gray-800 shadow-xl transition-all duration-300">
+                        <div class="flex justify-between items-start mb-3">
+                            <h4 class="text-xs font-black text-indigo-400 uppercase tracking-widest">🏋️ أفضل مدرب</h4>
+                            <span class="bg-indigo-500/20 text-indigo-300 text-xs font-bold px-2 py-1 rounded-lg border border-indigo-500/30">
+                                ⭐ {{ number_format(\App\Models\Review::where('reviewable_id', $bestTrainer->id)->where('reviewable_type', 'trainer')->avg('rating') ?? 0, 1) }}
+                            </span>
+                        </div>
+                        <p class="text-white text-xl font-black truncate">
+                            {{ $bestTrainer->user->name ?? $bestTrainer->name ?? 'غير محدد' }}
+                        </p>
+                    </div>
+                    @endif
+
+                    {{-- أفضل جلسة --}}
+                    @if(isset($bestGymSession) && $bestGymSession)
+                    <div class="bg-gray-900 rounded-3xl p-6 border border-gray-800 shadow-xl transition-all duration-300">
+                        <div class="flex justify-between items-start mb-3">
+                            <h4 class="text-xs font-black text-purple-400 uppercase tracking-widest">⏱️ أفضل جلسة</h4>
+                            <span class="bg-purple-500/20 text-purple-300 text-xs font-bold px-2 py-1 rounded-lg border border-purple-500/30">
+                                ⭐ {{ number_format(\App\Models\Review::where('reviewable_id', $bestGymSession->id)->where('reviewable_type', 'gymsession')->avg('rating') ?? 0, 1) }}
+                            </span>
+                        </div>
+                        <p class="text-white text-xl font-black truncate">
+                            {{ $bestGymSession->title ?? 'غير محدد' }}
+                        </p>
+                    </div>
+                    @endif
+
+                    {{-- أفضل كورس --}}
+                    @if(isset($bestCourse) && $bestCourse)
+                    <div class="bg-gray-900 rounded-3xl p-6 border border-gray-800 shadow-xl transition-all duration-300">
+                        <div class="flex justify-between items-start mb-3">
+                            <h4 class="text-xs font-black text-orange-400 uppercase tracking-widest">📘 أفضل كورس</h4>
+                            <span class="bg-orange-500/20 text-orange-300 text-xs font-bold px-2 py-1 rounded-lg border border-orange-500/30">
+                                ⭐ {{ number_format(\App\Models\Review::where('reviewable_id', $bestCourse->id)->where('reviewable_type', 'course')->avg('rating') ?? 0, 1) }}
+                            </span>
+                        </div>
+                        <p class="text-white text-xl font-black truncate">
+                            {{ $bestCourse->name ?? 'غير محدد' }}
+                        </p>
+                    </div>
+                    @endif
+
+                    {{-- أفضل خطة --}}
+                    @if(isset($bestMealPlan) && $bestMealPlan)
+                    <div class="bg-gray-900 rounded-3xl p-6 border border-gray-800 shadow-xl transition-all duration-300">
+                        <div class="flex justify-between items-start mb-3">
+                            <h4 class="text-xs font-black text-emerald-400 uppercase tracking-widest">🥗 أفضل خطة</h4>
+                            <span class="bg-emerald-500/20 text-emerald-300 text-xs font-bold px-2 py-1 rounded-lg border border-emerald-500/30">
+                                ⭐ {{ number_format(\App\Models\Review::where('reviewable_id', $bestMealPlan->id)->where('reviewable_type', 'mealplan')->avg('rating') ?? 0, 1) }}
+                            </span>
+                        </div>
+                        <p class="text-white text-xl font-black truncate">
+                            {{ $bestMealPlan->name ?? 'غير محدد' }}
+                        </p>
+                    </div>
+                    @endif
+                </div>
+            </div>
+
             {{-- رسائل النجاح --}}
             @if (session('success'))
                 <div class="bg-gray-900 border-r-4 border-emerald-500 p-4 rounded-lg shadow-lg flex items-center gap-3">
@@ -26,96 +96,78 @@
                 </div>
             @endif
 
-            {{-- شبكة بطاقات التقييم (Navigation Grid) --}}
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            {{-- قسم التحكم في التقييمات (Navigation Grid) --}}
+            <div class="space-y-6">
+                <h3 class="text-2xl font-black text-gray-800 flex items-center gap-2">
+                    <span class="bg-indigo-100 p-2 rounded-lg">🚀</span>
+                    استعراض التقييمات التفصيلية
+                </h3>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
 
-                {{-- 1. تقييمات المدربين --}}
-                <a href="{{ route('reviews.trainers.index') }}"
-                    class="group relative overflow-hidden bg-gray-900 rounded-2xl p-6 shadow-xl border border-gray-800 hover:border-indigo-500 hover:-translate-y-1 transition-all duration-300">
-                    <div
-                        class="absolute top-0 right-0 w-24 h-24 bg-indigo-500/10 rounded-bl-full -mr-4 -mt-4 transition-all group-hover:bg-indigo-500/20">
-                    </div>
-
-                    <div class="relative z-10 flex flex-col items-center text-center">
-                        <div
-                            class="w-16 h-16 bg-indigo-900/50 rounded-2xl flex items-center justify-center mb-4 border border-indigo-500/30 group-hover:bg-indigo-600 transition-colors shadow-lg shadow-indigo-900/50">
-                            <svg class="w-8 h-8 text-indigo-400 group-hover:text-white transition-colors" fill="none"
-                                stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-                            </svg>
+                    {{-- 1. تقييمات المدربين --}}
+                    <a href="{{ route('reviews.trainers.index') }}"
+                        class="group relative overflow-hidden bg-gray-900 rounded-2xl p-6 shadow-xl border border-gray-800 hover:border-indigo-500 hover:-translate-y-1 transition-all duration-300">
+                        <div class="absolute top-0 right-0 w-24 h-24 bg-indigo-500/10 rounded-bl-full -mr-4 -mt-4 transition-all group-hover:bg-indigo-500/20"></div>
+                        <div class="relative z-10 flex flex-col items-center text-center">
+                            <div class="w-16 h-16 bg-indigo-900/50 rounded-2xl flex items-center justify-center mb-4 border border-indigo-500/30 group-hover:bg-indigo-600 transition-colors shadow-lg shadow-indigo-900/50">
+                                <svg class="w-8 h-8 text-indigo-400 group-hover:text-white transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                                </svg>
+                            </div>
+                            <h3 class="text-xl font-bold text-white mb-2">المدربين</h3>
+                            <p class="text-sm text-gray-400 leading-relaxed">آراء المتدربين وأدائهم مع المدربين</p>
                         </div>
-                        <h3 class="text-xl font-bold text-white mb-2">المدربين</h3>
-                        <p class="text-sm text-gray-400 leading-relaxed">آراء المتدربين وأدائهم مع المدربين</p>
-                    </div>
-                </a>
+                    </a>
 
-                {{-- 2. تقييمات الوجبات --}}
-                <a href="{{ route('reviews.mealplans.index') }}"
-                    class="group relative overflow-hidden bg-gray-900 rounded-2xl p-6 shadow-xl border border-gray-800 hover:border-emerald-500 hover:-translate-y-1 transition-all duration-300">
-                    <div
-                        class="absolute top-0 right-0 w-24 h-24 bg-emerald-500/10 rounded-bl-full -mr-4 -mt-4 transition-all group-hover:bg-emerald-500/20">
-                    </div>
-
-                    <div class="relative z-10 flex flex-col items-center text-center">
-                        <div
-                            class="w-16 h-16 bg-emerald-900/50 rounded-2xl flex items-center justify-center mb-4 border border-emerald-500/30 group-hover:bg-emerald-600 transition-colors shadow-lg shadow-emerald-900/50">
-                            <svg class="w-8 h-8 text-emerald-400 group-hover:text-white transition-colors"
-                                fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
-                            </svg>
+                    {{-- 2. تقييمات الوجبات --}}
+                    <a href="{{ route('reviews.mealplans.index') }}"
+                        class="group relative overflow-hidden bg-gray-900 rounded-2xl p-6 shadow-xl border border-gray-800 hover:border-emerald-500 hover:-translate-y-1 transition-all duration-300">
+                        <div class="absolute top-0 right-0 w-24 h-24 bg-emerald-500/10 rounded-bl-full -mr-4 -mt-4 transition-all group-hover:bg-emerald-500/20"></div>
+                        <div class="relative z-10 flex flex-col items-center text-center">
+                            <div class="w-16 h-16 bg-emerald-900/50 rounded-2xl flex items-center justify-center mb-4 border border-emerald-500/30 group-hover:bg-emerald-600 transition-colors shadow-lg shadow-emerald-900/50">
+                                <svg class="w-8 h-8 text-emerald-400 group-hover:text-white transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
+                                </svg>
+                            </div>
+                            <h3 class="text-xl font-bold text-white mb-2">وجبات الطعام</h3>
+                            <p class="text-sm text-gray-400 leading-relaxed">تقييمات الأنظمة الغذائية والوجبات</p>
                         </div>
-                        <h3 class="text-xl font-bold text-white mb-2">وجبات الطعام</h3>
-                        <p class="text-sm text-gray-400 leading-relaxed">تقييمات الأنظمة الغذائية والوجبات</p>
-                    </div>
-                </a>
+                    </a>
 
-                {{-- 3. تقييمات الكورسات --}}
-                <a href="{{ route('reviews.courses.index') }}"
-                    class="group relative overflow-hidden bg-gray-900 rounded-2xl p-6 shadow-xl border border-gray-800 hover:border-orange-500 hover:-translate-y-1 transition-all duration-300">
-                    <div
-                        class="absolute top-0 right-0 w-24 h-24 bg-orange-500/10 rounded-bl-full -mr-4 -mt-4 transition-all group-hover:bg-orange-500/20">
-                    </div>
-
-                    <div class="relative z-10 flex flex-col items-center text-center">
-                        <div
-                            class="w-16 h-16 bg-orange-900/50 rounded-2xl flex items-center justify-center mb-4 border border-orange-500/30 group-hover:bg-orange-600 transition-colors shadow-lg shadow-orange-900/50">
-                            <svg class="w-8 h-8 text-orange-400 group-hover:text-white transition-colors" fill="none"
-                                stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
-                            </svg>
+                    {{-- 3. تقييمات الكورسات --}}
+                    <a href="{{ route('reviews.courses.index') }}"
+                        class="group relative overflow-hidden bg-gray-900 rounded-2xl p-6 shadow-xl border border-gray-800 hover:border-orange-500 hover:-translate-y-1 transition-all duration-300">
+                        <div class="absolute top-0 right-0 w-24 h-24 bg-orange-500/10 rounded-bl-full -mr-4 -mt-4 transition-all group-hover:bg-orange-500/20"></div>
+                        <div class="relative z-10 flex flex-col items-center text-center">
+                            <div class="w-16 h-16 bg-orange-900/50 rounded-2xl flex items-center justify-center mb-4 border border-orange-500/30 group-hover:bg-orange-600 transition-colors shadow-lg shadow-orange-900/50">
+                                <svg class="w-8 h-8 text-orange-400 group-hover:text-white transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+                                </svg>
+                            </div>
+                            <h3 class="text-xl font-bold text-white mb-2">الكورسات</h3>
+                            <p class="text-sm text-gray-400 leading-relaxed">مراجعات الدورات والبرامج التعليمية</p>
                         </div>
-                        <h3 class="text-xl font-bold text-white mb-2">الكورسات</h3>
-                        <p class="text-sm text-gray-400 leading-relaxed">مراجعات الدورات والبرامج التعليمية</p>
-                    </div>
-                </a>
+                    </a>
 
-                {{-- 4. تقييمات الجلسات --}}
-                <a href="{{ route('reviews.gymsessions.index') }}"
-                    class="group relative overflow-hidden bg-gray-900 rounded-2xl p-6 shadow-xl border border-gray-800 hover:border-purple-500 hover:-translate-y-1 transition-all duration-300">
-                    <div
-                        class="absolute top-0 right-0 w-24 h-24 bg-purple-500/10 rounded-bl-full -mr-4 -mt-4 transition-all group-hover:bg-purple-500/20">
-                    </div>
-
-                    <div class="relative z-10 flex flex-col items-center text-center">
-                        <div
-                            class="w-16 h-16 bg-purple-900/50 rounded-2xl flex items-center justify-center mb-4 border border-purple-500/30 group-hover:bg-purple-600 transition-colors shadow-lg shadow-purple-900/50">
-                            <svg class="w-8 h-8 text-purple-400 group-hover:text-white transition-colors" fill="none"
-                                stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                            </svg>
+                    {{-- 4. تقييمات الجلسات --}}
+                    <a href="{{ route('reviews.gymsessions.index') }}"
+                        class="group relative overflow-hidden bg-gray-900 rounded-2xl p-6 shadow-xl border border-gray-800 hover:border-purple-500 hover:-translate-y-1 transition-all duration-300">
+                        <div class="absolute top-0 right-0 w-24 h-24 bg-purple-500/10 rounded-bl-full -mr-4 -mt-4 transition-all group-hover:bg-purple-500/20"></div>
+                        <div class="relative z-10 flex flex-col items-center text-center">
+                            <div class="w-16 h-16 bg-purple-900/50 rounded-2xl flex items-center justify-center mb-4 border border-purple-500/30 group-hover:bg-purple-600 transition-colors shadow-lg shadow-purple-900/50">
+                                <svg class="w-8 h-8 text-purple-400 group-hover:text-white transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                                </svg>
+                            </div>
+                            <h3 class="text-xl font-bold text-white mb-2">الجلسات</h3>
+                            <p class="text-sm text-gray-400 leading-relaxed">تقييم الجلسات التدريبية والاستشارية</p>
                         </div>
-                        <h3 class="text-xl font-bold text-white mb-2">الجلسات</h3>
-                        <p class="text-sm text-gray-400 leading-relaxed">تقييم الجلسات التدريبية والاستشارية</p>
-                    </div>
-                </a>
-
+                    </a>
+                </div>
             </div>
 
-            {{-- قسم توضيحي (فارغ) --}}
+            {{-- قسم توضيحي --}}
             <div class="bg-white rounded-3xl border border-gray-200 shadow-sm p-12 text-center">
                 <div class="inline-flex items-center justify-center w-20 h-20 bg-gray-100 rounded-full mb-6">
                     <svg class="w-10 h-10 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -123,9 +175,9 @@
                             d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                     </svg>
                 </div>
-                <h3 class="text-2xl font-bold text-gray-800">ابدأ باستعراض التقييمات</h3>
+                <h3 class="text-2xl font-bold text-gray-800">إدارة الجودة</h3>
                 <p class="text-gray-500 mt-2 max-w-lg mx-auto text-lg">
-                    اختر أحد التصنيفات في الأعلى لعرض التفاصيل الكاملة للمراجعات والتحكم بها.
+                    يساعدك هذا النظام على تتبع مستوى رضا العملاء وتحسين الخدمات بناءً على تجاربهم الحقيقية.
                 </p>
             </div>
 
