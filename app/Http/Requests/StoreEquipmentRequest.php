@@ -7,7 +7,9 @@ use Illuminate\Foundation\Http\FormRequest;
 class StoreEquipmentRequest extends FormRequest
 {
     /**
-     * Determine if the user is authorized to make this request.
+     * determines whether the authenticated user is allowed to create new equipment records.
+     * 
+     * @return bool
      */
     public function authorize(): bool
     {
@@ -15,9 +17,11 @@ class StoreEquipmentRequest extends FormRequest
     }
 
     /**
-     * Get the validation rules that apply to the request.
+     * defines validation rules for storing new equipment.
+     * 
+     * validates name, status, quantity, and optional image upload.
      *
-     * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
+     * @return array
      */
     public function rules(): array
     {

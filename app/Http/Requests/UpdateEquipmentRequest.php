@@ -7,7 +7,9 @@ use Illuminate\Foundation\Http\FormRequest;
 class UpdateEquipmentRequest extends FormRequest
 {
     /**
-     * Determine if the user is authorized to make this request.
+     * determines whether the authenticated user is allowed to update equipment records.
+     * 
+     * @return bool
      */
     public function authorize(): bool
     {
@@ -15,9 +17,9 @@ class UpdateEquipmentRequest extends FormRequest
     }
 
     /**
-     * Get the validation rules that apply to the request.
+     * defines validation rules for updating equipment data.
      *
-     * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
+     * @return array
      */
     public function rules(): array
     {

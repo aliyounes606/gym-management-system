@@ -4,6 +4,13 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
+/**
+ * represents gym equipment entity.
+ * 
+ * defines relationships with images and categories and images, and exposes computed attributes such as image_url 
+ * for both web and API responsees.
+ */
+
 class Equipment extends Model
 {
   protected $appends = ['image_url'];

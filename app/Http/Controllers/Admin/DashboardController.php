@@ -13,7 +13,9 @@ use Barryvdh\DomPDF\Facade\Pdf;
 class DashboardController extends Controller
 {
     /**
-     * Summary of index
+     * Display the admin dashboard with comprehensive system statistics and charts.
+     * This method aggregates key metrics (revenue, members, pending requests) and processes 
+     * 30-day historical data to prepare visual charts before rendering the main dashboard view.
      * @return \Illuminate\Contracts\View\View
      */
     public function index()

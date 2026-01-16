@@ -23,8 +23,9 @@ class MealPlan extends Model
     }
 
     /**
-     * جلب كل التوصيات التي تمت لهذه الوجبة
-     * (الوجبة الواحدة يمكن أن يوصى بها لعدة متدربين)
+     * Get all recommendations associated with this meal plan
+     * Defines a one-to-many relationship where one meal plan can be recommended to multiple trainees
+     * @return HasMany<MealRecommendation, MealPlan>
      */
     public function recommendations(): HasMany
     {
