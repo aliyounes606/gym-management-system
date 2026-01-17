@@ -1,6 +1,38 @@
 
 # 🏋️‍♂️Gym Management System
 
+## Table of Content
+1. [Introductin](#-introduction)
+2. [Screenshots](#-screenshots)
+3. [Project Review](#-project-review)
+4. [Project Properties](#-project-properties)
+5. [Installation](#-installation)
+6. [Setup](#-setup)
+7. Run the Application
+8. [Packup](#-packup)
+9. [Database Schema (ERD)](#-database-schema-erd)
+10. [API Documentation](#-api-documentation)
+    - [Authentication](#-authentication)
+    - [Bookings](#-bookings)
+    - [Attendance](#-attendance)
+    - [Meal Plans](#-meal-plans)
+    - [Courses & Sessions](#-courses--sessions)
+    - Reviews & Ratings
+11. [Sample Responses](#-sample-responses)
+    - Single Session Booking Response
+    - Get Gym Sessions List Response
+12. [Sample Credentials](#-sample-credentials)
+13. [Telegram Bot Token](#-telegram-bot-token)
+14. [Support & Contributions](#-support--contributions) 
+15. [Acknowledgments](#-acknowledgments)
+    - [Special Thanks](#-special-thanks)
+    - [Mentors](#-mentors)
+    - Supervisors
+    - Focal X Team
+
+
+
+
 ## 📝 Introduction
 **Gym Management System** is a Laravel-based web application that helps manage gym operations such as courses, trainers, categories, and sessions. It provides a clean API and Blade views with unified responses, making the system scalable, maintainable, and easy to use for both administrators and users.
 
@@ -265,7 +297,7 @@ You can use the following credentials to test the system's different roles:
 | Role | Email | Password |
 | **Admin** | admin@gym.com | 12345678 |
  
-## 🤖 Telegram Bot Token :
+## 🤖 Telegram Bot Token:
 
 TELEGRAM_BOT_TOKEN=8258617852:AAGKhHi27UdPSoJtjLzz46O5Z-HIvXEiSIM
 
@@ -292,11 +324,11 @@ We are deeply grateful for their unwavering commitment to student growth and for
 * **Mr. Hashim Othman:** For his exceptional technical guidance, clarifying complex concepts, and providing inspirational mentorship.
 * **Mr. Ayham Ibrahim:** For his continuous support and encouragement throughout the entire development phase.
 
-###  Supervisors
+### Supervisors
 
 * **Ms. Nourhan Almohammed & Ms. Muna Alrays:** For their dedicated technical support and consistent daily follow-up.
 
-###  Focal X Team
+### Focal X Team
 A huge thank you to the entire **Focal X Team** for building and supporting this educational journey.
 
 **Special recognition to CEO and Founder:** **Alaa Darwish**
