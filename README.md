@@ -128,3 +128,47 @@ php artisan view:cache
 APP_ENV=production
 APP_DEBUG=false
 
+---
+
+## 🔐 Sample Credentials
+
+You can use the following credentials to test the system's different roles:
+
+| Role | Email | Password |
+| **Admin** | admin@gym.com | 12345678 |
+ 
+## 🤖 Telegram Bot Token :
+
+TELEGRAM_BOT_TOKEN=8258617852:AAGKhHi27UdPSoJtjLzz46O5Z-HIvXEiSIM
+
+## 🤝 Support & Contributions
+This project was developed and documented by the following team members:
+
+* **Lilian:** Managed sessions, courses, and project visuals.
+* **Amr:** Handled booking system, payments, and table of contents.
+* **Kinda:** Managed equipment, media, and system setup guide.
+* **Ali:** Developed authentication, ratings, and API documentation.
+* **Mahmoud:** Developed meal planning system and project credentials.
+
+---
+
+## 🏆 Acknowledgments
+
+### 🎉 Special Thanks
+
+**Focal X Agency**
+We are deeply grateful for their unwavering commitment to student growth and for providing such valuable learning opportunities.
+
+###  Mentors
+
+* **Mr. Hashim Othman:** For his exceptional technical guidance, clarifying complex concepts, and providing inspirational mentorship.
+* **Mr. Ayham Ibrahim:** For his continuous support and encouragement throughout the entire development phase.
+
+###  Supervisors
+
+* **Ms. Nourhan Almohammed & Ms. Muna Alrays:** For their dedicated technical support and consistent daily follow-up.
+
+###  Focal X Team
+A huge thank you to the entire **Focal X Team** for building and supporting this educational journey.
+
+**Special recognition to CEO and Founder:** **Alaa Darwish**
