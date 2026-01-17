@@ -129,6 +129,14 @@ php artisan view:cache
 APP_ENV=production
 APP_DEBUG=false
 
+## 🗂 Database Schema (ERD)
+
+Here is the Entity Relationship Diagram for the Gym Management System:
+
+[![ER Diagram](docs/images/9.png)](https://dbdiagram.io/d/last-erd-694d6ba2b8f7d868861f3a61)
+
+> **Note:** Click on the image to view the interactive diagram.
+
 ## 📚 API Documentation
 
 ### 🔐 Authentication
