@@ -25,35 +25,40 @@ class EquipmentController extends Controller
  * @param \Illuminate\Http\Request $request
  * @return \Illuminate\Http\JsonResponse
  */
-    public function index(Request $request): JsonResponse
-    {
-        try {
-            // تحميل العلاقات مع المعدات
-            $query = Equipment::with(['category','image']);
-
-            // فلترة حسب category (عن طريق العلاقة)
-            if ($request->filled('category_id')) {
+    
+public function index(Request $request): JsonResponse
+{
+    try {
+        $query = Equipment::with(['category', 'image'])
+            ->when($request->filled('category_id'), function ($query) use ($request) {
                 $query->whereHas('category', function ($q) use ($request) {
                     $q->where('categories.id', $request->category_id);
                 });
-            }
+            });
 
-            $equipment = $query->get();
+        $equipment = $query->get();
 
-            return response()->json([
-                'status'  => true,
-                'message' => 'Equipment retrieved successfully',
-                'count'   => $equipment->count(),
-                'data'    => $equipment
-            ], 200);
-
-        } catch (\Exception $e) {
-
+        if ($request->filled('category_id') && $equipment->isEmpty()) {
             return response()->json([
                 'status'  => false,
-                'message' => 'Something went wrong while retrieving equipment',
-                'error'   => $e->getMessage()
-            ], 500);
+                'message' => 'No equipment found for this category'
+            ], 404);
         }
+
+        return response()->json([
+            'status'  => true,
+            'message' => 'Equipment retrieved successfully',
+            'count'   => $equipment->count(),
+            'data'    => $equipment
+        ], 200);
+
+    } catch (\Exception $e) {
+        return response()->json([
+            'status'  => false,
+            'message' => 'Something went wrong while retrieving equipment',
+            'error'   => $e->getMessage()
+        ], 500);
     }
+}
+    
 }
