@@ -3,209 +3,155 @@
 namespace App\Http\Controllers;
 
 use App\Models\Course;
-use App\Models\User;
 use App\Models\Review;
 use App\Models\MealPlan;
 use App\Models\GymSession;
-use Illuminate\Http\Request;
 use App\Models\TrainerProfile;
-use Illuminate\Support\Facades\Auth;
+use App\Services\ReviewService;
+use App\Traits\ApiResponseTrait;
+use App\Http\Requests\Api\StoreReviewRequest;
+use Illuminate\Http\Request;
 
 class ReviewController extends Controller
 {
-    /**
-     * this fuction for create a review by model type
-     * @param Request $request
-     * @param mixed $model
-     * @param mixed $t
-     * @return void
-     */
-    public function storeReview(Request $request, $model, &$t)
-    {
-        $data = $request->validate([
-            
-        ]);
+    use ApiResponseTrait;
 
-        $t = $model->review()->create([
-            'user_id' => Auth::user()->id,
-            'rating'  => $request->rating,
-            'comment' => $request->comment,
-        ]);
+    protected $reviewService;
+
+    public function __construct(ReviewService $reviewService)
+    {
+        $this->reviewService = $reviewService;
     }
 
+    // ================== API Methods ==================
+
     /**
-     * this fuction for review a course (api)
-     * @param Request $request
-     * @param Course $course
+     * Summary of CourseReview
+     * @param \App\Http\Requests\Api\StoreReviewRequest $request
+     * @param \App\Models\Course $course
      * @return \Illuminate\Http\JsonResponse
      */
-    public function CourseReview(Request $request, Course $course)
+    public function CourseReview(StoreReviewRequest $request, Course $course)
     {
         try {
-            $this->storeReview($request, $course, $t);
-            return response()->json([
-                'message' => 'تم تقييم الكورس',
-                $t,
+            $review = $this->reviewService->createReview($course, $request->validated());
+
+            return $this->successResponse([
+                'review' => $review,
                 'course' => $course->name
-            ], 200);
+            ], 'تم تقييم الكورس بنجاح');
+
         } catch (\Exception $e) {
-            return response()->json([
-                'message' => 'حدث خطأ أثناء إضافة التقييم: ' . $e->getMessage()
-            ], 500);
+            return $this->errorResponse('حدث خطأ أثناء إضافة التقييم: ' . $e->getMessage(), 500);
         }
     }
 
     /**
-     * this fuction for review a traine (api)
-     * @param Request $request
-     * @param TrainerProfile $trainer
+     * Summary of TrainerReview
+     * @param \App\Http\Requests\Api\StoreReviewRequest $request
+     * @param \App\Models\TrainerProfile $trainer
      * @return \Illuminate\Http\JsonResponse
      */
-    public function TrainerReview(Request $request, TrainerProfile $trainer)
+    public function TrainerReview(StoreReviewRequest $request, TrainerProfile $trainer)
     {
-        $this->storeReview($request, $trainer, $t);
-        return response()->json([
-            'message' => 'تم تقييم المدرب',
-            $t,
-            'trainer' => $trainer->user_id
-        ], 200);
+        try {
+            $review = $this->reviewService->createReview($trainer, $request->validated());
+
+            return $this->successResponse([
+                'review' => $review,
+                'trainer' => $trainer->user->name ?? $trainer->id
+            ], 'تم تقييم المدرب بنجاح');
+
+        } catch (\Exception $e) {
+            return $this->errorResponse('حدث خطأ أثناء تقييم المدرب', 500);
+        }
     }
 
     /**
-     * this funcion for review a meal plan (api)
-     * @param Request $request
-     * @param MealPlan $mealplan
+     * Summary of MealPlanReview
+     * @param \App\Http\Requests\Api\StoreReviewRequest $request
+     * @param \App\Models\MealPlan $mealplan
      * @return \Illuminate\Http\JsonResponse
      */
-    public function MealPlanReview(Request $request, MealPlan $mealplan)
+    public function MealPlanReview(StoreReviewRequest $request, MealPlan $mealplan)
     {
-        $this->storeReview($request, $mealplan, $t);
-        return response()->json([
-            'message' => 'تم تقييم الخطة',
-            $t,
-            'mealplan' => $mealplan->name
-        ], 200);
+        try {
+            $review = $this->reviewService->createReview($mealplan, $request->validated());
+
+            return $this->successResponse([
+                'review' => $review,
+                'mealplan' => $mealplan->name
+            ], 'تم تقييم الخطة بنجاح');
+
+        } catch (\Exception $e) {
+            return $this->errorResponse('حدث خطأ أثناء تقييم الخطة', 500);
+        }
     }
 
     /**
-     * this funcion for review a gym session (api)
-     * @param Request $request
-     * @param GymSession $gymsession
+     * Summary of GymSessionReview
+     * @param \App\Http\Requests\Api\StoreReviewRequest $request
+     * @param \App\Models\GymSession $gymsession
      * @return \Illuminate\Http\JsonResponse
      */
-    public function GymSessionReview(Request $request, GymSession $gymsession)
+    public function GymSessionReview(StoreReviewRequest $request, GymSession $gymsession)
     {
         if ($gymsession->course_id !== null) {
-            return response()->json([
-                'message' => 'لا يمكن تقيم الجلسات المنتمية لكورس'
-            ], 403);
+            return $this->errorResponse('لا يمكن تقييم الجلسات المنتمية لكورس، يرجى تقييم الكورس كاملاً', 403);
         }
 
-        $this->storeReview($request, $gymsession, $t);
-        return response()->json([
-            'message' => 'تم تقييم الجلسة',
-            $t,
-            'gymsession' => $gymsession->title
-        ], 200);
+        try {
+            $review = $this->reviewService->createReview($gymsession, $request->validated());
+
+            return $this->successResponse([
+                'review' => $review,
+                'gymsession' => $gymsession->title
+            ], 'تم تقييم الجلسة بنجاح');
+
+        } catch (\Exception $e) {
+            return $this->errorResponse('حدث خطأ أثناء تقييم الجلسة', 500);
+        }
     }
 
+    // ================== Web Methods (Views) ==================
     /**
-     * this method for got to index pag and send data to it and git the top one (web)
+     * Summary of index
      * @return \Illuminate\Contracts\View\View
      */
     public function index()
-{
-    $reviews = Review::all();
+    {
+        $data = [
+            'reviews' => $this->reviewService->getAllReviews(),
+            'bestCourse' => $this->reviewService->getBestRatedItem('course', Course::class),
+            'bestTrainer' => $this->reviewService->getBestRatedItem('trainer', TrainerProfile::class),
+            'bestMealPlan' => $this->reviewService->getBestRatedItem('mealplan', MealPlan::class),
+            'bestGymSession' => $this->reviewService->getBestRatedItem('gymsession', GymSession::class),
+        ];
 
-    // ===== أفضل كورس =====
-    $bestCourseId = Review::where('reviewable_type', 'course')
-        ->selectRaw('reviewable_id')
-        ->groupBy('reviewable_id')
-        ->orderByRaw('AVG(rating) DESC')
-        ->value('reviewable_id');
+        return view('reviews.index', $data);
+    }
 
-    $bestCourse = $bestCourseId
-        ? Course::find($bestCourseId)
-        : null;
-
-    // ===== أفضل مدرب =====
-    $bestTrainerId = Review::where('reviewable_type', 'trainer')
-        ->selectRaw('reviewable_id')
-        ->groupBy('reviewable_id')
-        ->orderByRaw('AVG(rating) DESC')
-        ->value('reviewable_id');
-
-    $bestTrainer = $bestTrainerId
-        ? TrainerProfile::find($bestTrainerId)
-        : null;
-
-    // ===== أفضل خطة =====
-    $bestMealPlanId = Review::where('reviewable_type', 'mealplan')
-        ->selectRaw('reviewable_id')
-        ->groupBy('reviewable_id')
-        ->orderByRaw('AVG(rating) DESC')
-        ->value('reviewable_id');
-
-    $bestMealPlan = $bestMealPlanId
-        ? MealPlan::find($bestMealPlanId)
-        : null;
-
-    // ===== أفضل جلسة =====
-    $bestGymSessionId = Review::where('reviewable_type', 'gymsession')
-        ->selectRaw('reviewable_id')
-        ->groupBy('reviewable_id')
-        ->orderByRaw('AVG(rating) DESC')
-        ->value('reviewable_id');
-
-    $bestGymSession = $bestGymSessionId
-        ? GymSession::find($bestGymSessionId)
-        : null;
-
-    return view('reviews.index', compact(
-        'reviews',
-        'bestCourse',
-        'bestTrainer',
-        'bestMealPlan',
-        'bestGymSession'
-    ));
-}
-
-
-
-    // all these fuctions going to reviews 
     public function GoToTrainerReviews()
     {
-        $traniner_reviews = Review::with(['user', 'reviewable'])
-            ->where('reviewable_type', 'trainer')
-            ->get();
-
+        $traniner_reviews = $this->reviewService->getReviewsByType('trainer');
         return view('reviews.trainer_reviews', compact('traniner_reviews'));
     }
 
     public function GoToMealPlanReviews()
     {
-        $mealplan = Review::with(['user', 'reviewable'])
-            ->where('reviewable_type', 'mealplan')
-            ->get();
-
+        $mealplan = $this->reviewService->getReviewsByType('mealplan');
         return view('reviews.mealplan_reviews', compact('mealplan'));
     }
 
     public function GoToGymSessionReviews()
     {
-        $gym_session_reviews = Review::with(['user', 'reviewable'])
-            ->where('reviewable_type', 'gymsession')
-            ->get();
-
+        $gym_session_reviews = $this->reviewService->getReviewsByType('gymsession');
         return view('reviews.gym_session_reviews', compact('gym_session_reviews'));
     }
 
     public function GoToCourseReviews()
     {
-        $course_reviews = Review::with(['user', 'reviewable'])
-            ->where('reviewable_type', 'course')
-            ->get();
-
+        $course_reviews = $this->reviewService->getReviewsByType('course');
         return view('reviews.course_reviews', compact('course_reviews'));
     }
 }
