@@ -4,14 +4,20 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Services\EquipmentService;
+use App\Traits\ApiResponseTrait;
 use Illuminate\Http\Request;
-use Illuminate\Http\JsonResponse; 
+use Illuminate\Http\JsonResponse;
 
 /**
- * Handles equipment-related API requests and returns standardized JSON responses.
+ * Class EquipmentController
+ *
+ * Delegates API requests to EquipmentService
+ * and wraps with try/catch for extra safety
  */
 class EquipmentController extends Controller 
 {
+    use ApiResponseTrait;
+
     protected EquipmentService $equipmentService;
 
     public function __construct(EquipmentService $equipmentService)
@@ -20,33 +26,22 @@ class EquipmentController extends Controller
     }
 
     /**
-     * Retrieve equipment list for API.
+     * Retrieve equipment list for API
+     *
+     * @param Request $request
+     * @return JsonResponse
      */
     public function index(Request $request): JsonResponse
     {
         try {
-            $equipment = $this->equipmentService->getForApi($request);
-
-            if ($request->filled('category_id') && $equipment->isEmpty()) {
-                return response()->json([
-                    'status'  => false,
-                    'message' => 'No equipment found for this category'
-                ], 404);
-            }
-
-            return response()->json([
-                'status'  => true,
-                'message' => 'Equipment retrieved successfully',
-                'count'   => $equipment->count(),
-                'data'    => $equipment
-            ], 200);
+            // Service ترجع JsonResponse مباشرة
+            return $this->equipmentService->getForApi($request);
 
         } catch (\Exception $e) {
-            return response()->json([
-                'status'  => false,
-                'message' => 'Something went wrong while retrieving equipment',
-                'error'   => $e->getMessage()
-            ], 500);
+            return $this->errorResponse(
+                'Something went wrong while retrieving equipment',
+                500
+            );
         }
     }
-} 
+}
