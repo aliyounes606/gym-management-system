@@ -3,76 +3,63 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Models\User;
+use App\Http\Requests\Api\RegisterRequest;
+use App\Http\Requests\Api\LoginRequest;
+use App\Services\AuthService;
+use App\Traits\ApiResponseTrait;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Hash;
+use Exception;
 
 class AuthController extends Controller
 {
+    use ApiResponseTrait;
+
+    protected $authService;
+
+    public function __construct(AuthService $authService)
+    {
+        $this->authService = $authService;
+    }
     /**
      * Summary of register
-     * @param \Illuminate\Http\Request $request
+     * @param \App\Http\Requests\Api\RegisterRequest $request
      * @return \Illuminate\Http\JsonResponse
      */
-    public function register(Request $request)
+    public function register(RegisterRequest $request)
     {
-        $request->validate([
-            'name' => 'required|string|max:255',
-            'email' => 'required|string|email|unique:users',
-            'password' => 'required|string|min:8|confirmed',
-            'age' => 'nullable|integer|min:10|max:100',
-            'weight' => 'nullable|numeric|min:20|max:300',
-        ]);
+        try {
+            $result = $this->authService->registerUser($request->validated());
 
-        //  إنشاء المستخدم
-        $user = User::create([
-            'name' => $request->name,
-            'email' => $request->email,
-            'password' => Hash::make($request->password),
-            'age' => $request->age,
-            'weight' => $request->weight,
-        ]);
+            return $this->successResponse(
+                $result,
+                'تم إنشاء الحساب بنجاح!',
+                201
+            );
 
-        $user->assignRole('member');
-
-        $token = $user->createToken('auth_token')->plainTextToken;
-
-        return response()->json([
-            'message' => 'تم إنشاء الحساب بنجاح!',
-            'user' => $user,
-            'token' => $token,
-        ], 201);
+        } catch (Exception $e) {
+            return $this->errorResponse($e->getMessage(), 500);
+        }
     }
-
     /**
      * Summary of login
-     * @param \Illuminate\Http\Request $request
+     * @param \App\Http\Requests\Api\LoginRequest $request
      * @return \Illuminate\Http\JsonResponse
      */
-    public function login(Request $request)
+    public function login(LoginRequest $request)
     {
-        $request->validate([
-            'email' => 'required|email',
-            'password' => 'required',
-        ]);
+        try {
+            $result = $this->authService->loginUser($request->email, $request->password);
 
-        $user = User::where('email', $request->email)->first();
+            return $this->successResponse(
+                $result,
+                'تم تسجيل الدخول بنجاح!'
+            );
 
-        if (!$user || !Hash::check($request->password, $user->password)) {
-            return response()->json([
-                'message' => 'بيانات الدخول غير صحيحة.',
-            ], 401);
+        } catch (Exception $e) {
+            $code = $e->getCode() ?: 401;
+            return $this->errorResponse($e->getMessage(), $code);
         }
-
-        $token = $user->createToken('auth_token')->plainTextToken;
-
-        return response()->json([
-            'message' => 'تم تسجيل الدخول بنجاح!',
-            'token' => $token,
-            'user' => $user,
-        ]);
     }
-
     /**
      * Summary of logout
      * @param \Illuminate\Http\Request $request
@@ -80,10 +67,13 @@ class AuthController extends Controller
      */
     public function logout(Request $request)
     {
-        $request->user()->currentAccessToken()->delete();
+        try {
+            $this->authService->logoutUser($request->user());
 
-        return response()->json([
-            'message' => 'تم تسجيل الخروج بنجاح!',
-        ]);
+            return $this->successResponse([], 'تم تسجيل الخروج بنجاح!');
+
+        } catch (Exception $e) {
+            return $this->errorResponse($e->getMessage(), 500);
+        }
     }
 }
