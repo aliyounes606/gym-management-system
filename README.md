@@ -159,6 +159,45 @@ php artisan view:cache
 APP_ENV=production
 APP_DEBUG=false
 
+### 📧 Email Configuration
+
+To set up the email service, update your `.env` file with your email provider credentials.
+
+**For Local Development (Recommended: Mailtrap or Log):**
+If you don't want to send real emails during testing, set the mailer to `log`:
+
+```env
+MAIL_MAILER=log
+MAIL_MAILER=smtp
+MAIL_HOST=smtp.mailtrap.io   # orsmtp.gmail.com
+MAIL_PORT=2525               # or 587
+MAIL_USERNAME=your_username  
+MAIL_PASSWORD=your_password  
+MAIL_ENCRYPTION=tls
+MAIL_FROM_ADDRESS="hello@example.com"
+MAIL_FROM_NAME="${APP_NAME}"
+```
+
+### 📱 Telegram Notifications Setup
+
+To enable system notifications via Telegram, you need to configure a Telegram Bot.
+
+**1. Create a Bot:**
+* Open Telegram and search for **@BotFather**.
+* Send the command `/newbot` and follow the instructions.
+* Copy the **API Token** provided.
+
+**2. Get Your Chat ID:**
+* Start a conversation with your new bot (click Start).
+* To get your personal ID, you can use a bot like **@userinfobot** or check the updates API.
+
+**3. Update `.env`:**
+Add the credentials to your `.env` file:
+
+```env
+TELEGRAM_BOT_TOKEN=123456789:AAGs... (Your Bot Token)
+TELEGRAM_ADMIN_CHAT_ID=987654...     (Your User ID or Group ID)
+```
 
 ## 🗂 Database Schema (ERD)
 
@@ -295,9 +334,27 @@ You can use the following credentials to test the system's different roles:
 | Role | Email | Password |
 | **Admin** | admin@gym.com | 12345678 |
  
-## 🤖 Telegram Bot Token:
 
-TELEGRAM_BOT_TOKEN=8258617852:AAGKhHi27UdPSoJtjLzz46O5Z-HIvXEiSIM
+
+
+---
+
+
+## 🌟 Acknowledgements
+
+**Focal X Agency**
+We sincerely appreciate the professional environment provided by Focal X, which has played a crucial role in enhancing our skills and technical knowledge.
+
+### Mentorship
+* **Mr. Hashim Othman:** For his profound technical insights and his ability to simplify the most challenging aspects of development.
+* **Mr. Ayham Ibrahim:** For his constant motivation and being a pillar of support throughout the internship.
+
+### Supervision
+* **Ms. Nourhan Almohammed & Ms. Muna Alrays:** We are thankful for their daily management, technical assistance, and ensuring we stayed on the right track.
+
+### The Team & Leadership
+Gratitude to the entire **Focal X Family** for making this internship a success.
+**A special note of appreciation to the Founder & CEO, Mr. Alaa Darwish.**
 
 ## 🤝 Support & Contributions
 This project was developed and documented by the following team members:
@@ -307,27 +364,4 @@ This project was developed and documented by the following team members:
 * **Amr mohissen** 
 * **Kinda Alabdullah** 
 * **Mahmoud Baddour** 
-
----
-
-## 🏆 Acknowledgments
-
-### 🎉 Special Thanks
-
-**Focal X Agency**
-We are deeply grateful for their unwavering commitment to student growth and for providing such valuable learning opportunities.
-
-###  Mentors
-
-* **Mr. Hashim Othman:** For his exceptional technical guidance, clarifying complex concepts, and providing inspirational mentorship.
-* **Mr. Ayham Ibrahim:** For his continuous support and encouragement throughout the entire development phase.
-
-### Supervisors
-
-* **Ms. Nourhan Almohammed & Ms. Muna Alrays:** For their dedicated technical support and consistent daily follow-up.
-
-### Focal X Team
-A huge thank you to the entire **Focal X Team** for building and supporting this educational journey.
-
-**Special recognition to CEO and Founder:** **Alaa Darwish**
 
