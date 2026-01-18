@@ -1,20 +1,30 @@
 <?php
 
 namespace App\Http\Controllers;
-
-use App\Models\Equipment;
-use App\Models\Category;
+ 
 use App\Http\Requests\StoreEquipmentRequest;
 use App\Http\Requests\UpdateEquipmentRequest;
-use Illuminate\Support\Facades\Storage;
+use App\Services\EquipmentService;
 use Illuminate\Routing\Controllers\HasMiddleware;
 use Illuminate\Routing\Controllers\Middleware;
 
+/**
+ * Handles equipment CRUD operations for web views.
+ * Delegates all business logic to EquipmentService.
+ */
 class EquipmentController extends Controller implements HasMiddleware
 {
-     public static function middleware(): array
+    protected EquipmentService $equipmentService;
+
+    public function __construct(EquipmentService $equipmentService)
     {
-        return [ new Middleware('can:sessions.view', only: ['index', 'show']),
+        $this->equipmentService = $equipmentService;
+    }
+
+    public static function middleware(): array
+    {
+        return [
+            new Middleware('can:sessions.view', only: ['index', 'show']),
             new Middleware('can:sessions.create', only: ['create', 'store']),
             new Middleware('can:sessions.update', only: ['edit', 'update']),
             new Middleware('can:sessions.delete', only: ['destroy']),
@@ -22,126 +32,73 @@ class EquipmentController extends Controller implements HasMiddleware
     }
 
     /**
-     * displays a list of all equipment with related images.
-     * 
-     * retrivevs equipment records and passes them to the index view.
-     * 
-     * @return \Illuminate\Contracts\View\View
+     * Display a list of equipment.
      */
     public function index()
     {
-        $equipment = Equipment::with('image')->paginate(10);
+        $equipment = $this->equipmentService->paginate();
         return view('equipment.index', compact('equipment'));
     }
+
     /**
-     * Summary of create
-     * @return \Illuminate\Contracts\View\View
+     * Show the equipment creation form.
      */
     public function create()
     {
-        $categories = Category::all();
+        $categories = $this->equipmentService->getCategories();
         return view('equipment.create', compact('categories'));
     }
+
     /**
-     * Summary of store
-     * @param \App\Http\Requests\StoreEquipmentRequest $request
-     * @return \Illuminate\Http\RedirectResponse
+     * Store a new equipment record.
      */
     public function store(StoreEquipmentRequest $request)
     {
-        $equipment = Equipment::create($request->validated());
-
-        // حفظ الصورة
-        if ($request->hasFile('image')) {
-            $imagePath = $request->file('image')->store('equipment_images', 'public');
-
-            $equipment->image()->create([
-                'path' => $imagePath
-            ]);
-        }
-
-        if ($request->categories) {
-            $equipment->category()->attach($request->categories);
-        }
+        $this->equipmentService->store($request);
 
         return redirect()->route('equipment.index')
             ->with('success', 'تم حفظ المعدة بنجاح');
     }
 
     /**
-     * Summary of show
-     * @param mixed $id
-     * @return \Illuminate\Contracts\View\View
+     * Display a single equipment.
      */
     public function show($id)
     {
-        $equipment = Equipment::with('category', 'image')->findOrFail($id);
+        $equipment = $this->equipmentService->find($id);
         return view('equipment.show', compact('equipment'));
     }
 
     /**
-     * Summary of edit
-     * @param mixed $id
-     * @return \Illuminate\Contracts\View\View
+     * Show the equipment edit form.
      */
     public function edit($id)
     {
-        $equipment = Equipment::with('category', 'image')->findOrFail($id);
-        $categories = Category::all();
+        $equipment = $this->equipmentService->find($id);
+        $categories = $this->equipmentService->getCategories();
+
         return view('equipment.edit', compact('equipment', 'categories'));
     }
 
     /**
-     * Summary of update
-     * @param \App\Http\Requests\UpdateEquipmentRequest $request
-     * @param mixed $id
-     * @return \Illuminate\Http\RedirectResponse
+     * Update an existing equipment.
      */
     public function update(UpdateEquipmentRequest $request, $id)
     {
-        $equipment = Equipment::findOrFail($id);
-        $equipment->update($request->validated());
-
-        // تحديث الصورة
-        if ($request->hasFile('image')) {
-            // حذف الصورة القديمة
-            if ($equipment->image) {
-                Storage::disk('public')->delete($equipment->image->path);
-                $equipment->image()->delete();
-            }
-
-            // رفع الصورة الجديدة
-            $imagePath = $request->file('image')->store('equipment_images', 'public');
-
-            $equipment->image()->create([
-                'path' => $imagePath
-            ]);
-        }
-
-        if ($request->categories) {
-            $equipment->category()->sync($request->categories);
-        }
+        $this->equipmentService->update($request, $id);
 
         return redirect()->route('equipment.index')
             ->with('success', 'تم تحديث المعدة بنجاح');
     }
 
     /**
-     * Summary of destroy
-     * @param mixed $id
-     * @return \Illuminate\Http\RedirectResponse
+     * Delete an equipment.
      */
     public function destroy($id)
     {
-        $equipment = Equipment::findOrFail($id);
+        $this->equipmentService->delete($id);
 
-        if ($equipment->image) {
-            Storage::disk('public')->delete($equipment->image->path);
-            $equipment->image()->delete();
-        }
-
-        $equipment->delete();
         return redirect()->route('equipment.index')
             ->with('success', 'تم حذف المعدة');
     }
-}
+} 
