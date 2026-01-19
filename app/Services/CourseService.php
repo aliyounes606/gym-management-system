@@ -31,7 +31,7 @@ class CourseService
     }
 
     /**
-     * عرض كل الكورسات مع إمكانية الفلترة حسب category_id
+     * عرض كل الكورسات  
      *
      * @param Request $request
      * @return \Illuminate\Http\JsonResponse
@@ -42,9 +42,7 @@ class CourseService
             $query = Course::with(['sessions', 'trainerProfile']);
             $courses = $query->paginate(10);
 
-            if ($courses->isEmpty()) {
-                return $this->errorResponse("لا توجد كورسات مطابقة لخيارات الفلترة", 404);
-            }
+        
 
             return $this->successResponse($courses, "تمت عملية جلب الكورسات بنجاح", 200);
 
