@@ -44,20 +44,7 @@ Route::middleware('auth:sanctum')->group(function () {
 });
 
 
-Route::get('/meals/my-plans', [MealPlanController::class, 'myPlans'])
-    ->middleware('permission:plans.view')
-    ->name('meals.my-plans');
 
-Route::post('/meals/recommend', [MealPlanController::class, 'recommend'])
-    ->middleware('permission:plans.subscribe')
-    ->name('meals.recommend');
-
-// Route::post('/logout', [AuthController::class, 'logout'])
-//     ->name('logout');
-
-Route::get('/user', function (Request $request) {
-    return $request->user();
-})->middleware('permission:users.view')->name('user.profile');
 
 
 
