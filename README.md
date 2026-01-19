@@ -324,6 +324,11 @@ You can filter the **Gym Sessions** list by adding query parameters to the URL:
     ]
 }
 ```
+## 🚀 API Documentation
+
+[![Run in Postman](https://run.pstmn.io/button.svg)](https://app.getpostman.com/run-collection/50322879-197fca6a-c55d-471a-89b9-fa2abe43231d?action=collection%2Ffork&source=rip_markdown&collection-url=entityId%3D50322879-197fca6a-c55d-471a-89b9-fa2abe43231d%26entityType%3Dcollection%26workspaceId%3D9bef0f7a-eca9-454e-8527-a22a2c1b71c5)
+
+> **Note:** After importing, please create a new Environment and set `base_url` to `http://127.0.0.1:8000/api`.
 
 ---
 
